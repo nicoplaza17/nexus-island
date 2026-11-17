@@ -45,6 +45,7 @@ src/
   NexusIsland.Services.Windows  Integración con Windows: monitores, pantalla completa, atajo global, estilos de ventana
   NexusIsland.Modules.Media     Módulo Multimedia: ViewModel, plantillas visuales, barra de progreso
   NexusIsland.Modules.Tools     Herramientas: temporizador, cronómetro, recordatorios, portapapeles
+  NexusIsland.Modules.Monitor   Monitoreo del sistema: panel (CPU, RAM, red, batería, temperatura aprox.) y alertas
   NexusIsland.App               Interfaz WPF: ventana de la isla, animador, ubicación/arrastre, ícono de bandeja
 tests/
   NexusIsland.Core.Tests        Tests unitarios del Core (xUnit)
@@ -71,6 +72,8 @@ Datos de la app:
 | `NEXUS_START_EXPANDED=1` | Arranca con la isla expandida (para probar controles con UI Automation) |
 | `NEXUS_DISABLE_MODULES=media` | Desactiva módulos por id, separados por coma |
 | `NEXUS_OPEN_SETTINGS=1` | Abre la Configuración al arrancar (para pruebas con UI Automation) |
+| `NEXUS_PIN_EXPANDED=1` | La isla no se contrae al irse el mouse (pruebas automáticas con la PC en uso) |
+| `NEXUS_MONITOR_TEST=1` | Umbrales de alerta mínimos (CPU/RAM ≥ 1 % por 2 s) para probar las alertas sin forzar la PC |
 
 ## Cómo agregar un módulo
 
@@ -345,9 +348,52 @@ tareas activas 100, alertas 200); si empatan, la más reciente. `RequestAttentio
 - El historial del portapapeles es solo de texto (no imágenes ni archivos).
 - Un solo temporizador a la vez: iniciar otro reemplaza al actual.
 
+### Etapa 6 — Monitoreo del sistema ✅ (17/11/2026, v0.6.0)
+
+**Qué ofrece Windows (relevado en esta PC antes de implementar)**
+
+| Dato | Fuente | Estado |
+|---|---|---|
+| CPU | `GetSystemTimes` | ✅ exacto |
+| RAM | `GlobalMemoryStatusEx` | ✅ exacto |
+| Batería | `GetSystemPowerStatus` | ✅ (en PCs de escritorio no se muestra) |
+| Conectividad y nombre de red | `Windows.Networking.Connectivity` (WinRT) | ✅ con aviso de cambios |
+| Velocidad de red | bytes de las interfaces **con puerta de enlace** | ✅ (así no se duplican los adaptadores virtuales de VMware/Hyper-V) |
+| Temperatura | zonas térmicas ACPI vía PDH con nombres en inglés (`PdhAddEnglishCounter`) | ⚠️ **aproximada**: no es exactamente la del procesador. El sensor de WMI da "Acceso denegado" sin administrador; la temperatura real de la CPU solo la dan programas con driver propio (HWiNFO). Los nombres de contadores vienen traducidos según el idioma de Windows, por eso se usan los nombres en inglés |
+
+**Implementado**
+
+- **Panel "Sistema"** (botón ⊞ → Sistema): CPU, memoria (con barras), red (nombre, ↓/↑), batería y temperatura aprox. Se actualiza una vez por segundo **solo mientras está abierto**. La temperatura se lee cada 5 s, porque es lo más caro.
+- **Alertas en segundo plano** (revisión cada 3 s, **0,14 ms por revisión**):
+  - CPU ≥ 90 % durante 30 s, indicando qué app la usa (sumando todos sus procesos: Chrome son decenas).
+  - Memoria ≥ 90 % durante 10 s, indicando qué app la usa.
+  - Batería ≤ 20 % y ≤ 10 % sin enchufar; se rearman al enchufar.
+  - Sin Internet durante 5 s: queda en la isla mientras dure. Al volver, aviso breve "Conectado (red)".
+  - Margen de 10 puntos para dar por terminada una alerta (no "parpadea" cerca del umbral). Los picos cortos no avisan. Un portal cautivo (Wi-Fi que pide iniciar sesión) no cuenta como "sin Internet".
+  - Botones *Entendido* y *Ver sistema*. Cada tipo de alerta se activa o desactiva en la Configuración.
+- **La propia isla nunca se señala** como la app que más consume.
+- No hay alertas de temperatura: con un sensor aproximado darían falsas alarmas.
+
+**Verificado (Release; UI Automation con `NEXUS_PIN_EXPANDED` y `NEXUS_MONITOR_TEST`)**
+
+| Prueba | Resultado |
+|---|---|
+| Tests unitarios (CPU, velocidad de red, formatos, reglas de alerta: sostenido, margen, picos, batería, sin Internet, portal cautivo, desactivar) | ✅ 87/87 |
+| Alertas de CPU y memoria con datos reales; detalle con la app responsable ("Google Chrome") | ✅ captura |
+| *Ver sistema* abre el panel: 56 °C aprox., CPU 22 %, 14,0 de 15,2 GB, "WiFi Talleres" ↓/↑, batería 100 % enchufada | ✅ captura |
+| Con la PC bloqueada, la isla se aparta (la pantalla de bloqueo cuenta como pantalla completa) | ✅ |
+| Costo de la vigilancia: medido desde adentro | 0,14 ms por revisión (≈0,005 % de un núcleo) |
+
+**Limitaciones conocidas**
+
+- **Temperatura aproximada** (ver arriba). En PCs sin zonas térmicas ACPI no aparece.
+- La alerta "Sin Internet" no se probó en vivo (no se cortó el Wi-Fi de la PC en uso). La cubren los tests de las reglas.
+- La velocidad de red suma las interfaces con puerta de enlace: con una VPN activa el tráfico puede contarse dos veces.
+- Identificar la app que más CPU usa mide durante 1 s; algunos procesos del sistema no se pueden leer sin administrador y se ignoran.
+- **En esta PC la memoria suele estar cerca del 90 %** (13,8–14 de 15,2 GB en las pruebas), así que la alerta de memoria puede aparecer seguido. Avisa una sola vez por episodio y se puede desactivar.
+
 ## Próximas etapas
 
-6. Monitoreo del sistema (CPU, RAM, red, batería) con alertas.
 7. Empaquetado MSIX + notificaciones de Windows.
 8. Tareas en segundo plano (descargas, instalaciones) por heurística.
 9. Producto: accesibilidad completa, idiomas, actualizaciones, firma y distribución.

@@ -36,6 +36,7 @@
     <ProjectReference Include="..\NexusIsland.Services.Windows\NexusIsland.Services.Windows.csproj" />
     <ProjectReference Include="..\NexusIsland.Modules.Media\NexusIsland.Modules.Media.csproj" />
     <ProjectReference Include="..\NexusIsland.Modules.Tools\NexusIsland.Modules.Tools.csproj" />
+    <ProjectReference Include="..\NexusIsland.Modules.Monitor\NexusIsland.Modules.Monitor.csproj" />
   </ItemGroup>
 
 </Project>

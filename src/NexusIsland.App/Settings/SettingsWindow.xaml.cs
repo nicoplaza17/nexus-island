@@ -82,6 +82,10 @@ public partial class SettingsWindow : Window
         UpdateRestartPanel();
 
         NotifyTrackBox.IsChecked = s.Media.NotifyOnTrackChange;
+        AlertCpuBox.IsChecked = s.Monitor.AlertCpu;
+        AlertMemoryBox.IsChecked = s.Monitor.AlertMemory;
+        AlertBatteryBox.IsChecked = s.Monitor.AlertBattery;
+        AlertNetworkBox.IsChecked = s.Monitor.AlertNetwork;
         BuildAppList();
 
         var version = typeof(SettingsWindow).Assembly.GetName().Version;
@@ -165,6 +169,15 @@ public partial class SettingsWindow : Window
 
         NotifyTrackBox.Checked += (_, _) => Save(s => s.Media.NotifyOnTrackChange = true);
         NotifyTrackBox.Unchecked += (_, _) => Save(s => s.Media.NotifyOnTrackChange = false);
+
+        AlertCpuBox.Checked += (_, _) => Save(s => s.Monitor.AlertCpu = true);
+        AlertCpuBox.Unchecked += (_, _) => Save(s => s.Monitor.AlertCpu = false);
+        AlertMemoryBox.Checked += (_, _) => Save(s => s.Monitor.AlertMemory = true);
+        AlertMemoryBox.Unchecked += (_, _) => Save(s => s.Monitor.AlertMemory = false);
+        AlertBatteryBox.Checked += (_, _) => Save(s => s.Monitor.AlertBattery = true);
+        AlertBatteryBox.Unchecked += (_, _) => Save(s => s.Monitor.AlertBattery = false);
+        AlertNetworkBox.Checked += (_, _) => Save(s => s.Monitor.AlertNetwork = true);
+        AlertNetworkBox.Unchecked += (_, _) => Save(s => s.Monitor.AlertNetwork = false);
 
         ChangeHotkeyButton.Click += (_, _) => StartHotkeyCapture();
         PreviewKeyDown += OnPreviewKeyDown;

@@ -22,6 +22,7 @@ namespace NexusIsland.App.Island;
 public partial class IslandWindow : Window
 {
     private const int ToggleHotkeyId = 0x4E49; // "NI"
+    private static readonly bool PinExpandedForTests = Environment.GetEnvironmentVariable("NEXUS_PIN_EXPANDED") == "1";
     private const double BaseWidth = 460, BaseHeight = 220; // lienzo a tamaño "Normal"
 
     private readonly ILogger<IslandWindow> _logger;
@@ -82,7 +83,9 @@ public partial class IslandWindow : Window
         IslandShape.MouseLeave += (_, _) =>
         {
             _logger.LogDebug("MouseLeave (cursor {Cursor})", DisplayService.GetCursorPosition());
-            if (!IsDraggingOrPressed) _stateMachine.PointerExited();
+            // Diagnóstico (NEXUS_PIN_EXPANDED=1): la isla no se contrae al irse el mouse (pruebas automáticas
+            // mientras alguien usa la PC).
+            if (!IsDraggingOrPressed && !PinExpandedForTests) _stateMachine.PointerExited();
         };
         IslandShape.MouseLeftButtonDown += OnPressed;
         IslandShape.MouseMove += OnMouseMoved;

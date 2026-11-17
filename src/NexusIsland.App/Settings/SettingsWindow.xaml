@@ -81,6 +81,15 @@
                        Text="Todavía no se detectó ninguna app. Reproducí algo y tocá Actualizar." />
             <Button x:Name="RefreshAppsButton" Content="Actualizar lista" HorizontalAlignment="Left" Margin="0,8,0,0" Padding="12,4" />
 
+            <!-- ================================ MONITOREO -->
+            <TextBlock Text="Alertas del sistema" Style="{StaticResource SectionTitle}" />
+            <TextBlock Style="{StaticResource Hint}"
+                       Text="La isla se revisa sola cada 3 segundos y avisa solo cuando hace falta. El panel 'Sistema' (botón de herramientas) siempre está disponible." />
+            <CheckBox x:Name="AlertCpuBox" Content="CPU al 90 % o más durante 30 segundos" Margin="0,2" />
+            <CheckBox x:Name="AlertMemoryBox" Content="Memoria al 90 % o más" Margin="0,2" />
+            <CheckBox x:Name="AlertBatteryBox" Content="Batería al 20 % y al 10 % (sin enchufar)" Margin="0,2" />
+            <CheckBox x:Name="AlertNetworkBox" Content="Sin Internet / conexión recuperada" Margin="0,2" />
+
             <!-- ================================ ACERCA DE -->
             <TextBlock Text="Acerca de" Style="{StaticResource SectionTitle}" />
             <TextBlock x:Name="VersionText" Style="{StaticResource Hint}" />

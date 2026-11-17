@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Monitoreo del sistema: panel (CPU, RAM, red, batería, temperatura aprox.) y alertas. -->
+  <PropertyGroup>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\NexusIsland.Core\NexusIsland.Core.csproj" />
+  </ItemGroup>
+
+</Project>

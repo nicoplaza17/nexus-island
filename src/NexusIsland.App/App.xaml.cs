@@ -19,6 +19,9 @@ using NexusIsland.Modules.Tools.Stopwatch;
 using NexusIsland.Modules.Tools.Timer;
 using NexusIsland.Core.Tools;
 using NexusIsland.Services.Windows.Clipboard;
+using NexusIsland.Core.Monitoring;
+using NexusIsland.Modules.Monitor;
+using NexusIsland.Services.Windows.Monitoring;
 using NexusIsland.Services.Windows.Media;
 
 namespace NexusIsland.App;
@@ -243,6 +246,7 @@ public partial class App : Application
         services.AddSingleton<IMediaSessionService, GsmtcMediaSessionService>();
 
         services.AddSingleton<IClipboardMonitor, ClipboardMonitor>();
+        services.AddSingleton<ISystemMetricsSource, SystemMetricsService>();
         services.AddSingleton(sp => new ReminderStore(
             System.IO.Path.Combine(AppPaths.RoamingData, "reminders.json"), sp.GetRequiredService<ILogger<ReminderStore>>()));
 
@@ -252,6 +256,7 @@ public partial class App : Application
         services.AddSingleton<IIslandModule, StopwatchModule>();
         services.AddSingleton<IIslandModule, ReminderModule>();
         services.AddSingleton<IIslandModule, ClipboardModule>();
+        services.AddSingleton<IIslandModule, MonitorModule>();
 
         return services.BuildServiceProvider(new ServiceProviderOptions { ValidateOnBuild = true });
     }

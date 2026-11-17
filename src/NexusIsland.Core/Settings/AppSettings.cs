@@ -15,6 +15,7 @@ public sealed class AppSettings
     public IslandSettings Island { get; set; } = new();
     public HotkeySettings Hotkey { get; set; } = new();
     public MediaSettings Media { get; set; } = new();
+    public MonitorSettings Monitor { get; set; } = new();
 
     /// <summary>Módulos activados por id. Un módulo que no figura se considera activado.</summary>
     public Dictionary<string, bool> Modules { get; set; } = new(StringComparer.OrdinalIgnoreCase);
@@ -28,7 +29,8 @@ public sealed class AppSettings
         Island ??= new();
         Hotkey ??= new();
         Media ??= new();
-        Modules = new Dictionary<string, bool>(Modules ?? new(), StringComparer.OrdinalIgnoreCase);
+        Monitor ??= new();
+        Modules =new Dictionary<string, bool>(Modules ?? new(), StringComparer.OrdinalIgnoreCase);
         Media.IgnoredApps ??= [];
         Media.IgnoredApps = Media.IgnoredApps
             .Where(a => !string.IsNullOrWhiteSpace(a.Id))
@@ -128,6 +130,15 @@ public sealed class MediaSettings
 
     public bool IsIgnored(string appId) =>
         IgnoredApps.Any(a => string.Equals(a.Id, appId, StringComparison.OrdinalIgnoreCase));
+}
+
+/// <summary>Alertas del monitoreo del sistema (el panel "Sistema" siempre está disponible).</summary>
+public sealed class MonitorSettings
+{
+    public bool AlertCpu { get; set; } = true;
+    public bool AlertMemory { get; set; } = true;
+    public bool AlertBattery { get; set; } = true;
+    public bool AlertNetwork { get; set; } = true;
 }
 
 /// <param name="Id">Identificador técnico (AppUserModelId).</param>
