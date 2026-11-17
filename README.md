@@ -48,6 +48,7 @@ src/
   NexusIsland.Modules.Tools     Herramientas: temporizador, cronómetro, recordatorios, portapapeles
   NexusIsland.Modules.Monitor   Monitoreo del sistema: panel (CPU, RAM, red, batería, temperatura aprox.) y alertas
   NexusIsland.Modules.Notifications  Notificaciones de otras apps (requiere identidad de paquete)
+  NexusIsland.Modules.Tasks     Tareas en segundo plano: descargas, copias del Explorador, instalaciones
   NexusIsland.App               Interfaz WPF: ventana de la isla, animador, ubicación/arrastre, ícono de bandeja
 tests/
   NexusIsland.Core.Tests        Tests unitarios del Core (xUnit)
@@ -443,7 +444,49 @@ Las pruebas automáticas se corren desde la app de escritorio de Claude, que es 
 - **Versión instalada:** en esta PC, la versión instalada tomó la identidad del paquete ya registrado (mismo nombre y editor en `<msix>`) sin registrarla aparte, y las notificaciones funcionaron. Es un comportamiento observado, no documentado por Microsoft para una ubicación distinta. Si no la tomara, `.\tools\register-identity.ps1 -Installed` la registra para esa carpeta. En otras PCs el instalador todavía no registra la identidad: requiere firmar, Etapa 9.
 - Requiere Modo de desarrollador mientras el paquete no esté firmado.
 
+### Etapa 8 — Tareas en segundo plano ✅ (17/11/2026, v0.8.0)
+
+**Qué se puede detectar (Windows no tiene una API general de "progreso de tareas")**
+
+| Qué | Cómo | Certeza | Progreso |
+|---|---|---|---|
+| Descargas del navegador | Temporales en la carpeta Descargas (`.crdownload` Chrome/Edge, `.part` Firefox, `.partial`); se respeta si el usuario movió Descargas | Confiable | Tamaño y velocidad; **sin %** (el navegador no deja el total en disco) |
+| Copias del Explorador | Título de su ventana de progreso (clase `OperationStatusWindow`, "37% completado") | Confiable | ✅ % |
+| Instalaciones MSI | Registro de eventos de Windows Installer (1033 instalación / 1034 desinstalación), leyendo las **propiedades** del evento (no el texto traducido) | Confiable | Resultado (bien / falló / requiere reiniciar) |
+| Otros instaladores | Procesos con "setup"/"install" en el nombre | **Aproximada** | Solo "en curso" / "se cerró" |
+| Windows Update, Store, copias de otras apps | — | ❌ no soportado | — |
+
+**Relevancia (para no saturar)**
+
+- Solo aparece lo que dura **más de 3 s**. Las descargas chiquitas no se muestran ni avisan; las canceladas tampoco.
+- Las fallidas siempre avisan; las instalaciones MSI siempre informan el resultado.
+- Varias tareas a la vez se agrupan: la principal (la que tiene % primero) y "+N más". Expandida muestra hasta 3.
+- Al terminar: aviso breve (prioridad 150, por debajo de las alertas del sistema). *Mostrar en la carpeta* selecciona el archivo **sin abrirlo**, porque podría ser un instalador.
+- Instaladores: se ignoran los nombres de servicios de fondo (*monitor, service, agent, helper, updater, host…*) y los procesos sin ventana que ya corrían al abrir la isla.
+- Sin barras "indeterminadas" animadas (redibujarían la isla sin parar); los datos cambian una vez por segundo.
+- En el log solo queda el tipo y el estado de la tarea, nunca nombres de archivos.
+
+**Verificado (Release, con la isla con identidad fuera del aislamiento)**
+
+| Prueba | Resultado |
+|---|---|
+| Tests unitarios (relevancia, temporales de navegadores, % del Explorador, heurística de instaladores + anteriores) | ✅ 124/124 |
+| Descarga (imitando el protocolo de Chrome en la carpeta Descargas real): "Descargando prueba-nexus.bin — 11 MB · 2 MB/s" → "Descarga completa" con *Mostrar en la carpeta* | ✅ capturas |
+| Copia con el Explorador: en curso → "Copia terminada" | ✅ log + captura |
+| Títulos reales de la ventana de copia en esta PC: "Progreso", "3% completado"… "17% completado" | ✅ |
+| Instalador (proceso "prueba-setup.exe"): en curso → "El instalador se cerró" | ✅ log |
+| Eventos MSI reales de esta PC (instalación del SDK de .NET): producto y estado leídos por propiedades | ✅ |
+| **Falso positivo encontrado y corregido:** `OmenInstallMonitor` (servicio de HP que corre siempre) aparecía como "Instalando" | ✅ ya no aparece |
+| Con una alerta del sistema activa (memoria 93 %), las tareas quedan detrás de la alerta (se ven pasando de página) | ✅ comportamiento esperado |
+
+**Limitaciones conocidas**
+
+- Las descargas no muestran porcentaje (los navegadores no dejan el total en disco). Una extensión de navegador podría informarlo: queda como mejora futura.
+- Solo se vigila la carpeta Descargas principal (no subcarpetas ni otras carpetas elegidas en el navegador).
+- La heurística de instaladores puede fallar con nombres poco comunes. No sabe si un setup.exe terminó bien.
+- Las copias de otros programas (o con otros diálogos) no se detectan. Si se oculta la ventana de progreso del Explorador, tampoco.
+- Un aviso de "terminado" no se oculta solo mientras se está leyendo con la isla expandida.
+
 ## Próximas etapas
 
-8. Tareas en segundo plano (descargas, instalaciones) por heurística.
 9. Producto: accesibilidad completa, idiomas, actualizaciones, firma y distribución.

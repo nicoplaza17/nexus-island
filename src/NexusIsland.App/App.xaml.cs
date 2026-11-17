@@ -25,6 +25,9 @@ using NexusIsland.Services.Windows.Monitoring;
 using NexusIsland.Core.Notifications;
 using NexusIsland.Modules.Notifications;
 using NexusIsland.Services.Windows.Notifications;
+using NexusIsland.Core.Tasks;
+using NexusIsland.Modules.Tasks;
+using NexusIsland.Services.Windows.Tasks;
 using NexusIsland.Services.Windows.Media;
 
 namespace NexusIsland.App;
@@ -252,6 +255,7 @@ public partial class App : Application
         services.AddSingleton<IClipboardMonitor, ClipboardMonitor>();
         services.AddSingleton<ISystemMetricsSource, SystemMetricsService>();
         services.AddSingleton<INotificationSource, UserNotificationService>();
+        services.AddSingleton<IBackgroundTaskSource, BackgroundTaskService>();
         services.AddSingleton(sp => new ReminderStore(
             System.IO.Path.Combine(AppPaths.RoamingData, "reminders.json"), sp.GetRequiredService<ILogger<ReminderStore>>()));
 
@@ -263,6 +267,7 @@ public partial class App : Application
         services.AddSingleton<IIslandModule, ClipboardModule>();
         services.AddSingleton<IIslandModule, MonitorModule>();
         services.AddSingleton<IIslandModule, NotificationsModule>();
+        services.AddSingleton<IIslandModule, TasksModule>();
 
         return services.BuildServiceProvider(new ServiceProviderOptions { ValidateOnBuild = true });
     }

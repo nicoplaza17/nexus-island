@@ -55,6 +55,17 @@ public static class MetricFormat
         return i == 0 ? $"{v:0} {units[i]}" : $"{v:0.#} {units[i]}";
     }
 
+    /// <summary>"820 KB", "45,3 MB", "1,2 GB".</summary>
+    public static string Size(long? bytes)
+    {
+        if (bytes is not { } b || b < 0) return "—";
+        string[] units = ["B", "KB", "MB", "GB", "TB"];
+        double v = b;
+        var i = 0;
+        while (v >= 1024 && i < units.Length - 1) { v /= 1024; i++; }
+        return i == 0 ? $"{v:0} {units[i]}" : $"{v:0.#} {units[i]}";
+    }
+
     /// <summary>"7,4 GB".</summary>
     public static string Gigabytes(ulong bytes) => $"{bytes / 1024d / 1024 / 1024:0.0} GB";
 }

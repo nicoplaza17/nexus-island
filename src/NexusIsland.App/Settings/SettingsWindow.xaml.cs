@@ -87,6 +87,9 @@ public partial class SettingsWindow : Window
         NotificationStatus.Text = NexusIsland.Services.Windows.Notifications.PackageIdentity.HasIdentity
             ? "La isla tiene identidad de paquete: puede leer notificaciones (si diste permiso)."
             : "Sin identidad de paquete: Windows no deja leer notificaciones. Ver tools\\register-identity.ps1 en el README.";
+        TaskDownloadsBox.IsChecked = s.Tasks.Downloads;
+        TaskCopiesBox.IsChecked = s.Tasks.FileCopies;
+        TaskInstallersBox.IsChecked = s.Tasks.Installers;
         AlertCpuBox.IsChecked = s.Monitor.AlertCpu;
         AlertMemoryBox.IsChecked = s.Monitor.AlertMemory;
         AlertBatteryBox.IsChecked = s.Monitor.AlertBattery;
@@ -191,6 +194,13 @@ public partial class SettingsWindow : Window
 
         ShowContentBox.Checked += (_, _) => Save(s => s.Notifications.ShowContent = true);
         ShowContentBox.Unchecked += (_, _) => Save(s => s.Notifications.ShowContent = false);
+
+        TaskDownloadsBox.Checked += (_, _) => Save(s => s.Tasks.Downloads = true);
+        TaskDownloadsBox.Unchecked += (_, _) => Save(s => s.Tasks.Downloads = false);
+        TaskCopiesBox.Checked += (_, _) => Save(s => s.Tasks.FileCopies = true);
+        TaskCopiesBox.Unchecked += (_, _) => Save(s => s.Tasks.FileCopies = false);
+        TaskInstallersBox.Checked += (_, _) => Save(s => s.Tasks.Installers = true);
+        TaskInstallersBox.Unchecked += (_, _) => Save(s => s.Tasks.Installers = false);
 
         AlertCpuBox.Checked += (_, _) => Save(s => s.Monitor.AlertCpu = true);
         AlertCpuBox.Unchecked += (_, _) => Save(s => s.Monitor.AlertCpu = false);

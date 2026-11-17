@@ -93,6 +93,14 @@
             <StackPanel x:Name="MutedList" />
             <TextBlock x:Name="NoMutedText" Style="{StaticResource Hint}" Text="Ninguna." />
 
+            <!-- ================================ TAREAS EN SEGUNDO PLANO -->
+            <TextBlock Text="Tareas en segundo plano" Style="{StaticResource SectionTitle}" />
+            <TextBlock Style="{StaticResource Hint}"
+                       Text="Solo aparece lo que dura más de 3 segundos. Las descargas muestran tamaño y velocidad (los navegadores no informan el total); las copias del Explorador, el porcentaje." />
+            <CheckBox x:Name="TaskDownloadsBox" Content="Descargas del navegador (carpeta Descargas)" Margin="0,2" />
+            <CheckBox x:Name="TaskCopiesBox" Content="Copias de archivos del Explorador" Margin="0,2" />
+            <CheckBox x:Name="TaskInstallersBox" Content="Instalaciones" Margin="0,2" />
+
             <!-- ================================ MONITOREO -->
             <TextBlock Text="Alertas del sistema" Style="{StaticResource SectionTitle}" />
             <TextBlock Style="{StaticResource Hint}"

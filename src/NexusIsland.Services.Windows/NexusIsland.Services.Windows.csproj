@@ -12,4 +12,9 @@
     <ProjectReference Include="..\NexusIsland.Core\NexusIsland.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <!-- Registro de eventos de Windows (instalaciones de Windows Installer). Paquete oficial de Microsoft. -->
+    <PackageReference Include="System.Diagnostics.EventLog" Version="10.0.0" />
+  </ItemGroup>
+
 </Project>

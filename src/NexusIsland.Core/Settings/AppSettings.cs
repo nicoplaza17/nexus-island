@@ -17,6 +17,7 @@ public sealed class AppSettings
     public MediaSettings Media { get; set; } = new();
     public MonitorSettings Monitor { get; set; } = new();
     public NotificationSettings Notifications { get; set; } = new();
+    public TaskSettings Tasks { get; set; } = new();
 
     /// <summary>Módulos activados por id. Un módulo que no figura se considera activado.</summary>
     public Dictionary<string, bool> Modules { get; set; } = new(StringComparer.OrdinalIgnoreCase);
@@ -32,6 +33,7 @@ public sealed class AppSettings
         Media ??= new();
         Monitor ??= new();
         Notifications ??= new();
+        Tasks ??= new();
         Notifications.MutedApps ??= [];
         Notifications.MutedApps = Notifications.MutedApps
             .Where(a => !string.IsNullOrWhiteSpace(a.Id))
@@ -147,6 +149,14 @@ public sealed class MonitorSettings
     public bool AlertMemory { get; set; } = true;
     public bool AlertBattery { get; set; } = true;
     public bool AlertNetwork { get; set; } = true;
+}
+
+/// <summary>Tareas en segundo plano que la isla vigila.</summary>
+public sealed class TaskSettings
+{
+    public bool Downloads { get; set; } = true;
+    public bool FileCopies { get; set; } = true;
+    public bool Installers { get; set; } = true;
 }
 
 /// <summary>Notificaciones de otras apps en la isla.</summary>
