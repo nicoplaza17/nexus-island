@@ -82,6 +82,11 @@ public partial class SettingsWindow : Window
         UpdateRestartPanel();
 
         NotifyTrackBox.IsChecked = s.Media.NotifyOnTrackChange;
+        ShowContentBox.IsChecked = s.Notifications.ShowContent;
+        BuildMutedList();
+        NotificationStatus.Text = NexusIsland.Services.Windows.Notifications.PackageIdentity.HasIdentity
+            ? "La isla tiene identidad de paquete: puede leer notificaciones (si diste permiso)."
+            : "Sin identidad de paquete: Windows no deja leer notificaciones. Ver tools\\register-identity.ps1 en el README.";
         AlertCpuBox.IsChecked = s.Monitor.AlertCpu;
         AlertMemoryBox.IsChecked = s.Monitor.AlertMemory;
         AlertBatteryBox.IsChecked = s.Monitor.AlertBattery;
@@ -154,6 +159,20 @@ public partial class SettingsWindow : Window
         NoAppsText.Visibility = apps.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
     }
 
+    /// <summary>Apps silenciadas (tildadas). Al destildar, vuelve a mostrarse; la fila queda hasta cerrar la ventana.</summary>
+    private void BuildMutedList()
+    {
+        MutedList.Children.Clear();
+        foreach (var app in _settings.Current.Notifications.MutedApps.OrderBy(a => a.Name, StringComparer.CurrentCultureIgnoreCase))
+        {
+            var box = new CheckBox { Content = app.Name, ToolTip = app.Id, IsChecked = true, Margin = new Thickness(0, 2, 0, 2) };
+            box.Checked += (_, _) => Save(s => { if (!s.Notifications.IsMuted(app.Id)) s.Notifications.MutedApps.Add(app); });
+            box.Unchecked += (_, _) => Save(s => s.Notifications.MutedApps.RemoveAll(a => string.Equals(a.Id, app.Id, StringComparison.OrdinalIgnoreCase)));
+            MutedList.Children.Add(box);
+        }
+        NoMutedText.Visibility = MutedList.Children.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
+    }
+
     // ------------------------------------------------------------------ eventos
 
     private void HookEvents()
@@ -169,6 +188,9 @@ public partial class SettingsWindow : Window
 
         NotifyTrackBox.Checked += (_, _) => Save(s => s.Media.NotifyOnTrackChange = true);
         NotifyTrackBox.Unchecked += (_, _) => Save(s => s.Media.NotifyOnTrackChange = false);
+
+        ShowContentBox.Checked += (_, _) => Save(s => s.Notifications.ShowContent = true);
+        ShowContentBox.Unchecked += (_, _) => Save(s => s.Notifications.ShowContent = false);
 
         AlertCpuBox.Checked += (_, _) => Save(s => s.Monitor.AlertCpu = true);
         AlertCpuBox.Unchecked += (_, _) => Save(s => s.Monitor.AlertCpu = false);

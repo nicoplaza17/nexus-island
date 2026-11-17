@@ -22,6 +22,9 @@ using NexusIsland.Services.Windows.Clipboard;
 using NexusIsland.Core.Monitoring;
 using NexusIsland.Modules.Monitor;
 using NexusIsland.Services.Windows.Monitoring;
+using NexusIsland.Core.Notifications;
+using NexusIsland.Modules.Notifications;
+using NexusIsland.Services.Windows.Notifications;
 using NexusIsland.Services.Windows.Media;
 
 namespace NexusIsland.App;
@@ -63,6 +66,7 @@ public partial class App : Application
             Environment.Version, Environment.Is64BitProcess ? "x64" : "x86");
 
         ConfigureRendering();
+        _logger.LogInformation("Identidad de paquete: {Identity}", PackageIdentity.FullName ?? "ninguna (sin acceso a notificaciones)");
 
         var settings = _services.GetRequiredService<SettingsStore>();
         SyncStartupRegistration(settings.Current);
@@ -247,6 +251,7 @@ public partial class App : Application
 
         services.AddSingleton<IClipboardMonitor, ClipboardMonitor>();
         services.AddSingleton<ISystemMetricsSource, SystemMetricsService>();
+        services.AddSingleton<INotificationSource, UserNotificationService>();
         services.AddSingleton(sp => new ReminderStore(
             System.IO.Path.Combine(AppPaths.RoamingData, "reminders.json"), sp.GetRequiredService<ILogger<ReminderStore>>()));
 
@@ -257,6 +262,7 @@ public partial class App : Application
         services.AddSingleton<IIslandModule, ReminderModule>();
         services.AddSingleton<IIslandModule, ClipboardModule>();
         services.AddSingleton<IIslandModule, MonitorModule>();
+        services.AddSingleton<IIslandModule, NotificationsModule>();
 
         return services.BuildServiceProvider(new ServiceProviderOptions { ValidateOnBuild = true });
     }

@@ -81,6 +81,18 @@
                        Text="Todavía no se detectó ninguna app. Reproducí algo y tocá Actualizar." />
             <Button x:Name="RefreshAppsButton" Content="Actualizar lista" HorizontalAlignment="Left" Margin="0,8,0,0" Padding="12,4" />
 
+            <!-- ================================ NOTIFICACIONES -->
+            <TextBlock Text="Notificaciones de otras apps" Style="{StaticResource SectionTitle}" />
+            <TextBlock x:Name="NotificationStatus" Style="{StaticResource Hint}" />
+            <CheckBox x:Name="ShowContentBox" Content="Mostrar el texto de las notificaciones" Margin="0,2" />
+            <TextBlock Style="{StaticResource Hint}"
+                       Text="Si lo desactivás, la isla solo dice de qué app es (útil al compartir pantalla)." />
+            <TextBlock Text="Apps silenciadas" FontWeight="SemiBold" Margin="0,10,0,0" />
+            <TextBlock Style="{StaticResource Hint}"
+                       Text="Se silencian desde la isla (botón 'Silenciar'). Destildá una app para volver a verla." />
+            <StackPanel x:Name="MutedList" />
+            <TextBlock x:Name="NoMutedText" Style="{StaticResource Hint}" Text="Ninguna." />
+
             <!-- ================================ MONITOREO -->
             <TextBlock Text="Alertas del sistema" Style="{StaticResource SectionTitle}" />
             <TextBlock Style="{StaticResource Hint}"

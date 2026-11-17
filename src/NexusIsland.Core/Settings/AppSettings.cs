@@ -16,6 +16,7 @@ public sealed class AppSettings
     public HotkeySettings Hotkey { get; set; } = new();
     public MediaSettings Media { get; set; } = new();
     public MonitorSettings Monitor { get; set; } = new();
+    public NotificationSettings Notifications { get; set; } = new();
 
     /// <summary>Módulos activados por id. Un módulo que no figura se considera activado.</summary>
     public Dictionary<string, bool> Modules { get; set; } = new(StringComparer.OrdinalIgnoreCase);
@@ -30,7 +31,14 @@ public sealed class AppSettings
         Hotkey ??= new();
         Media ??= new();
         Monitor ??= new();
-        Modules =new Dictionary<string, bool>(Modules ?? new(), StringComparer.OrdinalIgnoreCase);
+        Notifications ??= new();
+        Notifications.MutedApps ??= [];
+        Notifications.MutedApps = Notifications.MutedApps
+            .Where(a => !string.IsNullOrWhiteSpace(a.Id))
+            .GroupBy(a => a.Id, StringComparer.OrdinalIgnoreCase)
+            .Select(g => g.First())
+            .ToList();
+        Modules = new Dictionary<string, bool>(Modules ?? new(), StringComparer.OrdinalIgnoreCase);
         Media.IgnoredApps ??= [];
         Media.IgnoredApps = Media.IgnoredApps
             .Where(a => !string.IsNullOrWhiteSpace(a.Id))
@@ -139,6 +147,19 @@ public sealed class MonitorSettings
     public bool AlertMemory { get; set; } = true;
     public bool AlertBattery { get; set; } = true;
     public bool AlertNetwork { get; set; } = true;
+}
+
+/// <summary>Notificaciones de otras apps en la isla.</summary>
+public sealed class NotificationSettings
+{
+    /// <summary>Mostrar el texto. Si es false, solo se ve la app ("Nuevo mensaje de WhatsApp"): útil al compartir pantalla.</summary>
+    public bool ShowContent { get; set; } = true;
+
+    /// <summary>Apps silenciadas: sus notificaciones no aparecen en la isla.</summary>
+    public List<IgnoredApp> MutedApps { get; set; } = [];
+
+    public bool IsMuted(string appId) =>
+        MutedApps.Any(a => string.Equals(a.Id, appId, StringComparison.OrdinalIgnoreCase));
 }
 
 /// <param name="Id">Identificador técnico (AppUserModelId).</param>

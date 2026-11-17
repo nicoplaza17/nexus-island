@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Notificaciones de otras apps en la isla (requiere identidad de paquete y permiso del usuario). -->
+  <PropertyGroup>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\NexusIsland.Core\NexusIsland.Core.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -2,6 +2,16 @@
 <assembly manifestVersion="1.0" xmlns="urn:schemas-microsoft-com:asm.v1">
   <assemblyIdentity version="1.0.0.0" name="NexusIsland.App"/>
 
+  <!--
+    Enlace con el paquete de identidad (packaging\identity\AppxManifest.xml). Si ese paquete está
+    registrado, Windows le da identidad a este .exe al abrirlo (necesaria para leer notificaciones).
+    Si no está registrado, se ignora y la app funciona igual, sin notificaciones.
+  -->
+  <msix xmlns="urn:schemas-microsoft-com:msix.v1"
+        publisher="CN=NexusIsland Dev"
+        packageName="NexusIsland"
+        applicationId="NexusIsland" />
+
   <!-- Se ejecuta como usuario normal: nunca pide permisos de administrador. -->
   <trustInfo xmlns="urn:schemas-microsoft-com:asm.v2">
     <security>

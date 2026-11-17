@@ -35,6 +35,7 @@ Genera `artifacts\installer\NexusIsland-Setup-X.Y.Z.exe` (~59 MB, con .NET inclu
 |---|---|
 | `tools\build-installer.ps1` | Publica con .NET incluido y arma el instalador |
 | `tools\make-icon.ps1` | Regenera `assets\NexusIsland.ico` (todos los tamaños) |
+| `tools\register-identity.ps1` | Registra la identidad de paquete (necesaria para leer notificaciones). `-Installed` para la versión instalada, `-Unregister` para quitarla. Requiere Modo de desarrollador |
 | `tools\soak.ps1` | Prueba de resistencia: registra memoria, handles y objetos gráficos en un CSV. Para 24 h: `.\tools\soak.ps1 -Minutes 1440 -IntervalSeconds 300` |
 
 ## Estructura
@@ -46,10 +47,12 @@ src/
   NexusIsland.Modules.Media     Módulo Multimedia: ViewModel, plantillas visuales, barra de progreso
   NexusIsland.Modules.Tools     Herramientas: temporizador, cronómetro, recordatorios, portapapeles
   NexusIsland.Modules.Monitor   Monitoreo del sistema: panel (CPU, RAM, red, batería, temperatura aprox.) y alertas
+  NexusIsland.Modules.Notifications  Notificaciones de otras apps (requiere identidad de paquete)
   NexusIsland.App               Interfaz WPF: ventana de la isla, animador, ubicación/arrastre, ícono de bandeja
 tests/
   NexusIsland.Core.Tests        Tests unitarios del Core (xUnit)
 installer/                      Script de Inno Setup
+packaging/identity/             Manifiesto del paquete de identidad (notificaciones)
 tools/                          Instalador, ícono, prueba de resistencia
 assets/                         Ícono de la app
 ```
@@ -392,8 +395,55 @@ tareas activas 100, alertas 200); si empatan, la más reciente. `RequestAttentio
 - Identificar la app que más CPU usa mide durante 1 s; algunos procesos del sistema no se pueden leer sin administrador y se ignoran.
 - **En esta PC la memoria suele estar cerca del 90 %** (13,8–14 de 15,2 GB en las pruebas), así que la alerta de memoria puede aparecer seguido. Avisa una sola vez por episodio y se puede desactivar.
 
+### Etapa 7 — Identidad de paquete y notificaciones ✅ (17/11/2026, v0.7.0)
+
+**Por qué hace falta "identidad de paquete"**
+
+Windows solo deja leer las notificaciones de otras apps (`UserNotificationListener`) a apps con identidad de paquete (MSIX) que declaren la capacidad `userNotificationListener`, y con permiso del usuario. Se resolvió con un **paquete con ubicación externa** (*sparse package*): un manifiesto (`packaging\identity\AppxManifest.xml`) que le da identidad al mismo `NexusIsland.exe`, sin reempaquetar la app ni cambiar el instalador. El `.exe` lo declara en `app.manifest` (elemento `<msix>`).
+
+- **Desarrollo:** `tools\register-identity.ps1` lo registra sin firmar. Requiere **Modo de desarrollador** (Configuración → Sistema → Para programadores).
+- **Distribución:** hay que empaquetarlo (MakeAppx) y **firmarlo** con un certificado de confianza, o publicar en Microsoft Store (Etapa 9).
+- **Sin identidad, la app funciona igual:** las notificaciones quedan desactivadas y el panel explica por qué.
+
+**Implementado**
+
+- `UserNotificationService`: escucha por evento (con respaldo de consulta cada 2 s si el evento no estuviera disponible). Las notificaciones que ya estaban en el centro no se muestran como nuevas. Lee app, título, texto y hora.
+- **En la isla** (prioridad entre una tarea activa y una alerta): vistazo de 5 s; se va sola a los 8 s salvo que la estés leyendo expandida. Botones *Abrir app* (vía `shell:AppsFolder`), *Silenciar* y *Cerrar*.
+- **Panel ⊞ → Notificaciones:** las últimas 20, solo en memoria. Si falta identidad o permiso, explica qué hacer y ofrece *Dar permiso* / *Abrir configuración de Windows*.
+- **Configuración:** "Mostrar el texto" (apagado: solo "Nueva notificación de X", para compartir pantalla) y la lista de apps silenciadas.
+- **Privacidad:** el contenido nunca va al log ni al disco.
+- **Sin virtualización** (`desktop6:FileSystemWriteVirtualization` / `RegistryWriteVirtualization` = disabled): con identidad, Windows mandaría la configuración, los recordatorios, los logs y "Iniciar con Windows" a una copia privada del paquete. Así la isla usa los mismos archivos y el mismo Registro con o sin identidad.
+
+**Verificado**
+
+| Prueba | Resultado |
+|---|---|
+| Tests unitarios (detección de nuevas, historial, apps silenciadas + anteriores) | ✅ 91/91 |
+| Sin identidad: arranca normal, notificaciones desactivadas sin errores | ✅ |
+| Registro de identidad → el proceso corre como `NexusIsland_0.7.0.0_x64__k4aw2gq6v4ca2` | ✅ |
+| Permiso de notificaciones | ✅ "Allowed" (Windows 11 lo concedió sin mostrar diálogo en esta PC) |
+| Notificación real (enviada desde PowerShell, fuera del aislamiento) → aparece en la isla | ✅ captura |
+| Vista expandida con *Abrir app* / *Silenciar* / *Cerrar*; panel con la lista | ✅ capturas |
+| *Silenciar* → se guarda en el `settings.json` real y la siguiente de esa app no aparece | ✅ |
+| "Iniciar con Windows" verificado **en el Registro real** (escribe y borra) | ✅ |
+
+**⚠️ Hallazgo sobre las pruebas anteriores (Etapas 0–6)**
+
+Las pruebas automáticas se corren desde la app de escritorio de Claude, que es una app empaquetada. Todo lo que se abría desde ahí heredaba su aislamiento. **Las escrituras en `AppData` y en el Registro (HKCU) de esas pruebas fueron a la carpeta privada de la app Claude**, no a las reales. Funcionalmente las pruebas valen (el comportamiento es el mismo), pero:
+
+- "Iniciar con Windows" (Etapa 3) recién se verificó en el Registro real en esta etapa: ✅.
+- **El instalador (Etapa 4) se probó dentro de ese aislamiento.** Falta repetir la prueba de instalar/desinstalar fuera de él (con `explorer.exe`, como se hace ahora).
+- Desde la Etapa 7, las verificaciones de archivos y Registro se hacen fuera del aislamiento: se le pide al Explorador de Windows que ejecute la comprobación.
+
+**Limitaciones (reales de Windows)**
+
+- **No se pueden tocar los botones** de las notificaciones de otras apps (por ejemplo "Responder"), ni evitar que Windows muestre su propio cartel (se ven en los dos lados; con "No molestar" de Windows solo en la isla).
+- Solo notificaciones tipo *toast*.
+- *Abrir app* abre la app, no la conversación puntual.
+- **La versión instalada** necesita su propio registro: `.\tools\register-identity.ps1 -Installed`, y además se copia el manifiesto junto al `.exe`. El instalador todavía no lo hace solo: requiere firmar, Etapa 9.
+- Requiere Modo de desarrollador mientras el paquete no esté firmado.
+
 ## Próximas etapas
 
-7. Empaquetado MSIX + notificaciones de Windows.
 8. Tareas en segundo plano (descargas, instalaciones) por heurística.
 9. Producto: accesibilidad completa, idiomas, actualizaciones, firma y distribución.

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Paquete de IDENTIDAD de Nexus Island ("paquete con ubicación externa").
+  No contiene la app: le da identidad al NexusIsland.exe que ya está instalado (o compilado),
+  para poder usar APIs que la exigen, como leer notificaciones (userNotificationListener).
+
+  - Se registra con tools\register-identity.ps1.
+  - En desarrollo se registra sin firmar (requiere Modo de desarrollador).
+  - Para distribuirlo hay que empaquetarlo (MakeAppx) y firmarlo con un certificado de confianza.
+  - Publisher, Name y el Id de la aplicación tienen que coincidir con el elemento <msix> de app.manifest.
+-->
+<Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
+         xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
+         xmlns:uap3="http://schemas.microsoft.com/appx/manifest/uap/windows10/3"
+         xmlns:uap10="http://schemas.microsoft.com/appx/manifest/uap/windows10/10"
+         xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
+         xmlns:desktop6="http://schemas.microsoft.com/appx/manifest/desktop/windows10/6"
+         IgnorableNamespaces="uap uap3 uap10 rescap desktop6">
+
+  <Identity Name="NexusIsland" Publisher="CN=NexusIsland Dev" Version="0.7.0.0" ProcessorArchitecture="x64" />
+
+  <Properties>
+    <DisplayName>Nexus Island</DisplayName>
+    <PublisherDisplayName>Nexus Island</PublisherDisplayName>
+    <Logo>Assets\StoreLogo.png</Logo>
+    <uap10:AllowExternalContent>true</uap10:AllowExternalContent>
+    <!--
+      Sin virtualización: con identidad de paquete, Windows mandaría lo que la app escribe en AppData
+      (configuración, recordatorios, logs) y en HKCU (inicio con Windows) a una copia privada del paquete.
+      La isla tiene que usar los mismos archivos y el mismo Registro con o sin identidad.
+      (Requiere la capacidad unvirtualizedResources, declarada abajo.)
+    -->
+    <desktop6:FileSystemWriteVirtualization>disabled</desktop6:FileSystemWriteVirtualization>
+    <desktop6:RegistryWriteVirtualization>disabled</desktop6:RegistryWriteVirtualization>
+  </Properties>
+
+  <Resources>
+    <Resource Language="es-ar" />
+  </Resources>
+
+  <Dependencies>
+    <TargetDeviceFamily Name="Windows.Desktop" MinVersion="10.0.19041.0" MaxVersionTested="10.0.26200.0" />
+  </Dependencies>
+
+  <Capabilities>
+    <rescap:Capability Name="runFullTrust" />
+    <rescap:Capability Name="unvirtualizedResources" />
+    <uap3:Capability Name="userNotificationListener" />
+  </Capabilities>
+
+  <Applications>
+    <Application Id="NexusIsland" Executable="NexusIsland.exe"
+                 uap10:TrustLevel="mediumIL" uap10:RuntimeBehavior="win32App">
+      <!-- AppListEntry="none": el acceso del menú Inicio ya lo crea el instalador (sin duplicados). -->
+      <uap:VisualElements DisplayName="Nexus Island" Description="Isla flotante contextual para Windows"
+                          BackgroundColor="transparent" AppListEntry="none"
+                          Square150x150Logo="Assets\Square150x150Logo.png"
+                          Square44x44Logo="Assets\Square44x44Logo.png" />
+    </Application>
+  </Applications>
+</Package>

@@ -1,0 +1,140 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <!--
+      notifications.*        → la notificación actual (NotificationViewModel)
+      notifications.panel.*  → panel con las últimas (NotificationsPanelViewModel)
+    -->
+    <FontFamily x:Key="NtfGlyphFont">Segoe Fluent Icons, Segoe MDL2 Assets</FontFamily>
+    <SolidColorBrush x:Key="NtfAccent" Color="#FF60A5FA" />
+    <BooleanToVisibilityConverter x:Key="NtfBoolToVisibility" />
+
+    <!-- ============================================================ NOTIFICACIÓN ACTUAL -->
+    <DataTemplate x:Key="notifications.Compact">
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10,0">
+            <TextBlock Text="&#xE91C;" FontFamily="{StaticResource NtfGlyphFont}" FontSize="12" Margin="0,1,8,0"
+                       Foreground="{StaticResource NtfAccent}" />
+            <TextBlock Text="{Binding AppName}" FontSize="12.5" FontWeight="SemiBold" MaxWidth="104"
+                       TextTrimming="CharacterEllipsis" Foreground="{DynamicResource IslandForeground}" />
+        </StackPanel>
+    </DataTemplate>
+
+    <DataTemplate x:Key="notifications.Peek">
+        <Grid Margin="16,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <TextBlock Text="&#xE91C;" FontFamily="{StaticResource NtfGlyphFont}" FontSize="13" Margin="0,1,10,0"
+                       Foreground="{StaticResource NtfAccent}" VerticalAlignment="Center" />
+            <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                <TextBlock Text="{Binding AppName}" FontSize="10.5" FontWeight="SemiBold" TextTrimming="CharacterEllipsis"
+                           Foreground="{DynamicResource IslandForegroundMuted}" />
+                <TextBlock Text="{Binding Title}" FontSize="12.5" FontWeight="SemiBold" TextTrimming="CharacterEllipsis"
+                           Foreground="{DynamicResource IslandForeground}" />
+            </StackPanel>
+        </Grid>
+    </DataTemplate>
+
+    <DataTemplate x:Key="notifications.Expanded">
+        <Grid Margin="22,16,22,12">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="&#xE91C;" FontFamily="{StaticResource NtfGlyphFont}" FontSize="12" Margin="0,1,8,0"
+                               Foreground="{StaticResource NtfAccent}" />
+                    <TextBlock Text="{Binding AppName}" FontSize="12" FontWeight="SemiBold"
+                               Foreground="{DynamicResource IslandForegroundMuted}" />
+                </StackPanel>
+                <TextBlock Text="{Binding Time}" FontSize="11" HorizontalAlignment="Right"
+                           Foreground="{DynamicResource IslandForegroundMuted}" />
+            </Grid>
+            <TextBlock Grid.Row="1" Text="{Binding Title}" FontSize="15" FontWeight="SemiBold" Margin="0,8,0,0"
+                       TextTrimming="CharacterEllipsis" Foreground="{DynamicResource IslandForeground}" />
+            <TextBlock Grid.Row="2" Text="{Binding Body}" FontSize="12.5" Margin="0,2,0,0" TextWrapping="Wrap"
+                       MaxHeight="36" TextTrimming="CharacterEllipsis" Foreground="{DynamicResource IslandForegroundMuted}"
+                       Visibility="{Binding HasBody, Converter={StaticResource NtfBoolToVisibility}}" />
+            <StackPanel Grid.Row="3" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,4,0,0">
+                <Button Style="{DynamicResource IslandPillButton}" Command="{Binding OpenCommand}" Content="Abrir app"
+                        AutomationProperties.Name="Abrir la app de la notificación" Margin="0,0,6,0" />
+                <Button Style="{DynamicResource IslandPillButton}" Command="{Binding MuteCommand}" Content="Silenciar"
+                        ToolTip="{Binding MuteLabel}" AutomationProperties.Name="{Binding MuteLabel}" Margin="0,0,6,0" />
+                <Button Style="{DynamicResource IslandPillButton}" Command="{Binding CloseCommand}" Content="Cerrar"
+                        AutomationProperties.Name="Cerrar notificación" />
+            </StackPanel>
+        </Grid>
+    </DataTemplate>
+
+    <!-- ============================================================ PANEL -->
+    <DataTemplate x:Key="notifications.panel.Compact">
+        <TextBlock Text="&#xE91C;" FontFamily="{StaticResource NtfGlyphFont}" FontSize="12"
+                   Foreground="{DynamicResource IslandForegroundMuted}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+    </DataTemplate>
+
+    <DataTemplate x:Key="notifications.panel.Peek">
+        <TextBlock Text="Notificaciones" FontSize="12" FontWeight="SemiBold" Margin="18,0" VerticalAlignment="Center"
+                   Foreground="{DynamicResource IslandForegroundMuted}" />
+    </DataTemplate>
+
+    <DataTemplate x:Key="notifications.panel.Expanded">
+        <Grid Margin="16,12,16,38">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid Margin="6,0,0,6">
+                <TextBlock Text="Notificaciones" FontSize="12" FontWeight="SemiBold" VerticalAlignment="Center"
+                           Foreground="{DynamicResource IslandForegroundMuted}" />
+                <Button Style="{DynamicResource IslandPillButton}" Padding="10,3" FontSize="11" HorizontalAlignment="Right"
+                        Command="{Binding ClearCommand}" Content="Borrar todo"
+                        Visibility="{Binding HasItems, Converter={StaticResource NtfBoolToVisibility}}"
+                        AutomationProperties.Name="Borrar notificaciones recientes" />
+            </Grid>
+
+            <!-- Falta identidad o permiso -->
+            <StackPanel Grid.Row="1" Margin="6,2,0,0" Visibility="{Binding IsNotReady, Converter={StaticResource NtfBoolToVisibility}}">
+                <TextBlock Text="{Binding StatusText}" FontSize="12" TextWrapping="Wrap" Foreground="{DynamicResource IslandForeground}" />
+                <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
+                    <Button Style="{DynamicResource IslandPillButton}" Command="{Binding RequestAccessCommand}" Content="Dar permiso"
+                            Visibility="{Binding CanRequestAccess, Converter={StaticResource NtfBoolToVisibility}}"
+                            AutomationProperties.Name="Dar permiso para leer notificaciones" />
+                    <Button Style="{DynamicResource IslandPillButton}" Command="{Binding OpenPrivacyCommand}" Content="Abrir configuración de Windows"
+                            Visibility="{Binding CanOpenPrivacy, Converter={StaticResource NtfBoolToVisibility}}"
+                            AutomationProperties.Name="Abrir privacidad de notificaciones en Windows" />
+                </StackPanel>
+            </StackPanel>
+
+            <!-- Lista -->
+            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Hidden" Focusable="False"
+                          Visibility="{Binding HasItems, Converter={StaticResource NtfBoolToVisibility}}">
+                <ItemsControl ItemsSource="{Binding Items}" Focusable="False">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Button Style="{DynamicResource IslandPillButton}" Background="Transparent" Padding="8,4" Margin="0,1"
+                                    HorizontalContentAlignment="Stretch" Command="{Binding OpenCommand}" ToolTip="Abrir la app"
+                                    AutomationProperties.Name="{Binding Title}">
+                                <Grid Width="330">
+                                    <TextBlock FontSize="12" TextTrimming="CharacterEllipsis" Margin="0,0,44,0">
+                                        <Run Text="{Binding AppName, Mode=OneWay}" Foreground="{DynamicResource IslandForegroundMuted}" />
+                                        <Run Text="  " />
+                                        <Run Text="{Binding Title, Mode=OneWay}" />
+                                    </TextBlock>
+                                    <TextBlock Text="{Binding Time}" FontSize="11" HorizontalAlignment="Right"
+                                               Foreground="{DynamicResource IslandForegroundMuted}" />
+                                </Grid>
+                            </Button>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+            <TextBlock Grid.Row="1" FontSize="12" Margin="6,4,0,0" TextWrapping="Wrap"
+                       Foreground="{DynamicResource IslandForegroundMuted}"
+                       Visibility="{Binding ShowEmpty, Converter={StaticResource NtfBoolToVisibility}}"
+                       Text="Todavía no llegó ninguna. Se guardan las últimas 20, solo en memoria." />
+        </Grid>
+    </DataTemplate>
+</ResourceDictionary>
