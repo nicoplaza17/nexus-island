@@ -1,6 +1,35 @@
 # Nexus Island
 
 Isla flotante contextual para Windows, inspirada en Dynamic Island (C# · .NET 10 · WPF).
+*A floating, context-aware island for Windows. UI in Spanish and English.*
+
+Multimedia, temporizador, cronómetro, recordatorios, portapapeles, monitoreo del sistema, notificaciones
+y tareas en segundo plano (descargas, copias, instalaciones), en una isla arriba de la pantalla que no roba el foco.
+
+## Descargar e instalar
+
+1. Bajá `NexusIsland-Setup-X.Y.Z.exe` de la última [Release](../../releases/latest) (~59 MB, trae .NET incluido).
+2. Ejecutalo. Se instala solo para tu usuario, sin permisos de administrador.
+3. **El instalador no está firmado:** Windows muestra *"Windows protegió tu PC"*. Tocá **Más información → Ejecutar de todas formas**.
+   *Unsigned installer: on the SmartScreen prompt choose "More info → Run anyway".*
+
+Requisitos: Windows 10 (19041+) o Windows 11, 64 bits.
+
+- **Mostrar / ocultar:** Ctrl+Alt+N · **Modo teclado:** Ctrl+Alt+K · **Configuración:** doble clic en el ícono de la bandeja.
+- **Notificaciones de otras apps:** Windows solo las deja leer a apps con identidad de paquete. Como el paquete no
+  está firmado, hace falta activar el **Modo de desarrollador** de Windows y ejecutar
+  `tools\register-identity.ps1 -Installed` (de este repo). Todo lo demás funciona sin eso.
+- Desinstalar: Configuración de Windows → Aplicaciones → Nexus Island.
+
+Privacidad: no hay telemetría ni conexiones a Internet. El historial del portapapeles y las notificaciones viven
+solo en memoria; los logs (en `%LocalAppData%\NexusIsland\logs`) nunca guardan textos copiados, contenido de
+notificaciones ni nombres de archivos.
+
+Licencia: [MIT](LICENSE).
+
+---
+
+## Desarrollo
 
 ## Requisitos
 
