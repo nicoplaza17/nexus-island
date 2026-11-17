@@ -10,6 +10,7 @@ using NexusIsland.Core;
 using NexusIsland.Core.Activities;
 using NexusIsland.Core.Media;
 using NexusIsland.Core.Settings;
+using NexusIsland.Core.Translation;
 using NexusIsland.Services.Windows.Display;
 using NexusIsland.Services.Windows.Startup;
 
@@ -27,13 +28,15 @@ public partial class SettingsWindow : Window
     private readonly IReadOnlySet<string> _runningModules;
     private readonly ILogger<SettingsWindow> _logger;
     private readonly Action _restart;
+    private readonly ITranslationService _translator;
     private bool _loading;
     private bool _capturingHotkey;
 
     public SettingsWindow(SettingsStore settings, IslandWindow island, IMediaSessionService media,
         IReadOnlyList<IIslandModule> modules, IReadOnlySet<string> runningModules,
-        ILogger<SettingsWindow> logger, Action restart)
+        ILogger<SettingsWindow> logger, Action restart, ITranslationService translator)
     {
+        _translator = translator;
         _settings = settings;
         _island = island;
         _media = media;
@@ -99,6 +102,7 @@ public partial class SettingsWindow : Window
         AlertBatteryBox.IsChecked = s.Monitor.AlertBattery;
         AlertNetworkBox.IsChecked = s.Monitor.AlertNetwork;
         BuildAppList();
+        UpdateTranslatorStatus();
 
         var version = typeof(SettingsWindow).Assembly.GetName().Version;
         VersionText.Text = $"Nexus Island {version?.ToString(3)} · .NET {Environment.Version}\n{Strings.Settings_ConfigFile} {_settings.FilePath}";
@@ -137,6 +141,15 @@ public partial class SettingsWindow : Window
 
         FloatingInfo.Visibility = docked ? Visibility.Collapsed : Visibility.Visible;
         FloatingInfo.Text = Strings.Settings_Floating;
+    }
+
+    private void UpdateTranslatorStatus()
+    {
+        var bytes = _translator.InstalledBytes();
+        TranslatorStatus.Text = bytes > 0
+            ? string.Format(Strings.Settings_ModelsInstalled, bytes / 1048576.0)
+            : Strings.Settings_NoModels;
+        DeleteModelsButton.IsEnabled = bytes > 0;
     }
 
     private void BuildAppList()
@@ -227,6 +240,12 @@ public partial class SettingsWindow : Window
         Deactivated += (_, _) => { if (_capturingHotkey) StopHotkeyCapture(Strings.Hotkey_Cancelled); };
 
         RestartButton.Click += (_, _) => _restart();
+        DeleteModelsButton.Click += (_, _) =>
+        {
+            try { _translator.DeleteModels(); }
+            catch (Exception ex) { _logger.LogWarning(ex, "No se pudieron borrar los modelos de traducción"); }
+            UpdateTranslatorStatus();
+        };
         RefreshAppsButton.Click += (_, _) => BuildAppList();
         OpenSettingsFolderButton.Click += (_, _) => OpenFolder(Path.GetDirectoryName(_settings.FilePath)!);
         OpenLogsButton.Click += (_, _) => OpenFolder(AppPaths.Logs);

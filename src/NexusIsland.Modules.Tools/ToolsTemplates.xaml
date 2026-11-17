@@ -234,4 +234,96 @@
                        Foreground="{StaticResource AlertBrush}" />
         </Grid>
     </DataTemplate>
+
+    <!-- ============================================================ TRADUCIR -->
+    <DataTemplate x:Key="translate.Compact">
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <TextBlock Text="&#xE8C1;" FontFamily="{StaticResource ToolGlyphFont}" FontSize="12" Margin="0,1,8,0"
+                       Foreground="{DynamicResource IslandAccent}" />
+            <TextBlock Text="{Binding ShortStatus}" FontSize="12" FontWeight="SemiBold" MaxWidth="100"
+                       TextTrimming="CharacterEllipsis" Foreground="{DynamicResource IslandForeground}" />
+        </StackPanel>
+    </DataTemplate>
+
+    <DataTemplate x:Key="translate.Peek">
+        <Grid Margin="16,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <TextBlock Text="&#xE8C1;" FontFamily="{StaticResource ToolGlyphFont}" FontSize="13" Margin="0,1,10,0"
+                       VerticalAlignment="Center" Foreground="{DynamicResource IslandAccent}" />
+            <TextBlock Grid.Column="1" Text="{Binding Result}" FontSize="12.5" VerticalAlignment="Center"
+                       TextTrimming="CharacterEllipsis" Foreground="{DynamicResource IslandForeground}"
+                       Visibility="{Binding HasResult, Converter={StaticResource BoolToVisibility}}" />
+            <TextBlock Grid.Column="1" Text="{Binding Message}" FontSize="12" VerticalAlignment="Center"
+                       TextTrimming="CharacterEllipsis" Foreground="{DynamicResource IslandForegroundMuted}"
+                       Visibility="{Binding ShowMessage, Converter={StaticResource BoolToVisibility}}" />
+        </Grid>
+    </DataTemplate>
+
+    <DataTemplate x:Key="translate.Expanded">
+        <Grid Margin="18,12,18,10">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <!-- Encabezado: Traducir · Inglés → Español -->
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="&#xE8C1;" FontFamily="{StaticResource ToolGlyphFont}" FontSize="13" Margin="0,1,8,0"
+                           Foreground="{DynamicResource IslandAccent}" />
+                <TextBlock Text="{x:Static loc:Strings.Translate_Name}" Style="{StaticResource ToolCaption}" />
+                <TextBlock Text="{Binding DirectionText}" FontSize="12" Margin="8,0,0,0"
+                           Foreground="{DynamicResource IslandForegroundMuted}" />
+            </StackPanel>
+
+            <!-- Resultado: el original en una línea y la traducción (con desplazamiento si es larga) -->
+            <Grid Grid.Row="1" Margin="0,6,0,6"
+                  Visibility="{Binding HasResult, Converter={StaticResource BoolToVisibility}}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <TextBlock Text="{Binding Source}" FontSize="11" TextTrimming="CharacterEllipsis"
+                           Foreground="{DynamicResource IslandForegroundMuted}" />
+                <ScrollViewer Grid.Row="1" Margin="0,3,0,0" VerticalScrollBarVisibility="Auto" Focusable="False">
+                    <TextBlock Text="{Binding Result}" FontSize="13.5" TextWrapping="Wrap"
+                               Foreground="{DynamicResource IslandForeground}" />
+                </ScrollViewer>
+            </Grid>
+
+            <!-- Estado: sin texto, pedir descarga, descargando, traduciendo, error -->
+            <StackPanel Grid.Row="1" VerticalAlignment="Center" Margin="0,4"
+                        Visibility="{Binding ShowMessage, Converter={StaticResource BoolToVisibility}}">
+                <TextBlock Text="{Binding Message}" FontSize="12.5" TextWrapping="Wrap"
+                           Foreground="{DynamicResource IslandForeground}" />
+                <ProgressBar Height="4" Minimum="0" Maximum="1" Value="{Binding Progress, Mode=OneWay}" Margin="0,8,0,0"
+                             Template="{StaticResource ThinBar}" Foreground="{DynamicResource IslandAccent}"
+                             Visibility="{Binding IsDownloading, Converter={StaticResource BoolToVisibility}}" />
+            </StackPanel>
+
+            <!-- Botones (abajo a la izquierda: a la derecha está el botón de herramientas de la isla) -->
+            <StackPanel Grid.Row="2" Orientation="Horizontal">
+                <Button Style="{DynamicResource IslandPillButton}" Command="{Binding CopyCommand}" Margin="0,0,6,0"
+                        Content="{Binding CopyLabel}" AutomationProperties.Name="{x:Static loc:Strings.Translate_CopyA11y}"
+                        Visibility="{Binding IsDone, Converter={StaticResource BoolToVisibility}}" />
+                <Button Style="{DynamicResource IslandPillButton}" Command="{Binding DownloadCommand}" Margin="0,0,6,0"
+                        Content="{Binding DownloadLabel}" AutomationProperties.Name="{Binding DownloadLabel}"
+                        Visibility="{Binding IsNeedsModel, Converter={StaticResource BoolToVisibility}}" />
+                <Button Style="{DynamicResource IslandPillButton}" Command="{Binding InvertCommand}" Margin="0,0,6,0"
+                        Content="{x:Static loc:Strings.Translate_Invert}" AutomationProperties.Name="{x:Static loc:Strings.Translate_InvertA11y}"
+                        Visibility="{Binding CanInvert, Converter={StaticResource BoolToVisibility}}" />
+                <Button Style="{DynamicResource IslandPillButton}" Command="{Binding RetryCommand}" Margin="0,0,6,0"
+                        Content="{x:Static loc:Strings.Translate_Retry}" AutomationProperties.Name="{x:Static loc:Strings.Translate_Retry}"
+                        Visibility="{Binding IsFailed, Converter={StaticResource BoolToVisibility}}" />
+                <Button Style="{DynamicResource IslandPillButton}" Command="{Binding CancelDownloadCommand}" Margin="0,0,6,0"
+                        Content="{x:Static loc:Strings.Common_Cancel}" AutomationProperties.Name="{x:Static loc:Strings.Translate_CancelDownloadA11y}"
+                        Visibility="{Binding IsDownloading, Converter={StaticResource BoolToVisibility}}" />
+                <Button Style="{DynamicResource IslandPillButton}" Command="{Binding CloseCommand}"
+                        Content="{x:Static loc:Strings.Common_Close}" AutomationProperties.Name="{x:Static loc:Strings.Translate_CloseA11y}" />
+            </StackPanel>
+        </Grid>
+    </DataTemplate>
 </ResourceDictionary>

@@ -18,6 +18,9 @@ using NexusIsland.Modules.Tools.Clipboard;
 using NexusIsland.Modules.Tools.Reminders;
 using NexusIsland.Modules.Tools.Stopwatch;
 using NexusIsland.Modules.Tools.Timer;
+using NexusIsland.Modules.Tools.Translate;
+using NexusIsland.Core.Translation;
+using NexusIsland.Services.Windows.Translation;
 using NexusIsland.Core.Tools;
 using NexusIsland.Services.Windows.Clipboard;
 using NexusIsland.Core.Monitoring;
@@ -150,7 +153,8 @@ public partial class App : Application
             _allModules,
             _runningModuleIds,
             _services.GetRequiredService<ILogger<SettingsWindow>>(),
-            restart: Restart);
+            restart: Restart,
+            _services.GetRequiredService<ITranslationService>());
         _settingsWindow.Closed += (_, _) => _settingsWindow = null;
         _settingsWindow.Show();
         _settingsWindow.Activate();
@@ -287,6 +291,8 @@ public partial class App : Application
         services.AddSingleton<IIslandModule, StopwatchModule>();
         services.AddSingleton<IIslandModule, ReminderModule>();
         services.AddSingleton<IIslandModule, ClipboardModule>();
+        services.AddSingleton<ITranslationService, LocalTranslationService>();
+        services.AddSingleton<IIslandModule, TranslateModule>();
         services.AddSingleton<IIslandModule, MonitorModule>();
         services.AddSingleton<IIslandModule, NotificationsModule>();
         services.AddSingleton<IIslandModule, TasksModule>();

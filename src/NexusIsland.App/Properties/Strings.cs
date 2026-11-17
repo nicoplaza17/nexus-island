@@ -81,6 +81,9 @@ public static class Strings
     /// <summary>Settings:</summary>
     public static string Settings_ConfigFile => ResourceManager.GetString("Settings_ConfigFile", Culture) ?? "Settings_ConfigFile";
 
+    /// <summary>Delete models</summary>
+    public static string Settings_DeleteModels => ResourceManager.GetString("Settings_DeleteModels", Culture) ?? "Settings_DeleteModels";
+
     /// <summary>It's now loose where you left it. Pick a monitor to dock it at the top center again.</summary>
     public static string Settings_Floating => ResourceManager.GetString("Settings_Floating", Culture) ?? "Settings_Floating";
 
@@ -111,6 +114,9 @@ public static class Strings
     /// <summary>Media</summary>
     public static string Settings_Media => ResourceManager.GetString("Settings_Media", Culture) ?? "Settings_Media";
 
+    /// <summary>Downloaded models: {0:0} MB</summary>
+    public static string Settings_ModelsInstalled => ResourceManager.GetString("Settings_ModelsInstalled", Culture) ?? "Settings_ModelsInstalled";
+
     /// <summary>Modules</summary>
     public static string Settings_Modules => ResourceManager.GetString("Settings_Modules", Culture) ?? "Settings_Modules";
 
@@ -125,6 +131,9 @@ public static class Strings
 
     /// <summary>No package identity: Windows doesn't allow reading notifications. See tools\register-identity.ps1 in the README.</summary>
     public static string Settings_NoIdentity => ResourceManager.GetString("Settings_NoIdentity", Culture) ?? "Settings_NoIdentity";
+
+    /// <summary>No model downloaded.</summary>
+    public static string Settings_NoModels => ResourceManager.GetString("Settings_NoModels", Culture) ?? "Settings_NoModels";
 
     /// <summary>None.</summary>
     public static string Settings_None => ResourceManager.GetString("Settings_None", Culture) ?? "Settings_None";
@@ -203,6 +212,12 @@ public static class Strings
 
     /// <summary>Nexus Island — Settings</summary>
     public static string Settings_Title => ResourceManager.GetString("Settings_Title", Culture) ?? "Settings_Title";
+
+    /// <summary>Translator</summary>
+    public static string Settings_Translator => ResourceManager.GetString("Settings_Translator", Culture) ?? "Settings_Translator";
+
+    /// <summary>Translates copied text between English and Spanish on this PC (Tools → Translate). The models are downloaded the first time you use each direction (≈ 110 MB each) and run in a separate process that closes after 2 minutes without use. Models: Opus-MT by Helsinki-NLP (CC BY 4.0).</summary>
+    public static string Settings_TranslatorHint => ResourceManager.GetString("Settings_TranslatorHint", Culture) ?? "Settings_TranslatorHint";
 
     /// <summary>Tools</summary>
     public static string Tools => ResourceManager.GetString("Tools", Culture) ?? "Tools";

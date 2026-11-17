@@ -12,6 +12,8 @@
     <ApplicationIcon>..\..\assets\NexusIsland.ico</ApplicationIcon>
     <AssemblyName>NexusIsland</AssemblyName>
     <RootNamespace>NexusIsland.App</RootNamespace>
+    <!-- Main propio (Program.cs): con el argumento "translator" el mismo ejecutable corre como proceso traductor, sin interfaz. -->
+    <StartupObject>NexusIsland.App.Program</StartupObject>
     <!-- WFO0003 es para apps WinForms; en WPF el DPI se declara en app.manifest (correcto). -->
     <NoWarn>$(NoWarn);WFO0003</NoWarn>
   </PropertyGroup>
@@ -39,6 +41,7 @@
     <ProjectReference Include="..\NexusIsland.Modules.Monitor\NexusIsland.Modules.Monitor.csproj" />
     <ProjectReference Include="..\NexusIsland.Modules.Notifications\NexusIsland.Modules.Notifications.csproj" />
     <ProjectReference Include="..\NexusIsland.Modules.Tasks\NexusIsland.Modules.Tasks.csproj" />
+    <ProjectReference Include="..\NexusIsland.Translation\NexusIsland.Translation.csproj" />
   </ItemGroup>
 
 </Project>

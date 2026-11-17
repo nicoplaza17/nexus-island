@@ -124,6 +124,14 @@
             <CheckBox x:Name="AlertBatteryBox" Content="{x:Static loc:Strings.Settings_AlertBattery}" Margin="0,2" />
             <CheckBox x:Name="AlertNetworkBox" Content="{x:Static loc:Strings.Settings_AlertNetwork}" Margin="0,2" />
 
+            <!-- ================================ TRADUCTOR -->
+            <TextBlock Text="{x:Static loc:Strings.Settings_Translator}" Style="{StaticResource SectionTitle}" />
+            <TextBlock Style="{StaticResource Hint}" Text="{x:Static loc:Strings.Settings_TranslatorHint}" />
+            <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
+                <TextBlock x:Name="TranslatorStatus" VerticalAlignment="Center" />
+                <Button x:Name="DeleteModelsButton" Content="{x:Static loc:Strings.Settings_DeleteModels}" Margin="12,0,0,0" Padding="12,4" />
+            </StackPanel>
+
             <!-- ================================ ACERCA DE -->
             <TextBlock Text="{x:Static loc:Strings.Settings_About}" Style="{StaticResource SectionTitle}" />
             <TextBlock x:Name="VersionText" Style="{StaticResource Hint}" />

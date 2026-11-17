@@ -7,6 +7,7 @@ internal static class Glyphs
     public const string Stopwatch = "\uE916"; // cronómetro
     public const string Bell = "\uEA8F";      // campana (E7ED es la campana tachada: "silencio")
     public const string Clipboard = "\uE77F"; // pegar
+    public const string Translate = "\uE8C1"; // "caracteres" (A/字), el ícono de traducir de Windows
     public const string Play = "\uE768";
     public const string Pause = "\uE769";
 

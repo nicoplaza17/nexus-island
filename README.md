@@ -3,8 +3,9 @@
 Isla flotante contextual para Windows, inspirada en Dynamic Island (C# · .NET 10 · WPF).
 *A floating, context-aware island for Windows. UI in Spanish and English.*
 
-Multimedia, temporizador, cronómetro, recordatorios, portapapeles, monitoreo del sistema, notificaciones
-y tareas en segundo plano (descargas, copias, instalaciones), en una isla arriba de la pantalla que no roba el foco.
+Multimedia, temporizador, cronómetro, recordatorios, portapapeles, **traductor inglés ↔ español sin Internet**,
+monitoreo del sistema, notificaciones y tareas en segundo plano (descargas, copias, instalaciones), en una isla
+arriba de la pantalla que no roba el foco.
 
 ## Descargar e instalar
 
@@ -21,11 +22,13 @@ Requisitos: Windows 10 (19041+) o Windows 11, 64 bits.
   `tools\register-identity.ps1 -Installed` (de este repo). Todo lo demás funciona sin eso.
 - Desinstalar: Configuración de Windows → Aplicaciones → Nexus Island.
 
-Privacidad: no hay telemetría ni conexiones a Internet. El historial del portapapeles y las notificaciones viven
-solo en memoria; los logs (en `%LocalAppData%\NexusIsland\logs`) nunca guardan textos copiados, contenido de
-notificaciones ni nombres de archivos.
+Privacidad: no hay telemetría. La única conexión a Internet es **bajar el modelo del traductor**, una vez por
+sentido (≈ 110 MB de huggingface.co), y solo si aceptás; el texto que traducís nunca sale de la PC. El historial
+del portapapeles, las notificaciones y las traducciones viven solo en memoria; los logs (en
+`%LocalAppData%\NexusIsland\logs`) nunca guardan textos copiados, traducciones, contenido de notificaciones ni
+nombres de archivos.
 
-Licencia: [MIT](LICENSE).
+Licencia: [MIT](LICENSE). Componentes de terceros: [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md).
 
 ---
 
@@ -79,6 +82,7 @@ src/
   NexusIsland.Modules.Monitor   Monitoreo del sistema: panel (CPU, RAM, red, batería, temperatura aprox.) y alertas
   NexusIsland.Modules.Notifications  Notificaciones de otras apps (requiere identidad de paquete)
   NexusIsland.Modules.Tasks     Tareas en segundo plano: descargas, copias del Explorador, instalaciones
+  NexusIsland.Translation       Motor del traductor (Opus-MT en ONNX Runtime); corre como proceso aparte
   NexusIsland.App               Interfaz WPF: ventana de la isla, animador, ubicación/arrastre, ícono de bandeja
 tests/
   NexusIsland.Core.Tests        Tests unitarios del Core (xUnit)
@@ -580,6 +584,49 @@ Las pruebas automáticas se corren desde la app de escritorio de Claude, que es 
 - En alto contraste los fondos de los botones (blancos translúcidos) casi no se ven; el borde de foco sí.
 - Cambiar el idioma requiere reiniciar la isla.
 
+### Etapa 10 — Publicación ✅ (17/11/2026)
+
+- Repositorio público en GitHub con licencia MIT; el instalador va en cada *Release*.
+- Historial con el mail personal del autor (no el laboral). Instalador sin firmar: el README explica el aviso de SmartScreen.
+
+### Etapa 11 — Traductor inglés ↔ español sin Internet ✅ (17/11/2026, v0.10.0)
+
+**Cómo se usa:** copiás un texto → Herramientas → **Traducir**. Detecta solo si está en inglés o en español y
+muestra la traducción con **Copiar** e **Invertir** (por si detectó mal). Hasta 2000 caracteres; respeta los párrafos.
+
+**Por qué así (Windows no trae un traductor que una app pueda usar)**
+
+| Decisión | Motivo |
+|---|---|
+| Modelos **Opus-MT** (Helsinki-NLP, CC BY 4.0) en ONNX, versión int8, con **ONNX Runtime** | Traducción local: el texto (que puede venir del portapapeles) nunca sale de la PC |
+| Se bajan **al primer uso de cada sentido**, con permiso (≈ 110 MB c/u) | El instalador queda en 67 MB; quien no lo usa no carga con 222 MB |
+| Descarga con **revisión fija y huella SHA-256** de cada archivo | Si el archivo llega dañado o alguien lo cambia en el origen, se rechaza y no queda nada a medias |
+| El modelo corre en **otro proceso** (`NexusIsland.exe --translator`) que se cierra a los **2 min sin uso** | Usa ~250 MB mientras traduce; la isla sigue en ~40 MB y esa memoria se libera del todo |
+| Un solo modelo cargado a la vez; ONNX Runtime sin "arena" de memoria | Medido en la prueba: 739 MB → ~250 MB |
+| Decodificación "greedy" (palabra más probable) | 0,3–0,9 s por frase en la notebook; la búsqueda en haz sería más lenta |
+| Lee el portapapeles respetando a los gestores de contraseñas | Igual que el historial: si la app pide no ser leída, no se traduce |
+
+**Verificado**
+
+| Prueba | Resultado |
+|---|---|
+| Prueba de laboratorio (12 frases + párrafo): calidad, velocidad, memoria | ✅ buena en frases comunes; falla en modismos ("cancha" → *court*) |
+| Tests (detección de idioma, división en frases, catálogo fijo, descarga rechaza archivos alterados o más grandes sin dejar restos, descarga real verificada desde archivos locales) | ✅ 167/167 |
+| En la isla: EN→ES "The meeting has been moved…" → "La reunión se ha trasladado al jueves…" (≈ 2 s con el modelo ya cargando) | ✅ UI Automation + captura |
+| ES→EN "Che, ¿me pasás el archivo…?" → "Hey, can I have the file when you can? …" | ✅ |
+| Copiar pone la traducción en el portapapeles; sin texto copiado avisa qué hacer | ✅ |
+| Descarga real del modelo es→en desde la isla: 110 MB en 18 s, verificado | ✅ log |
+| Memoria: isla 37–45 MB; proceso traductor ≈ 250 MB; **se cierra solo a los 2 min** | ✅ |
+| Versión instalada 0.10.0: traduce en los dos sentidos | ✅ |
+
+**Limitaciones conocidas**
+
+- Calidad algo menor que DeepL/Google; modismos y frases ambiguas pueden salir mal ("se pasó al jueves").
+- La primera traducción tarda ~2–3 s más (carga el modelo). Textos largos: varios segundos.
+- La detección de idioma es por palabras frecuentes: con textos muy cortos o mezclados puede errar → *Invertir*.
+- Configuración → Traductor muestra cuánto ocupan los modelos y permite borrarlos.
+
 ## Próximas etapas
 
-10. Distribución: firma de código, actualizaciones automáticas, publicación (cuando deje de ser de uso personal).
+- Distribución "en serio": firma de código y actualizaciones automáticas (si deja de ser de uso personal).
+- Traductor: atajo de teclado directo (copiar + traducir sin abrir el panel), búsqueda en haz opcional para más calidad.

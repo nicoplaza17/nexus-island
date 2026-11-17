@@ -114,31 +114,36 @@ public sealed class ClipboardMonitor : IClipboardMonitor
     [DllImport("user32.dll")] private static extern UIntPtr SetTimer(IntPtr hwnd, IntPtr id, uint ms, IntPtr callback);
     [DllImport("user32.dll")] private static extern bool KillTimer(IntPtr hwnd, IntPtr id);
 
-    private void OnClipboardUpdate()
+    public string? TryGetText() => ReadAllowedText();
+
+    /// <summary>Texto del portapapeles si está permitido leerlo (ver la nota de privacidad de la clase).</summary>
+    private string? ReadAllowedText()
     {
-        if (!IsClipboardFormatAvailable(CF_UNICODETEXT)) return;
+        if (!IsClipboardFormatAvailable(CF_UNICODETEXT)) return null;
         if (_excludeFormat != 0 && IsClipboardFormatAvailable(_excludeFormat))
         {
-            _logger.LogDebug("Contenido marcado como privado (gestor de contraseñas): no se registra");
-            return;
+            _logger.LogDebug("Contenido marcado como privado (gestor de contraseñas): no se lee");
+            return null;
         }
-        if (!TryOpenClipboard()) return;
-
-        string? text;
+        if (!TryOpenClipboard()) return null;
         try
         {
             if (_historyFormat != 0 && IsClipboardFormatAvailable(_historyFormat) && ReadDword(_historyFormat) == 0)
             {
-                _logger.LogDebug("Contenido excluido del historial por la app de origen: no se registra");
-                return;
+                _logger.LogDebug("Contenido excluido del historial por la app de origen: no se lee");
+                return null;
             }
-            text = ReadUnicodeText();
+            return ReadUnicodeText();
         }
         finally
         {
             CloseClipboard();
         }
+    }
 
+    private void OnClipboardUpdate()
+    {
+        var text = ReadAllowedText();
         if (string.IsNullOrEmpty(text) || text == _lastText) return; // algunas apps avisan dos veces
         _lastText = text;
         if (text != _ownText) _logger.LogDebug("Texto copiado ({Length} caracteres)", text.Length); // nunca se loguea el contenido

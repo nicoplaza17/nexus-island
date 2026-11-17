@@ -10,6 +10,7 @@
   <data name="A11y_TimerDone" xml:space="preserve"><value>El temporizador terminó</value></data>
   <data name="A11y_TimerPaused" xml:space="preserve"><value>Temporizador en pausa: quedan {0}</value></data>
   <data name="A11y_TimerRunning" xml:space="preserve"><value>Temporizador: quedan {0}</value></data>
+  <data name="A11y_Translation" xml:space="preserve"><value>Traducción, {0}: {1}</value></data>
   <data name="Clipboard_Busy" xml:space="preserve"><value>El portapapeles está ocupado por otra app. Probá de nuevo.</value></data>
   <data name="Clipboard_ClearA11y" xml:space="preserve"><value>Borrar el historial del portapapeles</value></data>
   <data name="Clipboard_ClearAll" xml:space="preserve"><value>Borrar todo</value></data>
@@ -66,4 +67,26 @@
   <data name="Timer_Resume" xml:space="preserve"><value>Reanudar</value></data>
   <data name="Timer_TimesUp" xml:space="preserve"><value>¡Tiempo!</value></data>
   <data name="Timer_TitleFormat" xml:space="preserve"><value>Temporizador · {0}</value></data>
+  <data name="Translate_CancelDownloadA11y" xml:space="preserve"><value>Cancelar la descarga</value></data>
+  <data name="Translate_ClipboardBusy" xml:space="preserve"><value>El portapapeles está ocupado por otra app. Probá de nuevo.</value></data>
+  <data name="Translate_CloseA11y" xml:space="preserve"><value>Cerrar la traducción</value></data>
+  <data name="Translate_Copied" xml:space="preserve"><value>Copiado ✓</value></data>
+  <data name="Translate_Copy" xml:space="preserve"><value>Copiar</value></data>
+  <data name="Translate_CopyA11y" xml:space="preserve"><value>Copiar la traducción</value></data>
+  <data name="Translate_Download" xml:space="preserve"><value>Bajar ({0:0} MB)</value></data>
+  <data name="Translate_DownloadFailed" xml:space="preserve"><value>No se pudo bajar el modelo (sin Internet, o el archivo llegó dañado).</value></data>
+  <data name="Translate_Downloading" xml:space="preserve"><value>Bajando el modelo de traducción… {0:P0}</value></data>
+  <data name="Translate_EnToEs" xml:space="preserve"><value>Inglés → Español</value></data>
+  <data name="Translate_EsToEn" xml:space="preserve"><value>Español → Inglés</value></data>
+  <data name="Translate_Failed" xml:space="preserve"><value>No se pudo traducir. Probá de nuevo.</value></data>
+  <data name="Translate_FromEnglish" xml:space="preserve"><value>del inglés al español</value></data>
+  <data name="Translate_FromSpanish" xml:space="preserve"><value>del español al inglés</value></data>
+  <data name="Translate_Invert" xml:space="preserve"><value>Invertir</value></data>
+  <data name="Translate_InvertA11y" xml:space="preserve"><value>Traducir en el otro sentido</value></data>
+  <data name="Translate_Name" xml:space="preserve"><value>Traducir</value></data>
+  <data name="Translate_NeedsModel" xml:space="preserve"><value>Para traducir {0} en esta PC hay que bajar una sola vez un modelo de {1:0} MB (de huggingface.co). Tu texto nunca sale de la PC.</value></data>
+  <data name="Translate_NoText" xml:space="preserve"><value>Copiá un texto en inglés o en español (Ctrl+C) y tocá Traducir de nuevo.</value></data>
+  <data name="Translate_Retry" xml:space="preserve"><value>Reintentar</value></data>
+  <data name="Translate_Truncated" xml:space="preserve"><value>(se tradujeron solo los primeros 2000 caracteres)</value></data>
+  <data name="Translate_Working" xml:space="preserve"><value>Traduciendo…</value></data>
 </root>

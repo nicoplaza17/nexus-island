@@ -10,6 +10,7 @@
   <data name="A11y_TimerDone" xml:space="preserve"><value>The timer finished</value></data>
   <data name="A11y_TimerPaused" xml:space="preserve"><value>Timer paused: {0} left</value></data>
   <data name="A11y_TimerRunning" xml:space="preserve"><value>Timer: {0} left</value></data>
+  <data name="A11y_Translation" xml:space="preserve"><value>Translation, {0}: {1}</value></data>
   <data name="Clipboard_Busy" xml:space="preserve"><value>The clipboard is busy in another app. Try again.</value></data>
   <data name="Clipboard_ClearA11y" xml:space="preserve"><value>Clear clipboard history</value></data>
   <data name="Clipboard_ClearAll" xml:space="preserve"><value>Clear all</value></data>
@@ -66,4 +67,26 @@
   <data name="Timer_Resume" xml:space="preserve"><value>Resume</value></data>
   <data name="Timer_TimesUp" xml:space="preserve"><value>Time's up!</value></data>
   <data name="Timer_TitleFormat" xml:space="preserve"><value>Timer · {0}</value></data>
+  <data name="Translate_CancelDownloadA11y" xml:space="preserve"><value>Cancel the download</value></data>
+  <data name="Translate_ClipboardBusy" xml:space="preserve"><value>The clipboard is busy in another app. Try again.</value></data>
+  <data name="Translate_CloseA11y" xml:space="preserve"><value>Close translation</value></data>
+  <data name="Translate_Copied" xml:space="preserve"><value>Copied ✓</value></data>
+  <data name="Translate_Copy" xml:space="preserve"><value>Copy</value></data>
+  <data name="Translate_CopyA11y" xml:space="preserve"><value>Copy the translation</value></data>
+  <data name="Translate_Download" xml:space="preserve"><value>Download ({0:0} MB)</value></data>
+  <data name="Translate_DownloadFailed" xml:space="preserve"><value>Couldn't download the model (no Internet, or the file arrived damaged).</value></data>
+  <data name="Translate_Downloading" xml:space="preserve"><value>Downloading the translation model… {0:P0}</value></data>
+  <data name="Translate_EnToEs" xml:space="preserve"><value>English → Spanish</value></data>
+  <data name="Translate_EsToEn" xml:space="preserve"><value>Spanish → English</value></data>
+  <data name="Translate_Failed" xml:space="preserve"><value>Couldn't translate. Try again.</value></data>
+  <data name="Translate_FromEnglish" xml:space="preserve"><value>from English to Spanish</value></data>
+  <data name="Translate_FromSpanish" xml:space="preserve"><value>from Spanish to English</value></data>
+  <data name="Translate_Invert" xml:space="preserve"><value>Invert</value></data>
+  <data name="Translate_InvertA11y" xml:space="preserve"><value>Translate in the other direction</value></data>
+  <data name="Translate_Name" xml:space="preserve"><value>Translate</value></data>
+  <data name="Translate_NeedsModel" xml:space="preserve"><value>To translate {0} on this PC, a {1:0} MB model has to be downloaded once (from huggingface.co). Your text never leaves the PC.</value></data>
+  <data name="Translate_NoText" xml:space="preserve"><value>Copy some text in English or Spanish (Ctrl+C) and tap Translate again.</value></data>
+  <data name="Translate_Retry" xml:space="preserve"><value>Retry</value></data>
+  <data name="Translate_Truncated" xml:space="preserve"><value>(only the first 2000 characters were translated)</value></data>
+  <data name="Translate_Working" xml:space="preserve"><value>Translating…</value></data>
 </root>

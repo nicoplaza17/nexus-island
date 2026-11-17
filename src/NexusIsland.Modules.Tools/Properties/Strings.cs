@@ -36,6 +36,9 @@ public static class Strings
     /// <summary>Timer: {0} left</summary>
     public static string A11y_TimerRunning => ResourceManager.GetString("A11y_TimerRunning", Culture) ?? "A11y_TimerRunning";
 
+    /// <summary>Translation, {0}: {1}</summary>
+    public static string A11y_Translation => ResourceManager.GetString("A11y_Translation", Culture) ?? "A11y_Translation";
+
     /// <summary>The clipboard is busy in another app. Try again.</summary>
     public static string Clipboard_Busy => ResourceManager.GetString("Clipboard_Busy", Culture) ?? "Clipboard_Busy";
 
@@ -203,5 +206,71 @@ public static class Strings
 
     /// <summary>Timer · {0}</summary>
     public static string Timer_TitleFormat => ResourceManager.GetString("Timer_TitleFormat", Culture) ?? "Timer_TitleFormat";
+
+    /// <summary>Cancel the download</summary>
+    public static string Translate_CancelDownloadA11y => ResourceManager.GetString("Translate_CancelDownloadA11y", Culture) ?? "Translate_CancelDownloadA11y";
+
+    /// <summary>The clipboard is busy in another app. Try again.</summary>
+    public static string Translate_ClipboardBusy => ResourceManager.GetString("Translate_ClipboardBusy", Culture) ?? "Translate_ClipboardBusy";
+
+    /// <summary>Close translation</summary>
+    public static string Translate_CloseA11y => ResourceManager.GetString("Translate_CloseA11y", Culture) ?? "Translate_CloseA11y";
+
+    /// <summary>Copied ✓</summary>
+    public static string Translate_Copied => ResourceManager.GetString("Translate_Copied", Culture) ?? "Translate_Copied";
+
+    /// <summary>Copy</summary>
+    public static string Translate_Copy => ResourceManager.GetString("Translate_Copy", Culture) ?? "Translate_Copy";
+
+    /// <summary>Copy the translation</summary>
+    public static string Translate_CopyA11y => ResourceManager.GetString("Translate_CopyA11y", Culture) ?? "Translate_CopyA11y";
+
+    /// <summary>Download ({0:0} MB)</summary>
+    public static string Translate_Download => ResourceManager.GetString("Translate_Download", Culture) ?? "Translate_Download";
+
+    /// <summary>Couldn't download the model (no Internet, or the file arrived damaged).</summary>
+    public static string Translate_DownloadFailed => ResourceManager.GetString("Translate_DownloadFailed", Culture) ?? "Translate_DownloadFailed";
+
+    /// <summary>Downloading the translation model… {0:P0}</summary>
+    public static string Translate_Downloading => ResourceManager.GetString("Translate_Downloading", Culture) ?? "Translate_Downloading";
+
+    /// <summary>English → Spanish</summary>
+    public static string Translate_EnToEs => ResourceManager.GetString("Translate_EnToEs", Culture) ?? "Translate_EnToEs";
+
+    /// <summary>Spanish → English</summary>
+    public static string Translate_EsToEn => ResourceManager.GetString("Translate_EsToEn", Culture) ?? "Translate_EsToEn";
+
+    /// <summary>Couldn't translate. Try again.</summary>
+    public static string Translate_Failed => ResourceManager.GetString("Translate_Failed", Culture) ?? "Translate_Failed";
+
+    /// <summary>from English to Spanish</summary>
+    public static string Translate_FromEnglish => ResourceManager.GetString("Translate_FromEnglish", Culture) ?? "Translate_FromEnglish";
+
+    /// <summary>from Spanish to English</summary>
+    public static string Translate_FromSpanish => ResourceManager.GetString("Translate_FromSpanish", Culture) ?? "Translate_FromSpanish";
+
+    /// <summary>Invert</summary>
+    public static string Translate_Invert => ResourceManager.GetString("Translate_Invert", Culture) ?? "Translate_Invert";
+
+    /// <summary>Translate in the other direction</summary>
+    public static string Translate_InvertA11y => ResourceManager.GetString("Translate_InvertA11y", Culture) ?? "Translate_InvertA11y";
+
+    /// <summary>Translate</summary>
+    public static string Translate_Name => ResourceManager.GetString("Translate_Name", Culture) ?? "Translate_Name";
+
+    /// <summary>To translate {0} on this PC, a {1:0} MB model has to be downloaded once (from huggingface.co). Your text never leaves the PC.</summary>
+    public static string Translate_NeedsModel => ResourceManager.GetString("Translate_NeedsModel", Culture) ?? "Translate_NeedsModel";
+
+    /// <summary>Copy some text in English or Spanish (Ctrl+C) and tap Translate again.</summary>
+    public static string Translate_NoText => ResourceManager.GetString("Translate_NoText", Culture) ?? "Translate_NoText";
+
+    /// <summary>Retry</summary>
+    public static string Translate_Retry => ResourceManager.GetString("Translate_Retry", Culture) ?? "Translate_Retry";
+
+    /// <summary>(only the first 2000 characters were translated)</summary>
+    public static string Translate_Truncated => ResourceManager.GetString("Translate_Truncated", Culture) ?? "Translate_Truncated";
+
+    /// <summary>Translating…</summary>
+    public static string Translate_Working => ResourceManager.GetString("Translate_Working", Culture) ?? "Translate_Working";
 
 }

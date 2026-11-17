@@ -25,6 +25,7 @@
   <data name="Settings_AlertsHint" xml:space="preserve"><value>La isla se revisa sola cada 3 segundos y avisa solo cuando hace falta. El panel 'Sistema' (botón de herramientas) siempre está disponible.</value></data>
   <data name="Settings_Change" xml:space="preserve"><value>Cambiar…</value></data>
   <data name="Settings_ConfigFile" xml:space="preserve"><value>Configuración:</value></data>
+  <data name="Settings_DeleteModels" xml:space="preserve"><value>Borrar modelos</value></data>
   <data name="Settings_Floating" xml:space="preserve"><value>Ahora está suelta donde la dejaste. Elegí un monitor para volver a anclarla arriba al centro.</value></data>
   <data name="Settings_General" xml:space="preserve"><value>General</value></data>
   <data name="Settings_HasIdentity" xml:space="preserve"><value>La isla tiene identidad de paquete: puede leer notificaciones (si diste permiso).</value></data>
@@ -35,11 +36,13 @@
   <data name="Settings_Language" xml:space="preserve"><value>Idioma · Language</value></data>
   <data name="Settings_LanguageAuto" xml:space="preserve"><value>Automático (idioma de Windows)</value></data>
   <data name="Settings_Media" xml:space="preserve"><value>Multimedia</value></data>
+  <data name="Settings_ModelsInstalled" xml:space="preserve"><value>Modelos bajados: {0:0} MB</value></data>
   <data name="Settings_Modules" xml:space="preserve"><value>Módulos</value></data>
   <data name="Settings_MutedApps" xml:space="preserve"><value>Apps silenciadas</value></data>
   <data name="Settings_MutedHint" xml:space="preserve"><value>Se silencian desde la isla (botón 'Silenciar'). Destildá una app para volver a verla.</value></data>
   <data name="Settings_NoApps" xml:space="preserve"><value>Todavía no se detectó ninguna app. Reproducí algo y tocá Actualizar.</value></data>
   <data name="Settings_NoIdentity" xml:space="preserve"><value>Sin identidad de paquete: Windows no deja leer notificaciones. Ver tools\register-identity.ps1 en el README.</value></data>
+  <data name="Settings_NoModels" xml:space="preserve"><value>Ningún modelo bajado.</value></data>
   <data name="Settings_None" xml:space="preserve"><value>Ninguna.</value></data>
   <data name="Settings_Notifications" xml:space="preserve"><value>Notificaciones de otras apps</value></data>
   <data name="Settings_NotifyTrack" xml:space="preserve"><value>Mostrar la canción unos segundos cuando cambia</value></data>
@@ -66,6 +69,8 @@
   <data name="Settings_Tasks" xml:space="preserve"><value>Tareas en segundo plano</value></data>
   <data name="Settings_TasksHint" xml:space="preserve"><value>Solo aparece lo que dura más de 3 segundos. Las descargas muestran tamaño y velocidad (los navegadores no informan el total); las copias del Explorador, el porcentaje.</value></data>
   <data name="Settings_Title" xml:space="preserve"><value>Nexus Island — Configuración</value></data>
+  <data name="Settings_Translator" xml:space="preserve"><value>Traductor</value></data>
+  <data name="Settings_TranslatorHint" xml:space="preserve"><value>Traduce el texto copiado entre inglés y español en esta PC (Herramientas → Traducir). Los modelos se bajan la primera vez que usás cada sentido (≈ 110 MB cada uno) y corren en un proceso aparte que se cierra a los 2 minutos sin uso. Modelos: Opus-MT de Helsinki-NLP (CC BY 4.0).</value></data>
   <data name="Tools" xml:space="preserve"><value>Herramientas</value></data>
   <data name="Tray_Exit" xml:space="preserve"><value>Salir</value></data>
   <data name="Tray_Hide" xml:space="preserve"><value>Ocultar isla</value></data>

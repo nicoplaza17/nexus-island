@@ -8,6 +8,7 @@
     <Project Path="src/NexusIsland.Modules.Tasks/NexusIsland.Modules.Tasks.csproj" />
     <Project Path="src/NexusIsland.Modules.Tools/NexusIsland.Modules.Tools.csproj" />
     <Project Path="src/NexusIsland.Services.Windows/NexusIsland.Services.Windows.csproj" />
+    <Project Path="src/NexusIsland.Translation/NexusIsland.Translation.csproj" />
   </Folder>
   <Folder Name="/tests/">
     <Project Path="tests/NexusIsland.Core.Tests/NexusIsland.Core.Tests.csproj" />

@@ -17,4 +17,10 @@ public interface IClipboardMonitor : IDisposable
 
     /// <summary>Pone un texto en el portapapeles. False si otra app lo tenía bloqueado.</summary>
     bool TrySetText(string text);
+
+    /// <summary>
+    /// Lee el texto que hay ahora en el portapapeles. Null si no hay texto, si está ocupado, o si la app de
+    /// origen pidió no ser leída (gestores de contraseñas).
+    /// </summary>
+    string? TryGetText();
 }
