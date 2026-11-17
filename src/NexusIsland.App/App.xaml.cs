@@ -75,6 +75,14 @@ public partial class App : Application
         var island = _services.GetRequiredService<IslandWindow>();
         island.Show();
 
+        // Al volver de suspensión, los avisos multimedia de Windows a veces dejan de llegar: se reconecta.
+        var media = _services.GetRequiredService<IMediaSessionService>();
+        island.SystemResumed += async () =>
+        {
+            try { await media.ReconnectAsync(); }
+            catch (Exception ex) { _logger?.LogWarning(ex, "No se pudo reconectar la multimedia tras suspensión"); }
+        };
+
         var tray = _services.GetRequiredService<TrayIconService>();
         tray.SettingsRequested += OpenSettings;
         tray.Initialize();

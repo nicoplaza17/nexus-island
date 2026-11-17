@@ -9,6 +9,7 @@
     <!-- Solo para el ícono de la bandeja (NotifyIcon). -->
     <UseWindowsForms>true</UseWindowsForms>
     <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationIcon>..\..\assets\NexusIsland.ico</ApplicationIcon>
     <AssemblyName>NexusIsland</AssemblyName>
     <RootNamespace>NexusIsland.App</RootNamespace>
     <!-- WFO0003 es para apps WinForms; en WPF el DPI se declara en app.manifest (correcto). -->
@@ -23,6 +24,11 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.0" />
+  </ItemGroup>
+
+  <!-- Ícono (generado con tools\make-icon.ps1): embebido para la bandeja y las ventanas. -->
+  <ItemGroup>
+    <Resource Include="..\..\assets\NexusIsland.ico" Link="Assets\NexusIsland.ico" />
   </ItemGroup>
 
   <ItemGroup>

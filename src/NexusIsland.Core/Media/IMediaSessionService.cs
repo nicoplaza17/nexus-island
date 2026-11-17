@@ -20,6 +20,12 @@ public interface IMediaSessionService : IDisposable
 
     Task InitializeAsync(CancellationToken cancellationToken);
 
+    /// <summary>
+    /// Vuelve a conectarse con Windows desde cero (por ejemplo al volver de suspensión,
+    /// cuando los avisos multimedia de Windows a veces dejan de llegar).
+    /// </summary>
+    Task ReconnectAsync();
+
     Task<bool> TogglePlayPauseAsync();
     Task<bool> NextAsync();
     Task<bool> PreviousAsync();

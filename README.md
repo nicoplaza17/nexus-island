@@ -16,6 +16,27 @@ dotnet build NexusIsland.slnx -c Release
 
 Para salir: clic derecho en el ícono de la bandeja (junto al reloj) → **Salir**.
 
+## Instalador
+
+```powershell
+.\tools\build-installer.ps1
+```
+
+Genera `artifacts\installer\NexusIsland-Setup-X.Y.Z.exe` (~59 MB, con .NET incluido). Requiere
+[Inno Setup 6](https://jrsoftware.org/isinfo.php) (`winget install JRSoftware.InnoSetup`). La versión sale de `Directory.Build.props`.
+
+- Se instala por usuario en `%LocalAppData%\Programs\Nexus Island`, sin permisos de administrador.
+- Para instalar sin preguntas: `NexusIsland-Setup-X.Y.Z.exe /VERYSILENT /SUPPRESSMSGBOXES`.
+- Se desinstala desde Configuración → Aplicaciones. La configuración y los logs del usuario se conservan.
+
+## Herramientas
+
+| Script | Para qué |
+|---|---|
+| `tools\build-installer.ps1` | Publica con .NET incluido y arma el instalador |
+| `tools\make-icon.ps1` | Regenera `assets\NexusIsland.ico` (todos los tamaños) |
+| `tools\soak.ps1` | Prueba de resistencia: registra memoria, handles y objetos gráficos en un CSV. Para 24 h: `.\tools\soak.ps1 -Minutes 1440 -IntervalSeconds 300` |
+
 ## Estructura
 
 ```
@@ -26,6 +47,9 @@ src/
   NexusIsland.App               Interfaz WPF: ventana de la isla, animador, ubicación/arrastre, ícono de bandeja
 tests/
   NexusIsland.Core.Tests        Tests unitarios del Core (xUnit)
+installer/                      Script de Inno Setup
+tools/                          Instalador, ícono, prueba de resistencia
+assets/                         Ícono de la app
 ```
 
 Tests: `dotnet test tests/NexusIsland.Core.Tests`
@@ -240,9 +264,47 @@ tareas activas 100, alertas 200); si empatan, la más reciente. `RequestAttentio
 - La isla tarda un instante en ubicarse al arrancar en un monitor con otra escala: primero se calcula con la escala del principal y después se corrige sola.
 - Sin probar automáticamente (requiere teclado): el cambio de atajo y el aviso de atajo ocupado.
 
-## Próximas etapas (post-MVP)
+### Etapa 4 — Endurecimiento e instalador ✅ (17/11/2026, v0.4.0)
 
-4. Endurecimiento: suspensión/reanudación, reinicio del Explorador, instalador, prueba de 24 h.
+**Implementado**
+
+- **Suspensión / hibernación**: al suspender, la isla se contrae. Al volver, a los 2 s se reubica, re-afirma "siempre encima", renueva el atajo y reconecta los controles multimedia de Windows (que pueden dejar de avisar tras dormir).
+- **Reinicio del Explorador** (mensaje `TaskbarCreated`): la isla se reacomoda al área de trabajo nueva. El ícono de bandeja lo vuelve a agregar WinForms solo.
+- **Resincronización multimedia cada 60 s**: si Windows pierde un aviso, la isla se corrige sola.
+- **Reconexión multimedia** completa (`ReconnectAsync`), sin suscripciones duplicadas.
+- **Ícono propio** (`assets\NexusIsland.ico`, 10 tamaños): en el .exe, la bandeja, la Configuración y el instalador.
+- **Instalador Inno Setup** con .NET incluido (autocontenido, x64, precompilado ReadyToRun), por usuario, en español, con desinstalador. Al desinstalar también borra la entrada de "Iniciar con Windows".
+- **`tools\soak.ps1`**: prueba de resistencia reutilizable (CSV + resumen de tendencia).
+
+**Verificado**
+
+| Prueba | Resultado |
+|---|---|
+| Tests unitarios | ✅ 63/63 |
+| Suspensión + reanudación (mensajes de Windows simulados) → contraer, reubicar, atajo, reconexión multimedia | ✅ |
+| Explorador reiniciado (mensaje `TaskbarCreated` simulado) → reubicación | ✅ |
+| Prueba de resistencia acelerada: 8 min, ~3.200 animaciones | ✅ memoria 37→32 MB, GDI 31→31, USER 25→24; handles 485→535 (acompañan a hilos de trabajo de .NET: vigilar en 24 h) |
+| Instalación silenciosa, por usuario, sin administrador | ✅ carpeta, acceso en Inicio, entrada en Aplicaciones "Nexus Island 0.4.0" |
+| La versión instalada arranca | ✅ 21 MB de RAM |
+| Reinstalar encima con la app abierta (actualización) | ✅ |
+| Desinstalar con la app abierta y "Iniciar con Windows" activo | ✅ borra carpeta, acceso, entrada y clave de inicio; conserva la configuración |
+
+**Tamaños**: instalador 59 MB; instalada 231 MB en disco (incluye .NET completo y código precompilado).
+
+**Pendiente de prueba real (no se simula en una PC en uso)**
+
+- Suspender la PC de verdad y volver (se probaron los mensajes de Windows, no la suspensión física).
+- Reiniciar el Explorador de verdad (Administrador de tareas → Explorador de Windows → Reiniciar) y confirmar que el ícono de bandeja vuelve.
+- Prueba de resistencia de 24 h en uso normal: `.\tools\soak.ps1 -Minutes 1440 -IntervalSeconds 300`.
+
+**Limitaciones conocidas**
+
+- **El instalador no está firmado digitalmente.** En otras PC, Windows SmartScreen va a mostrar "Windows protegió tu PC" (se sigue con *Más información → Ejecutar de todas formas*). Firmar requiere un certificado de firma de código o publicar en Microsoft Store: queda para la Etapa 9.
+- El tamaño (231 MB instalada) es el precio de incluir .NET. Con "pedir .NET si falta" serían ~10 MB, a cambio de que el usuario instale el runtime de Microsoft.
+- Si la app se cierra a la fuerza (por ejemplo, al actualizar), el ícono de la bandeja puede quedar "fantasma" hasta pasar el mouse por encima (comportamiento de Windows).
+
+## Próximas etapas
+
 5. Herramientas rápidas: temporizador, cronómetro, portapapeles, recordatorios.
 6. Monitoreo del sistema (CPU, RAM, red, batería) con alertas.
 7. Empaquetado MSIX + notificaciones de Windows.

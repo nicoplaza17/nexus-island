@@ -29,7 +29,7 @@ public sealed class TrayIconService : IDisposable
 
     public void Initialize()
     {
-        _icon = CreateCapsuleIcon(Forms.SystemInformation.SmallIconSize.Width);
+        _icon = LoadAppIcon(Forms.SystemInformation.SmallIconSize.Width);
 
         _toggleItem = new Forms.ToolStripMenuItem(ToggleText(), null, (_, _) => _island.ToggleUserVisibility());
         var menu = new Forms.ContextMenuStrip();
@@ -80,10 +80,26 @@ public sealed class TrayIconService : IDisposable
         }
     }
 
-    /// <summary>
-    /// Dibuja un ícono provisorio (una cápsula) para no depender de archivos .ico en la Etapa 0.
-    /// En la etapa de producto se reemplaza por un ícono diseñado.
-    /// </summary>
+    /// <summary>Ícono de la app (embebido), en el tamaño justo para la bandeja según la escala de pantalla.</summary>
+    private Icon LoadAppIcon(int size)
+    {
+        try
+        {
+            var resource = System.Windows.Application.GetResourceStream(new Uri("pack://application:,,,/Assets/NexusIsland.ico"));
+            if (resource is not null)
+            {
+                using var stream = resource.Stream;
+                return new Icon(stream, size, size);
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning(ex, "No se pudo cargar el ícono de la app; se usa uno dibujado");
+        }
+        return CreateCapsuleIcon(size);
+    }
+
+    /// <summary>Respaldo: ícono dibujado por código (una cápsula) si el embebido no se pudiera cargar.</summary>
     private static Icon CreateCapsuleIcon(int size)
     {
         using var bmp = new Bitmap(size, size);

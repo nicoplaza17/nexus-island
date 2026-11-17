@@ -480,3 +480,6 @@ $RECYCLE.BIN/
 
 # Vim temporary swap files
 *.swp
+
+# Salidas de publicación e instalador (se regeneran con tools/build-installer.ps1)
+artifacts/

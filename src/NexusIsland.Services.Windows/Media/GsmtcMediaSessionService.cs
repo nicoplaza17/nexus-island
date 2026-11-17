@@ -27,6 +27,7 @@ public sealed class GsmtcMediaSessionService : IMediaSessionService
 {
     private const int MaxThumbnailBytes = 4 * 1024 * 1024;
     private static readonly TimeSpan RefreshDebounce = TimeSpan.FromMilliseconds(120);
+    private static readonly TimeSpan ResyncInterval = TimeSpan.FromSeconds(60);
 
     private readonly ILogger<GsmtcMediaSessionService> _logger;
     private readonly object _sessionLock = new();
@@ -40,6 +41,7 @@ public sealed class GsmtcMediaSessionService : IMediaSessionService
     private string? _thumbnailTrackKey;
     private byte[]? _thumbnail;
     private bool _disposed;
+    private Timer? _resyncTimer;
 
     public GsmtcMediaSessionService(ILogger<GsmtcMediaSessionService> logger, SettingsStore settings)
     {
@@ -72,11 +74,20 @@ public sealed class GsmtcMediaSessionService : IMediaSessionService
 
     public event Action<MediaSnapshot?>? Changed;
 
-    public async Task InitializeAsync(CancellationToken cancellationToken)
+    public Task InitializeAsync(CancellationToken cancellationToken) => ConnectAsync(cancellationToken);
+
+    public Task ReconnectAsync()
     {
+        _logger.LogInformation("Reconectando con los controles multimedia de Windows");
+        return ConnectAsync(CancellationToken.None);
+    }
+
+    private async Task ConnectAsync(CancellationToken cancellationToken)
+    {
+        GsmtcManager manager;
         try
         {
-            _manager = await GsmtcManager.RequestAsync().AsTask(cancellationToken);
+            manager = await GsmtcManager.RequestAsync().AsTask(cancellationToken);
         }
         catch (Exception ex) when (ex is not OperationCanceledException)
         {
@@ -85,23 +96,49 @@ public sealed class GsmtcMediaSessionService : IMediaSessionService
             return;
         }
 
-        _manager.CurrentSessionChanged += (_, _) =>
+        if (_manager is not null)
         {
-            AttachCurrentSession();
-            ScheduleRefresh();
-        };
-        // Algunas apps abren/cierran sesiones sin que cambie la "actual"; además, si la actual está
-        // ignorada, la elegida puede cambiar cuando aparece o desaparece otra.
-        _manager.SessionsChanged += (_, _) =>
-        {
-            AttachCurrentSession();
-            ScheduleRefresh();
-        };
+            _manager.CurrentSessionChanged -= OnManagerChanged;
+            _manager.SessionsChanged -= OnManagerChanged;
+        }
+        _manager = manager;
+        // CurrentSessionChanged: Windows eligió otra sesión. SessionsChanged: se abrió/cerró alguna
+        // (si la actual está ignorada, la elegida puede cambiar cuando aparece o desaparece otra).
+        _manager.CurrentSessionChanged += OnManagerChanged;
+        _manager.SessionsChanged += OnManagerChanged;
 
+        DetachSession(); // tras suspensión, la suscripción vieja puede haber quedado "muda"
         AttachCurrentSession();
         await RefreshSafeAsync();
+
+        // Red de seguridad: si Windows pierde algún aviso, cada minuto se vuelve a mirar.
+        _resyncTimer ??= new Timer(_ =>
+        {
+            if (_disposed) return;
+            AttachCurrentSession();
+            ScheduleRefresh();
+        }, null, ResyncInterval, ResyncInterval);
+
         _logger.LogInformation("Controles multimedia de Windows conectados ({Count} sesiones abiertas)",
             _manager.GetSessions().Count);
+    }
+
+    private void OnManagerChanged(GsmtcManager sender, object args)
+    {
+        AttachCurrentSession();
+        ScheduleRefresh();
+    }
+
+    private void DetachSession()
+    {
+        lock (_sessionLock)
+        {
+            if (_session is null) return;
+            _session.MediaPropertiesChanged -= OnSessionChanged;
+            _session.PlaybackInfoChanged -= OnSessionChanged;
+            _session.TimelinePropertiesChanged -= OnSessionChanged;
+            _session = null;
+        }
     }
 
     public Task<bool> TogglePlayPauseAsync() => RunCommandAsync("play/pausa", s => s.TryTogglePlayPauseAsync().AsTask());
@@ -351,15 +388,12 @@ public sealed class GsmtcMediaSessionService : IMediaSessionService
         if (_disposed) return;
         _disposed = true;
         _debounceTimer.Dispose();
-        lock (_sessionLock)
+        _resyncTimer?.Dispose();
+        if (_manager is not null)
         {
-            if (_session is not null)
-            {
-                _session.MediaPropertiesChanged -= OnSessionChanged;
-                _session.PlaybackInfoChanged -= OnSessionChanged;
-                _session.TimelinePropertiesChanged -= OnSessionChanged;
-                _session = null;
-            }
+            _manager.CurrentSessionChanged -= OnManagerChanged;
+            _manager.SessionsChanged -= OnManagerChanged;
         }
+        DetachSession();
     }
 }

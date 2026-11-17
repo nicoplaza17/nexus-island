@@ -217,6 +217,9 @@ public partial class IslandWindow : Window
             return IntPtr.Zero;
         }
 
+        var systemEvent = SystemMessages.Classify(msg, wParam);
+        if (systemEvent != SystemEvent.None) OnSystemEvent(systemEvent);
+
         if (DisplayChangeMessages.IsDisplayChange(msg, wParam))
         {
             // Se deja terminar a WPF (por ejemplo el ajuste de DPI) y después se reubica.
@@ -228,6 +231,46 @@ public partial class IslandWindow : Window
         }
 
         return IntPtr.Zero;
+    }
+
+    /// <summary>La PC volvió de suspensión/hibernación (los servicios conviene reconectarlos).</summary>
+    public event Action? SystemResumed;
+
+    private void OnSystemEvent(SystemEvent systemEvent)
+    {
+        switch (systemEvent)
+        {
+            case SystemEvent.Suspending:
+                _logger.LogInformation("La PC se está suspendiendo");
+                _stateMachine.ForceCollapse();
+                break;
+
+            case SystemEvent.Resumed:
+                _logger.LogInformation("La PC volvió de suspensión: se reacomoda la isla en 2 s");
+                // Se espera un momento: al despertar, monitores y servicios tardan en estabilizarse.
+                var delay = new DispatcherTimer { Interval = TimeSpan.FromSeconds(2) };
+                delay.Tick += (_, _) =>
+                {
+                    delay.Stop();
+                    _placement?.Revalidate();
+                    if (IsVisible) OverlayWindowStyles.BringToTopmost(_hwnd);
+                    if (_registeredHotkey is not null) TryRegister(_registeredHotkey);
+                    _clock.Refresh(force: true);
+                    SystemResumed?.Invoke();
+                };
+                delay.Start();
+                break;
+
+            case SystemEvent.TaskbarCreated:
+                // El Explorador se reinició: el área de trabajo pudo cambiar y otras ventanas "topmost" reaparecieron.
+                _logger.LogInformation("El Explorador de Windows se reinició: se reacomoda la isla");
+                Dispatcher.BeginInvoke(DispatcherPriority.Background, () =>
+                {
+                    _placement?.Revalidate();
+                    if (IsVisible) OverlayWindowStyles.BringToTopmost(_hwnd);
+                });
+                break;
+        }
     }
 
     // ----------------------------------------------------------------- estados y animación
