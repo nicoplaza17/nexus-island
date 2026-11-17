@@ -1,0 +1,69 @@
+<Window x:Class="NexusIsland.App.Island.IslandWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Nexus Island"
+        Width="460" Height="220"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Background="Transparent"
+        ResizeMode="NoResize"
+        ShowInTaskbar="False"
+        ShowActivated="False"
+        Topmost="True"
+        Focusable="False"
+        UseLayoutRounding="True"
+        TextOptions.TextFormattingMode="Display"
+        FontFamily="{StaticResource IslandFont}">
+
+    <!--
+      La ventana es un "lienzo" transparente FIJO, más grande que la isla expandida.
+      Lo que se anima es el Border "IslandShape" (no la ventana): así no hay parpadeo.
+      Las zonas 100% transparentes dejan pasar los clics a la app de abajo.
+    -->
+    <Grid x:Name="Root">
+      <!-- IslandFrame: lo que el animador redimensiona. Adentro, la sombra y la isla se estiran solas. -->
+      <Grid x:Name="IslandFrame"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Top"
+            Margin="0,10,0,0"
+            Width="150" Height="34">
+
+        <!--
+          Sombra "barata": dos halos semitransparentes en lugar de DropShadowEffect.
+          Medido en la Etapa 1: el desenfoque por software triplicaba la CPU al animar (76 % vs 28 % de un núcleo).
+        -->
+        <Border x:Name="ShadowOuter" Margin="-7,-2,-7,-9" CornerRadius="24"
+                Background="#14000000" IsHitTestVisible="False" />
+        <Border x:Name="ShadowInner" Margin="-3,-1,-3,-4" CornerRadius="20"
+                Background="#26000000" IsHitTestVisible="False" />
+
+        <Border x:Name="IslandShape"
+                CornerRadius="17"
+                Background="{StaticResource IslandBackground}"
+                BorderBrush="{StaticResource IslandStroke}"
+                BorderThickness="1"
+                Cursor="Hand">
+
+            <!--
+              Tres capas superpuestas, una por estado. Cada una muestra la actividad actual
+              (reloj, multimedia...) con la plantilla "{módulo}.Compact/.Peek/.Expanded".
+              El animador hace el fundido entre capas.
+            -->
+            <Grid x:Name="ContentHost">
+                <Grid x:Name="CollapsedLayer" Width="148" Height="32"
+                      HorizontalAlignment="Center" VerticalAlignment="Top">
+                    <ContentControl x:Name="CollapsedHost" Focusable="False" IsTabStop="False" />
+                </Grid>
+                <Grid x:Name="PeekLayer" Width="248" Height="40"
+                      HorizontalAlignment="Center" VerticalAlignment="Top">
+                    <ContentControl x:Name="PeekHost" Focusable="False" IsTabStop="False" />
+                </Grid>
+                <Grid x:Name="ExpandedLayer" Width="398" Height="182"
+                      HorizontalAlignment="Center" VerticalAlignment="Top">
+                    <ContentControl x:Name="ExpandedHost" Focusable="False" IsTabStop="False" />
+                </Grid>
+            </Grid>
+        </Border>
+      </Grid>
+    </Grid>
+</Window>

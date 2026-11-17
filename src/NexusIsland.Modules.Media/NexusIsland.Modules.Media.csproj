@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Módulo Multimedia: lógica de presentación (ViewModel) + plantillas visuales (WPF).
+       Solo depende del Core: no sabe nada de GSMTC (eso vive en Services.Windows). -->
+  <PropertyGroup>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\NexusIsland.Core\NexusIsland.Core.csproj" />
+  </ItemGroup>
+
+</Project>

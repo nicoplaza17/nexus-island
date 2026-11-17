@@ -1,0 +1,92 @@
+<Window x:Class="NexusIsland.App.Settings.SettingsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Nexus Island — Configuración"
+        Width="560" Height="720" MinWidth="480" MinHeight="420"
+        WindowStartupLocation="CenterScreen"
+        ResizeMode="CanResize">
+
+    <Window.Resources>
+        <Style x:Key="SectionTitle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="15" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Margin" Value="0,22,0,8" />
+        </Style>
+        <Style x:Key="Hint" TargetType="TextBlock">
+            <Setter Property="Opacity" Value="0.7" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="Margin" Value="0,2,0,6" />
+        </Style>
+        <Style x:Key="Warning" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#FFE0A030" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="Margin" Value="0,4,0,4" />
+        </Style>
+    </Window.Resources>
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+        <StackPanel Margin="24,8,24,24">
+
+            <!-- ================================ GENERAL -->
+            <TextBlock Text="General" Style="{StaticResource SectionTitle}" />
+            <CheckBox x:Name="StartWithWindowsBox" Content="Iniciar con Windows" />
+            <TextBlock x:Name="StartupWarning" Style="{StaticResource Warning}" Visibility="Collapsed"
+                       Text="Windows tiene desactivado el inicio de Nexus Island (Administrador de tareas → Aplicaciones de inicio). Activalo ahí para que funcione." />
+            <CheckBox x:Name="HideFullscreenBox" Content="Ocultar la isla cuando una app está en pantalla completa" Margin="0,8,0,0" />
+
+            <!-- ================================ APARIENCIA -->
+            <TextBlock Text="Tamaño de la isla" Style="{StaticResource SectionTitle}" />
+            <StackPanel Orientation="Horizontal">
+                <RadioButton x:Name="SizeSmall" GroupName="Size" Content="Chica" Margin="0,0,20,0" />
+                <RadioButton x:Name="SizeNormal" GroupName="Size" Content="Normal" Margin="0,0,20,0" />
+                <RadioButton x:Name="SizeLarge" GroupName="Size" Content="Grande" />
+            </StackPanel>
+
+            <!-- ================================ POSICIÓN -->
+            <TextBlock Text="Posición" Style="{StaticResource SectionTitle}" />
+            <TextBlock Style="{StaticResource Hint}"
+                       Text="Anclada arriba al centro del monitor elegido. También podés arrastrarla con el mouse: si la soltás lejos del centro, queda suelta en ese lugar." />
+            <StackPanel x:Name="MonitorList" Margin="0,4,0,0" />
+            <TextBlock x:Name="FloatingInfo" Style="{StaticResource Hint}" Visibility="Collapsed" Margin="0,6,0,0" />
+
+            <!-- ================================ ATAJO -->
+            <TextBlock Text="Atajo para mostrar / ocultar" Style="{StaticResource SectionTitle}" />
+            <StackPanel Orientation="Horizontal">
+                <Border Padding="12,6" CornerRadius="6" BorderThickness="1" BorderBrush="#40808080" MinWidth="150">
+                    <TextBlock x:Name="HotkeyText" FontFamily="Consolas" FontSize="14" VerticalAlignment="Center" />
+                </Border>
+                <Button x:Name="ChangeHotkeyButton" Content="Cambiar…" Margin="10,0,0,0" Padding="14,6" />
+            </StackPanel>
+            <TextBlock x:Name="HotkeyStatus" Style="{StaticResource Hint}" Margin="0,6,0,0" />
+
+            <!-- ================================ MÓDULOS -->
+            <TextBlock Text="Módulos" Style="{StaticResource SectionTitle}" />
+            <StackPanel x:Name="ModuleList" />
+            <StackPanel x:Name="RestartPanel" Orientation="Horizontal" Margin="0,8,0,0" Visibility="Collapsed">
+                <TextBlock Style="{StaticResource Warning}" VerticalAlignment="Center" Text="Se aplica al reiniciar la isla." />
+                <Button x:Name="RestartButton" Content="Reiniciar ahora" Margin="12,0,0,0" Padding="12,4" />
+            </StackPanel>
+
+            <!-- ================================ MULTIMEDIA -->
+            <TextBlock Text="Multimedia" Style="{StaticResource SectionTitle}" />
+            <CheckBox x:Name="NotifyTrackBox" Content="Mostrar la canción unos segundos cuando cambia" />
+            <TextBlock Text="Apps ignoradas" FontWeight="SemiBold" Margin="0,14,0,0" />
+            <TextBlock Style="{StaticResource Hint}"
+                       Text="La isla no muestra la reproducción de estas apps (útil para WhatsApp, Discord o navegadores que no son tu reproductor de música). Aparecen las apps que reprodujeron algo desde que se abrió la isla." />
+            <StackPanel x:Name="AppList" Margin="0,4,0,0" />
+            <TextBlock x:Name="NoAppsText" Style="{StaticResource Hint}" Visibility="Collapsed"
+                       Text="Todavía no se detectó ninguna app. Reproducí algo y tocá Actualizar." />
+            <Button x:Name="RefreshAppsButton" Content="Actualizar lista" HorizontalAlignment="Left" Margin="0,8,0,0" Padding="12,4" />
+
+            <!-- ================================ ACERCA DE -->
+            <TextBlock Text="Acerca de" Style="{StaticResource SectionTitle}" />
+            <TextBlock x:Name="VersionText" Style="{StaticResource Hint}" />
+            <StackPanel Orientation="Horizontal" Margin="0,6,0,0">
+                <Button x:Name="OpenSettingsFolderButton" Content="Abrir carpeta de configuración" Padding="12,4" />
+                <Button x:Name="OpenLogsButton" Content="Abrir logs" Margin="10,0,0,0" Padding="12,4" />
+            </StackPanel>
+        </StackPanel>
+    </ScrollViewer>
+</Window>

@@ -1,0 +1,34 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- App: interfaz WPF (la isla, la bandeja del sistema, más adelante la configuración) -->
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows10.0.19041.0</TargetFramework>
+    <SupportedOSPlatformVersion>10.0.19041.0</SupportedOSPlatformVersion>
+    <UseWPF>true</UseWPF>
+    <!-- Solo para el ícono de la bandeja (NotifyIcon). -->
+    <UseWindowsForms>true</UseWindowsForms>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <AssemblyName>NexusIsland</AssemblyName>
+    <RootNamespace>NexusIsland.App</RootNamespace>
+    <!-- WFO0003 es para apps WinForms; en WPF el DPI se declara en app.manifest (correcto). -->
+    <NoWarn>$(NoWarn);WFO0003</NoWarn>
+  </PropertyGroup>
+
+  <!-- Evita choques de nombres entre WPF y WinForms (Application, Point, Color...). -->
+  <ItemGroup>
+    <Using Remove="System.Windows.Forms" />
+    <Using Remove="System.Drawing" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\NexusIsland.Core\NexusIsland.Core.csproj" />
+    <ProjectReference Include="..\NexusIsland.Services.Windows\NexusIsland.Services.Windows.csproj" />
+    <ProjectReference Include="..\NexusIsland.Modules.Media\NexusIsland.Modules.Media.csproj" />
+  </ItemGroup>
+
+</Project>

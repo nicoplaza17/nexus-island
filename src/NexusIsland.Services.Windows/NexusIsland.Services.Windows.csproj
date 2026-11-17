@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Services.Windows: todo lo que habla con APIs de Windows (Win32 y WinRT).
+       El TFM con versión de Windows habilita las APIs WinRT (GSMTC, batería, etc.). -->
+  <PropertyGroup>
+    <TargetFramework>net10.0-windows10.0.19041.0</TargetFramework>
+    <SupportedOSPlatformVersion>10.0.19041.0</SupportedOSPlatformVersion>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\NexusIsland.Core\NexusIsland.Core.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,11 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/NexusIsland.App/NexusIsland.App.csproj" />
+    <Project Path="src/NexusIsland.Core/NexusIsland.Core.csproj" />
+    <Project Path="src/NexusIsland.Modules.Media/NexusIsland.Modules.Media.csproj" />
+    <Project Path="src/NexusIsland.Services.Windows/NexusIsland.Services.Windows.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/NexusIsland.Core.Tests/NexusIsland.Core.Tests.csproj" />
+  </Folder>
+</Solution>

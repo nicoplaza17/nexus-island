@@ -1,0 +1,12 @@
+<Project>
+  <!-- Configuración común a todos los proyectos de la solución -->
+  <PropertyGroup>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <Version>0.3.0</Version>
+    <Company>Nexus Island</Company>
+    <Product>Nexus Island</Product>
+  </PropertyGroup>
+</Project>
