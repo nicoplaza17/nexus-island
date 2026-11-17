@@ -61,6 +61,14 @@
                 <Grid x:Name="ExpandedLayer" Width="398" Height="182"
                       HorizontalAlignment="Center" VerticalAlignment="Top">
                     <ContentControl x:Name="ExpandedHost" Focusable="False" IsTabStop="False" />
+
+                    <!-- Controles de la isla (no de los módulos): páginas y panel de herramientas -->
+                    <StackPanel x:Name="PagerDots" Orientation="Horizontal" Visibility="Collapsed"
+                                HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,7" />
+                    <Button x:Name="LauncherButton" Style="{StaticResource IslandSmallButton}"
+                            HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,12,8"
+                            Content="&#xE8A9;" ToolTip="Herramientas" AutomationProperties.Name="Herramientas"
+                            Visibility="Collapsed" />
                 </Grid>
             </Grid>
         </Border>

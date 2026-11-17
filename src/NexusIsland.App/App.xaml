@@ -8,6 +8,7 @@
         <!-- Las plantillas de los módulos se agregan por código al iniciar (App.xaml.cs). -->
         <ResourceDictionary.MergedDictionaries>
             <ResourceDictionary Source="Island/ClockTemplates.xaml" />
+            <ResourceDictionary Source="Island/LauncherTemplates.xaml" />
         </ResourceDictionary.MergedDictionaries>
 
         <!-- Paleta base de la isla. En etapas siguientes se mueve a un diccionario de tema. -->
@@ -17,6 +18,71 @@
         <SolidColorBrush x:Key="IslandForegroundMuted" Color="#99FFFFFF" />
         <SolidColorBrush x:Key="IslandAccent" Color="#FF34D399" />
         <FontFamily x:Key="IslandFont">Segoe UI Variable Text, Segoe UI</FontFamily>
+        <FontFamily x:Key="IslandGlyphFont">Segoe Fluent Icons, Segoe MDL2 Assets</FontFamily>
+
+        <!-- Botón chico con ícono (controles de la isla: panel de herramientas). Nunca toma el foco. -->
+        <Style x:Key="IslandSmallButton" TargetType="Button">
+            <Setter Property="Focusable" Value="False" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Width" Value="26" />
+            <Setter Property="Height" Value="26" />
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="FontFamily" Value="{StaticResource IslandGlyphFont}" />
+            <Setter Property="Foreground" Value="{StaticResource IslandForegroundMuted}" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="Bg" Background="{TemplateBinding Background}" CornerRadius="13">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Bg" Property="Background" Value="#24FFFFFF" />
+                                <Setter Property="Foreground" Value="{StaticResource IslandForeground}" />
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="Bg" Property="Background" Value="#3DFFFFFF" />
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Opacity" Value="0.3" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Botón de acción con ícono y texto (paneles y alertas). -->
+        <Style x:Key="IslandPillButton" TargetType="Button">
+            <Setter Property="Focusable" Value="False" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Foreground" Value="{StaticResource IslandForeground}" />
+            <Setter Property="Background" Value="#1AFFFFFF" />
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="Padding" Value="12,6" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="Bg" Background="{TemplateBinding Background}" CornerRadius="10"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Bg" Property="Background" Value="#2EFFFFFF" />
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="Bg" Property="Background" Value="#47FFFFFF" />
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Opacity" Value="0.35" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
       </ResourceDictionary>
     </Application.Resources>
 </Application>

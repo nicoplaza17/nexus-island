@@ -1,0 +1,236 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <!--
+      Plantillas de las herramientas. La isla las busca por "{id del módulo}.{Compact|Peek|Expanded}".
+      Tamaños: Compact 148x32 · Peek 248x40 · Expanded 398x182 (abajo a la derecha está el botón de
+      herramientas de la isla y al centro los puntitos de página: se deja ese espacio libre).
+    -->
+
+    <FontFamily x:Key="ToolGlyphFont">Segoe Fluent Icons, Segoe MDL2 Assets</FontFamily>
+    <SolidColorBrush x:Key="AlertBrush" Color="#FFF5A524" />
+    <BooleanToVisibilityConverter x:Key="BoolToVisibility" />
+
+    <Style x:Key="ToolBigText" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="40" />
+        <Setter Property="FontWeight" Value="Light" />
+        <Setter Property="Foreground" Value="{DynamicResource IslandForeground}" />
+        <Setter Property="FontFamily" Value="Segoe UI Variable Display, Segoe UI" />
+    </Style>
+    <Style x:Key="ToolCaption" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="Foreground" Value="{DynamicResource IslandForegroundMuted}" />
+    </Style>
+
+    <!-- Barra de progreso fina (temporizador) -->
+    <ControlTemplate x:Key="ThinBar" TargetType="ProgressBar">
+        <Grid>
+            <Border CornerRadius="2" Background="#38FFFFFF" />
+            <Border x:Name="PART_Track" />
+            <Border x:Name="PART_Indicator" HorizontalAlignment="Left" CornerRadius="2"
+                    Background="{TemplateBinding Foreground}" />
+        </Grid>
+    </ControlTemplate>
+
+    <!-- ============================================================ TEMPORIZADOR -->
+    <DataTemplate x:Key="timer.Compact">
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <TextBlock Text="&#xE823;" FontFamily="{StaticResource ToolGlyphFont}" FontSize="12" Margin="0,1,8,0"
+                       Foreground="{DynamicResource IslandAccent}" />
+            <TextBlock Text="{Binding RemainingText}" FontSize="13" FontWeight="SemiBold"
+                       Foreground="{DynamicResource IslandForeground}" />
+        </StackPanel>
+    </DataTemplate>
+
+    <DataTemplate x:Key="timer.Peek">
+        <Grid Margin="18,0">
+            <TextBlock Text="{Binding Title}" Style="{StaticResource ToolCaption}" VerticalAlignment="Center" />
+            <TextBlock Text="{Binding RemainingText}" FontSize="14" FontWeight="SemiBold" HorizontalAlignment="Right"
+                       VerticalAlignment="Center" Foreground="{DynamicResource IslandForeground}" />
+        </Grid>
+    </DataTemplate>
+
+    <DataTemplate x:Key="timer.Expanded">
+        <Grid Margin="24,16,24,14">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <TextBlock Text="{Binding Title}" Style="{StaticResource ToolCaption}" />
+            <TextBlock Grid.Row="1" Text="{Binding RemainingText}" Style="{StaticResource ToolBigText}" />
+            <ProgressBar Grid.Row="2" Height="4" Minimum="0" Maximum="1" Value="{Binding Progress, Mode=OneWay}"
+                         Template="{StaticResource ThinBar}" Foreground="{DynamicResource IslandAccent}" Margin="0,2,0,0" />
+            <StackPanel Grid.Row="3" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,4,0,0">
+                <Button Style="{DynamicResource IslandPillButton}" Command="{Binding PauseResumeCommand}"
+                        Visibility="{Binding IsNotFinished, Converter={StaticResource BoolToVisibility}}"
+                        AutomationProperties.Name="{Binding PauseResumeLabel}" Margin="0,0,6,0">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{Binding PauseResumeGlyph}" FontFamily="{StaticResource ToolGlyphFont}" Margin="0,1,6,0" />
+                        <TextBlock Text="{Binding PauseResumeLabel}" />
+                    </StackPanel>
+                </Button>
+                <Button Style="{DynamicResource IslandPillButton}" Command="{Binding AddMinuteCommand}"
+                        Content="+1 min" AutomationProperties.Name="Agregar un minuto" Margin="0,0,6,0" />
+                <Button Style="{DynamicResource IslandPillButton}" Command="{Binding CloseCommand}"
+                        Content="{Binding CloseLabel}" AutomationProperties.Name="{Binding CloseLabel}" />
+            </StackPanel>
+        </Grid>
+    </DataTemplate>
+
+    <!-- ============================================================ CRONÓMETRO -->
+    <DataTemplate x:Key="stopwatch.Compact">
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <TextBlock Text="&#xE916;" FontFamily="{StaticResource ToolGlyphFont}" FontSize="12" Margin="0,1,8,0"
+                       Foreground="{DynamicResource IslandAccent}" />
+            <TextBlock Text="{Binding ElapsedText}" FontSize="13" FontWeight="SemiBold"
+                       Foreground="{DynamicResource IslandForeground}" />
+        </StackPanel>
+    </DataTemplate>
+
+    <DataTemplate x:Key="stopwatch.Peek">
+        <Grid Margin="18,0">
+            <TextBlock Text="Cronómetro" Style="{StaticResource ToolCaption}" VerticalAlignment="Center" />
+            <TextBlock Text="{Binding ElapsedText}" FontSize="14" FontWeight="SemiBold" HorizontalAlignment="Right"
+                       VerticalAlignment="Center" Foreground="{DynamicResource IslandForeground}" />
+        </Grid>
+    </DataTemplate>
+
+    <DataTemplate x:Key="stopwatch.Expanded">
+        <Grid Margin="24,16,24,14">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <TextBlock Text="Cronómetro" Style="{StaticResource ToolCaption}" />
+            <TextBlock Grid.Row="1" Text="{Binding ElapsedText}" Style="{StaticResource ToolBigText}" />
+            <ItemsControl Grid.Row="1" Grid.Column="1" ItemsSource="{Binding Laps}" VerticalAlignment="Center" Focusable="False">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding}" FontSize="11" FontFamily="Consolas"
+                                   Foreground="{DynamicResource IslandForegroundMuted}" HorizontalAlignment="Right" />
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+            <StackPanel Grid.Row="2" Grid.ColumnSpan="2" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,4,0,0">
+                <Button Style="{DynamicResource IslandPillButton}" Command="{Binding StartPauseCommand}"
+                        AutomationProperties.Name="{Binding StartPauseLabel}" Margin="0,0,6,0">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{Binding StartPauseGlyph}" FontFamily="{StaticResource ToolGlyphFont}" Margin="0,1,6,0" />
+                        <TextBlock Text="{Binding StartPauseLabel}" />
+                    </StackPanel>
+                </Button>
+                <Button Style="{DynamicResource IslandPillButton}" Command="{Binding LapCommand}"
+                        Content="Vuelta" AutomationProperties.Name="Marcar vuelta" Margin="0,0,6,0" />
+                <Button Style="{DynamicResource IslandPillButton}" Command="{Binding CloseCommand}"
+                        Content="Cerrar" AutomationProperties.Name="Cerrar cronómetro" />
+            </StackPanel>
+        </Grid>
+    </DataTemplate>
+
+    <!-- ============================================================ RECORDATORIO (alerta) -->
+    <DataTemplate x:Key="reminders.Compact">
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10,0">
+            <TextBlock Text="&#xEA8F;" FontFamily="{StaticResource ToolGlyphFont}" FontSize="12" Margin="0,1,8,0"
+                       Foreground="{StaticResource AlertBrush}" />
+            <TextBlock Text="{Binding Text}" FontSize="12.5" FontWeight="SemiBold" MaxWidth="104"
+                       TextTrimming="CharacterEllipsis" Foreground="{DynamicResource IslandForeground}" />
+        </StackPanel>
+    </DataTemplate>
+
+    <DataTemplate x:Key="reminders.Peek">
+        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="16,0">
+            <TextBlock Text="&#xEA8F;" FontFamily="{StaticResource ToolGlyphFont}" FontSize="13" Margin="0,1,10,0"
+                       Foreground="{StaticResource AlertBrush}" VerticalAlignment="Center" />
+            <TextBlock Text="{Binding Text}" FontSize="13" FontWeight="SemiBold" MaxWidth="190"
+                       TextTrimming="CharacterEllipsis" VerticalAlignment="Center"
+                       Foreground="{DynamicResource IslandForeground}" />
+        </StackPanel>
+    </DataTemplate>
+
+    <DataTemplate x:Key="reminders.Expanded">
+        <Grid Margin="24,16,24,14">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="&#xEA8F;" FontFamily="{StaticResource ToolGlyphFont}" FontSize="12" Margin="0,1,8,0"
+                           Foreground="{StaticResource AlertBrush}" />
+                <TextBlock Text="{Binding WhenText}" Style="{StaticResource ToolCaption}" />
+            </StackPanel>
+            <TextBlock Grid.Row="1" Text="{Binding Text}" FontSize="18" FontWeight="SemiBold" Margin="0,8,0,0"
+                       TextWrapping="Wrap" MaxHeight="52" TextTrimming="CharacterEllipsis"
+                       Foreground="{DynamicResource IslandForeground}" />
+            <StackPanel Grid.Row="2" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,4,0,0">
+                <Button Style="{DynamicResource IslandPillButton}" Command="{Binding DoneCommand}"
+                        Content="Listo" AutomationProperties.Name="Marcar recordatorio como listo" Margin="0,0,6,0" />
+                <Button Style="{DynamicResource IslandPillButton}" Command="{Binding SnoozeCommand}"
+                        Content="Posponer 10 min" AutomationProperties.Name="Posponer 10 minutos" />
+            </StackPanel>
+        </Grid>
+    </DataTemplate>
+
+    <!-- ============================================================ PORTAPAPELES (panel) -->
+    <DataTemplate x:Key="clipboard.Compact">
+        <TextBlock Text="&#xE77F;" FontFamily="{StaticResource ToolGlyphFont}" FontSize="12"
+                   Foreground="{DynamicResource IslandForegroundMuted}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+    </DataTemplate>
+
+    <DataTemplate x:Key="clipboard.Peek">
+        <Grid Margin="18,0">
+            <TextBlock Text="Portapapeles" Style="{StaticResource ToolCaption}" VerticalAlignment="Center" />
+            <TextBlock Text="{Binding CountText}" FontSize="12" HorizontalAlignment="Right" VerticalAlignment="Center"
+                       Foreground="{DynamicResource IslandForegroundMuted}" />
+        </Grid>
+    </DataTemplate>
+
+    <DataTemplate x:Key="clipboard.Expanded">
+        <Grid Margin="16,12,16,38">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid Margin="6,0,0,6">
+                <TextBlock Text="Portapapeles" Style="{StaticResource ToolCaption}" VerticalAlignment="Center" />
+                <Button Style="{DynamicResource IslandPillButton}" Padding="10,3" HorizontalAlignment="Right"
+                        Command="{Binding ClearCommand}" Content="Borrar todo" FontSize="11"
+                        Visibility="{Binding HasItems, Converter={StaticResource BoolToVisibility}}"
+                        AutomationProperties.Name="Borrar el historial del portapapeles" />
+            </Grid>
+            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Hidden" Focusable="False"
+                          Visibility="{Binding HasItems, Converter={StaticResource BoolToVisibility}}">
+                <ItemsControl ItemsSource="{Binding Items}" Focusable="False">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Button Style="{DynamicResource IslandPillButton}" Background="Transparent"
+                                    HorizontalContentAlignment="Stretch" Padding="8,4" Margin="0,1"
+                                    Command="{Binding CopyCommand}" ToolTip="Clic para copiar de nuevo"
+                                    AutomationProperties.Name="{Binding Preview}">
+                                <Grid Width="330">
+                                    <TextBlock Text="{Binding Preview}" FontSize="12" TextTrimming="CharacterEllipsis"
+                                               Margin="0,0,44,0" />
+                                    <TextBlock Text="{Binding Ago}" FontSize="11" HorizontalAlignment="Right"
+                                               Foreground="{DynamicResource IslandForegroundMuted}" />
+                                </Grid>
+                            </Button>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+            <TextBlock Grid.Row="1" TextWrapping="Wrap" FontSize="12" Margin="6,4,0,0"
+                       Foreground="{DynamicResource IslandForegroundMuted}"
+                       Visibility="{Binding IsEmpty, Converter={StaticResource BoolToVisibility}}"
+                       Text="Copiá un texto (Ctrl+C) en cualquier app y aparece acá. El historial vive solo en memoria: se borra al cerrar la isla." />
+            <TextBlock Grid.Row="1" Text="{Binding Message}" VerticalAlignment="Bottom" FontSize="11"
+                       Foreground="{StaticResource AlertBrush}" />
+        </Grid>
+    </DataTemplate>
+</ResourceDictionary>

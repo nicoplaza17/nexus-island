@@ -19,7 +19,8 @@ public sealed class ClockViewModel : ObservableObject
 
     public string Hint { get => _hint; private set => SetProperty(ref _hint, value); }
 
-    public void SetHotkeyText(string hotkey) => Hint = $"Arrastrá para mover · {hotkey} para ocultar";
+    // Corto: abajo a la derecha está el botón de herramientas y al centro los puntitos de página.
+    public void SetHotkeyText(string hotkey) => Hint = $"{hotkey} oculta la isla";
 
     /// <summary>Actualiza solo si cambió el minuto (así no se redibuja la isla cada segundo).</summary>
     public void Refresh(bool force = false)

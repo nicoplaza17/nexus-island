@@ -18,6 +18,18 @@ public static class ActivityPriority
     public const int Ambient = 50;    // multimedia
     public const int Active = 100;    // temporizador corriendo, descarga en curso
     public const int Urgent = 200;    // alertas que requieren atención
+    public const int Panel = 300;     // paneles que el usuario abrió a propósito (herramientas, portapapeles)
+}
+
+/// <summary>Una acción del panel de herramientas (por ejemplo "Temporizador 5 min").</summary>
+/// <param name="Glyph">Ícono de Segoe Fluent Icons / Segoe MDL2 Assets.</param>
+/// <param name="Order">Para ordenar los botones (menor primero).</param>
+public sealed record QuickAction(string Id, string Label, string Glyph, int Order, Action Execute);
+
+/// <summary>Opcional para módulos: aportar botones al panel de herramientas de la isla.</summary>
+public interface IQuickActionProvider
+{
+    IEnumerable<QuickAction> GetQuickActions();
 }
 
 /// <summary>Lo que un módulo puede hacer con la isla. Llamar siempre desde el hilo de la interfaz.</summary>

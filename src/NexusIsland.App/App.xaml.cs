@@ -13,6 +13,12 @@ using NexusIsland.Core.Settings;
 using NexusIsland.App.Settings;
 using NexusIsland.Services.Windows.Startup;
 using NexusIsland.Modules.Media;
+using NexusIsland.Modules.Tools.Clipboard;
+using NexusIsland.Modules.Tools.Reminders;
+using NexusIsland.Modules.Tools.Stopwatch;
+using NexusIsland.Modules.Tools.Timer;
+using NexusIsland.Core.Tools;
+using NexusIsland.Services.Windows.Clipboard;
 using NexusIsland.Services.Windows.Media;
 
 namespace NexusIsland.App;
@@ -73,6 +79,7 @@ public partial class App : Application
 
         // 4) La isla y el ícono de la bandeja.
         var island = _services.GetRequiredService<IslandWindow>();
+        island.SetQuickActionProviders(modules.OfType<IQuickActionProvider>());
         island.Show();
 
         // Al volver de suspensión, los avisos multimedia de Windows a veces dejan de llegar: se reconecta.
@@ -150,16 +157,16 @@ public partial class App : Application
 
     private void LoadModuleTemplates(IEnumerable<IIslandModule> modules)
     {
-        foreach (var module in modules)
+        // Varios módulos pueden compartir un mismo diccionario (las herramientas): se carga una sola vez.
+        foreach (var uri in modules.Select(m => m.TemplatesUri).OfType<Uri>().Distinct())
         {
-            if (module.TemplatesUri is null) continue;
             try
             {
-                Resources.MergedDictionaries.Add(new ResourceDictionary { Source = module.TemplatesUri });
+                Resources.MergedDictionaries.Add(new ResourceDictionary { Source = uri });
             }
             catch (Exception ex)
             {
-                _logger?.LogError(ex, "No se pudieron cargar las plantillas del módulo {Module}", module.Id);
+                _logger?.LogError(ex, "No se pudieron cargar las plantillas {Uri}", uri);
             }
         }
     }
@@ -235,8 +242,16 @@ public partial class App : Application
         // Servicios de Windows
         services.AddSingleton<IMediaSessionService, GsmtcMediaSessionService>();
 
-        // Módulos (para desactivar uno, alcanza con no registrarlo; en la Etapa 3 será configurable)
+        services.AddSingleton<IClipboardMonitor, ClipboardMonitor>();
+        services.AddSingleton(sp => new ReminderStore(
+            System.IO.Path.Combine(AppPaths.RoamingData, "reminders.json"), sp.GetRequiredService<ILogger<ReminderStore>>()));
+
+        // Módulos (se activan/desactivan desde la Configuración). El orden define el orden en la configuración.
         services.AddSingleton<IIslandModule, MediaModule>();
+        services.AddSingleton<IIslandModule, TimerModule>();
+        services.AddSingleton<IIslandModule, StopwatchModule>();
+        services.AddSingleton<IIslandModule, ReminderModule>();
+        services.AddSingleton<IIslandModule, ClipboardModule>();
 
         return services.BuildServiceProvider(new ServiceProviderOptions { ValidateOnBuild = true });
     }

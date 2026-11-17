@@ -16,8 +16,8 @@ namespace NexusIsland.Modules.Media;
 public sealed class MediaViewModel : ObservableObject, IIslandAware
 {
     // Glifos de Segoe Fluent Icons / Segoe MDL2 Assets.
-    private const string GlyphPlay = "";
-    private const string GlyphPause = "";
+    private const string GlyphPlay = "\uE768";
+    private const string GlyphPause = "\uE769";
 
     private readonly IMediaSessionService _service;
     private readonly ILogger _logger;

@@ -44,6 +44,7 @@ src/
   NexusIsland.Core              Lógica pura sin Windows: estados de la isla, resortes, cálculo de ubicación, logging
   NexusIsland.Services.Windows  Integración con Windows: monitores, pantalla completa, atajo global, estilos de ventana
   NexusIsland.Modules.Media     Módulo Multimedia: ViewModel, plantillas visuales, barra de progreso
+  NexusIsland.Modules.Tools     Herramientas: temporizador, cronómetro, recordatorios, portapapeles
   NexusIsland.App               Interfaz WPF: ventana de la isla, animador, ubicación/arrastre, ícono de bandeja
 tests/
   NexusIsland.Core.Tests        Tests unitarios del Core (xUnit)
@@ -303,9 +304,49 @@ tareas activas 100, alertas 200); si empatan, la más reciente. `RequestAttentio
 - El tamaño (231 MB instalada) es el precio de incluir .NET. Con "pedir .NET si falta" serían ~10 MB, a cambio de que el usuario instale el runtime de Microsoft.
 - Si la app se cierra a la fuerza (por ejemplo, al actualizar), el ícono de la bandeja puede quedar "fantasma" hasta pasar el mouse por encima (comportamiento de Windows).
 
+### Etapa 5 — Herramientas rápidas ✅ (17/11/2026, v0.5.0)
+
+**Implementado**
+
+- **Panel de herramientas**: botón ⊞ abajo a la derecha de la isla expandida. Lo arman los módulos que implementan `IQuickActionProvider` (cada botón es una `QuickAction`).
+- **Páginas**: si hay varias actividades (temporizador + música + reloj), la isla expandida muestra puntitos abajo al centro. Se cambia con la rueda del mouse o con clic en un puntito. Al contraerse vuelve a lo más importante. Las alertas le ganan a la página elegida a mano.
+- **Paneles** (prioridad 300): se cierran solos al contraer la isla.
+- **Temporizador** (1 / 5 / 10 / 25 min): pausa, +1 min, cancelar. Al terminar pasa a alerta (prioridad urgente), con sonido de Windows y notificación temporal. *+1 min* desde la alerta lo reinicia.
+- **Cronómetro**: pausa / seguir, vueltas (se muestran las últimas 3), cerrar.
+- **Recordatorios**: se crean en una ventana aparte (la isla no toma el foco, así que no se puede escribir en ella), "en N minutos" o "a las HH:mm" (si ya pasó, es mañana). Se guardan en `%AppData%\NexusIsland\reminders.json`. Al vencer: alerta con sonido, *Listo* o *Posponer 10 min*. Si la PC estaba apagada, avisan al volver ("Vencía hoy a las…").
+- **Portapapeles**: últimos 20 textos; clic para volver a copiar; *Borrar todo*.
+  - **Solo en memoria**: nunca se guarda en disco y se borra al cerrar la isla. El contenido nunca va al log.
+  - **Respeta a los gestores de contraseñas**: lo marcado con `ExcludeClipboardContentFromMonitorProcessing` o `CanIncludeInClipboardHistory = 0` no se registra (igual que Win+V).
+  - Lee 60 ms después del aviso de Windows, para no chocar con la app que está copiando.
+- Cada herramienta es un **módulo independiente** (activable desde la Configuración). Los cuatro comparten un mismo diccionario de plantillas, que se carga una sola vez.
+- Las alertas se actualizan cuatro veces por segundo internamente, pero solo redibujan cuando cambia el texto (una vez por segundo).
+
+**Verificado (Release, UI Automation)**
+
+| Prueba | Resultado |
+|---|---|
+| Tests unitarios (temporizador, cronómetro, historial, recordatorios, ranking de actividades + anteriores) | ✅ 76/76 |
+| Panel de herramientas con 7 botones; cada uno abre lo suyo | ✅ |
+| Temporizador: corre, barra de progreso, puntitos de página (temporizador + reloj) | ✅ captura |
+| Temporizador termina a los 60 s exactos → "¡Tiempo!" con notificación temporal | ✅ |
+| Recordatorio creado desde la ventana ("te aviso a las 10:31") → alerta a las 10:31:39 | ✅ |
+| Recordatorio vencido con la isla cerrada → avisa al arrancar como "atrasado"; *Listo* lo borra | ✅ |
+| Portapapeles: registra textos, **ignora el contenido marcado como privado**, vuelve a copiar con clic | ✅ |
+| 20 copias seguidas desde otra app con la isla escuchando | ✅ 0 fallos (antes de esperar 60 ms, fallaba alguna) |
+| Cronómetro: arranca y marca vueltas | ✅ |
+| Cambio de páginas con la isla expandida | ✅ (usado con el mouse real) |
+| RAM / CPU con los 5 módulos activos y una alerta en pantalla | 35,6 MB / 0,23 % de un núcleo |
+
+**Limitaciones conocidas**
+
+- El sonido de las alertas es el sonido de sistema de Windows (Exclamación / Asterisco). Si están en silencio en Windows, no suena.
+- El temporizador y el cronómetro no sobreviven a cerrar la app (los recordatorios sí).
+- La rueda del mouse para cambiar de página requiere "Desplazar ventanas inactivas al pasar el mouse" (activado por defecto en Windows 10/11).
+- El historial del portapapeles es solo de texto (no imágenes ni archivos).
+- Un solo temporizador a la vez: iniciar otro reemplaza al actual.
+
 ## Próximas etapas
 
-5. Herramientas rápidas: temporizador, cronómetro, portapapeles, recordatorios.
 6. Monitoreo del sistema (CPU, RAM, red, batería) con alertas.
 7. Empaquetado MSIX + notificaciones de Windows.
 8. Tareas en segundo plano (descargas, instalaciones) por heurística.

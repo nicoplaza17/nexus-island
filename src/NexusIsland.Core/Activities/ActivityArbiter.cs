@@ -14,6 +14,18 @@ public sealed class ActivityArbiter : IActivityHost
 
     public IReadOnlyCollection<IslandActivity> All => _activities.Values.Select(v => v.Activity).ToArray();
 
+    /// <summary>Todas las actividades en el orden en que compiten: prioridad y después la más reciente.</summary>
+    public IReadOnlyList<IslandActivity> Ranked => _activities.Values
+        .OrderByDescending(v => v.Activity.Priority)
+        .ThenByDescending(v => v.Sequence)
+        .Select(v => v.Activity)
+        .ToList();
+
+    /// <summary>Se agregó, quitó o reemplazó alguna actividad (visible o no).</summary>
+    public event Action? ActivitiesChanged;
+
+    public bool Contains(string key) => _activities.ContainsKey(key);
+
     /// <summary>Cambió la actividad visible (o su ViewModel).</summary>
     public event Action<IslandActivity?>? CurrentChanged;
 
@@ -27,11 +39,14 @@ public sealed class ActivityArbiter : IActivityHost
         var sequence = _activities.TryGetValue(activity.Key, out var existing) ? existing.Sequence : ++_sequence;
         _activities[activity.Key] = (activity, sequence);
         Recompute();
+        ActivitiesChanged?.Invoke();
     }
 
     public void Remove(string key)
     {
-        if (_activities.Remove(key)) Recompute();
+        if (!_activities.Remove(key)) return;
+        Recompute();
+        ActivitiesChanged?.Invoke();
     }
 
     public void RequestAttention(string key, TimeSpan duration)

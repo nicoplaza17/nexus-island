@@ -98,8 +98,17 @@ public partial class IslandWindow : Window
         Closed += (_, _) => { _hotkey?.Dispose(); _housekeeping.Stop(); };
 
         // Actividades: el reloj siempre está (prioridad mínima); los módulos agregan las suyas.
-        _arbiter.CurrentChanged += ShowActivity;
+        _arbiter.CurrentChanged += current =>
+        {
+            // Algo urgente (alerta) o un panel que el usuario abrió le gana a la página elegida a mano.
+            if (current is not null && current.Priority >= ActivityPriority.Urgent) _pinnedKey = null;
+            RefreshDisplay();
+        };
+        _arbiter.ActivitiesChanged += RefreshDisplay;
         _arbiter.AttentionRequested += OnAttentionRequested;
+
+        IslandShape.MouseWheel += OnMouseWheel;
+        LauncherButton.Click += (_, _) => ToggleLauncher();
         _clock.Refresh(force: true);
         _arbiter.Publish(new IslandActivity(ClockViewModel.ActivityKey, ClockViewModel.ModuleId,
             ActivityPriority.Idle, _clock));
@@ -280,6 +289,116 @@ public partial class IslandWindow : Window
         _logger.LogDebug("Estado: {Previous} → {Next}", previous, next);
         _animator.AnimateTo(next);
         NotifyAware(_shownActivity, next, isShown: true);
+
+        if (next == IslandState.Collapsed)
+        {
+            // Al contraerse: se vuelve a lo más importante y se cierran los paneles (herramientas, portapapeles).
+            _pinnedKey = null;
+            foreach (var panel in _arbiter.Ranked.Where(a => a.Priority >= ActivityPriority.Panel).ToList())
+                _arbiter.Remove(panel.Key);
+            RefreshDisplay();
+        }
+    }
+
+    // ----------------------------------------------------------------- páginas y panel de herramientas
+
+    private const string LauncherKey = "launcher";
+    private string? _pinnedKey;
+    private LauncherViewModel? _launcher;
+
+    /// <summary>Botones del panel de herramientas: los aportan los módulos que implementan IQuickActionProvider.</summary>
+    public void SetQuickActionProviders(IEnumerable<IQuickActionProvider> providers)
+    {
+        _launcher = new LauncherViewModel(providers, run: action =>
+        {
+            _arbiter.Remove(LauncherKey);
+            _logger.LogInformation("Herramienta: {Action}", action.Label);
+            try { action.Execute(); }
+            catch (Exception ex) { _logger.LogError(ex, "Falló la herramienta {Action}", action.Id); }
+        });
+        LauncherButton.Visibility = _launcher.Items.Count > 0 ? Visibility.Visible : Visibility.Collapsed;
+    }
+
+    private void ToggleLauncher()
+    {
+        if (_launcher is null) return;
+        if (_arbiter.Contains(LauncherKey))
+        {
+            _arbiter.Remove(LauncherKey);
+            return;
+        }
+        _arbiter.Publish(new IslandActivity(LauncherKey, LauncherKey, ActivityPriority.Panel, _launcher));
+    }
+
+    /// <summary>Actividades entre las que se puede pasar de página (los paneles no cuentan).</summary>
+    private List<IslandActivity> Pages() =>
+        _arbiter.Ranked.Where(a => a.Priority < ActivityPriority.Panel).ToList();
+
+    /// <summary>Muestra la actividad que corresponde: un panel abierto, la página elegida a mano, o la más importante.</summary>
+    private void RefreshDisplay()
+    {
+        if (_pinnedKey is not null && !_arbiter.Contains(_pinnedKey)) _pinnedKey = null;
+        var current = _arbiter.Current;
+        var target = current is not null && current.Priority >= ActivityPriority.Panel
+            ? current
+            : (_pinnedKey is not null ? _arbiter.Ranked.First(a => a.Key == _pinnedKey) : current);
+
+        if (!ReferenceEquals(target, _shownActivity)) ShowActivity(target);
+        UpdatePager();
+    }
+
+    private void Page(int direction)
+    {
+        var pages = Pages();
+        if (pages.Count < 2 || _shownActivity is null || _shownActivity.Priority >= ActivityPriority.Panel) return;
+        var index = pages.FindIndex(a => a.Key == _shownActivity.Key);
+        var next = pages[((index < 0 ? 0 : index) + direction + pages.Count) % pages.Count];
+        _pinnedKey = next.Key == _arbiter.Current?.Key ? null : next.Key;
+        RefreshDisplay();
+    }
+
+    private void OnMouseWheel(object sender, MouseWheelEventArgs e)
+    {
+        if (_stateMachine.State != IslandState.Expanded) return;
+        Page(e.Delta > 0 ? -1 : 1);
+        e.Handled = true;
+    }
+
+    /// <summary>Puntitos de página (solo con la isla expandida y si hay más de una actividad).</summary>
+    private void UpdatePager()
+    {
+        PagerDots.Children.Clear();
+        var pages = Pages();
+        if (pages.Count < 2 || _shownActivity is null || _shownActivity.Priority >= ActivityPriority.Panel)
+        {
+            PagerDots.Visibility = Visibility.Collapsed;
+            return;
+        }
+
+        PagerDots.Visibility = Visibility.Visible;
+        foreach (var page in pages)
+        {
+            var isCurrent = page.Key == _shownActivity.Key;
+            var dot = new System.Windows.Shapes.Ellipse
+            {
+                Width = isCurrent ? 7 : 6,
+                Height = isCurrent ? 7 : 6,
+                Margin = new Thickness(3, 0, 3, 0),
+                Fill = (Brush)FindResource(isCurrent ? "IslandForeground" : "IslandForegroundMuted"),
+                Opacity = isCurrent ? 1 : 0.45,
+                Cursor = Cursors.Hand,
+                ToolTip = page.ModuleId,
+                Tag = page.Key,
+            };
+            dot.MouseLeftButtonDown += (s, e) =>
+            {
+                var key = (string)((FrameworkElement)s).Tag;
+                _pinnedKey = key == _arbiter.Current?.Key ? null : key;
+                RefreshDisplay();
+                e.Handled = true; // que el clic no cierre la isla
+            };
+            PagerDots.Children.Add(dot);
+        }
     }
 
     // ----------------------------------------------------------------- actividades

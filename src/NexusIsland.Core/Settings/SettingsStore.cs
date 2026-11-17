@@ -73,10 +73,7 @@ public sealed class SettingsStore
     {
         try
         {
-            Directory.CreateDirectory(Path.GetDirectoryName(_path)!);
-            var temp = _path + ".tmp";
-            File.WriteAllText(temp, JsonSerializer.Serialize(Current, JsonOptions));
-            File.Move(temp, _path, overwrite: true); // reemplazo atómico en el mismo disco
+            Storage.AtomicFile.WriteAllText(_path, JsonSerializer.Serialize(Current, JsonOptions));
         }
         catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
         {
