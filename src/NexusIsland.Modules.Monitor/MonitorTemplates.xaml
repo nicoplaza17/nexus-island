@@ -1,5 +1,6 @@
 <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:loc="clr-namespace:NexusIsland.Modules.Monitor.Properties">
     <!--
       monitor.*        → panel "Sistema" (MonitorPanelViewModel)
       monitor.alert.*  → alertas (MonitorAlertViewModel)
@@ -41,7 +42,7 @@
 
     <DataTemplate x:Key="monitor.Peek">
         <Grid Margin="18,0">
-            <TextBlock Text="Sistema" FontSize="12" FontWeight="SemiBold" VerticalAlignment="Center"
+            <TextBlock Text="{x:Static loc:Strings.Panel_Title}" FontSize="12" FontWeight="SemiBold" VerticalAlignment="Center"
                        Foreground="{DynamicResource IslandForegroundMuted}" />
             <TextBlock Text="{Binding CpuText, StringFormat=CPU {0}}" FontSize="12" HorizontalAlignment="Right"
                        VerticalAlignment="Center" Foreground="{DynamicResource IslandForeground}" />
@@ -60,17 +61,17 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <TextBlock Text="Sistema" FontSize="12" FontWeight="SemiBold" Margin="4,0,0,6"
+            <TextBlock Text="{x:Static loc:Strings.Panel_Title}" FontSize="12" FontWeight="SemiBold" Margin="4,0,0,6"
                        Foreground="{DynamicResource IslandForegroundMuted}" />
             <TextBlock Grid.Column="1" Text="{Binding TemperatureText}" FontSize="11" HorizontalAlignment="Right" Margin="0,0,4,6"
                        Foreground="{DynamicResource IslandForegroundMuted}"
-                       ToolTip="Zona térmica ACPI: aproximada, no es exactamente la temperatura del procesador"
+                       ToolTip="{x:Static loc:Strings.Temp_Tip}"
                        Visibility="{Binding HasTemperature, Converter={StaticResource MonBoolToVisibility}}" />
 
             <!-- CPU -->
             <Border Grid.Row="1" Background="{StaticResource MonTileBrush}" CornerRadius="10" Padding="10,4" Margin="0,0,3,3">
                 <StackPanel>
-                    <TextBlock Text="CPU" Style="{StaticResource MonTileLabel}" />
+                    <TextBlock Text="{x:Static loc:Strings.Tile_Cpu}" Style="{StaticResource MonTileLabel}" />
                     <TextBlock Text="{Binding CpuText}" Style="{StaticResource MonTileValue}" />
                     <ProgressBar Height="3" Minimum="0" Maximum="1" Value="{Binding CpuValue, Mode=OneWay}"
                                  Template="{StaticResource MonBar}" Foreground="{DynamicResource IslandAccent}" />
@@ -79,7 +80,7 @@
             <!-- RAM -->
             <Border Grid.Row="1" Grid.Column="1" Background="{StaticResource MonTileBrush}" CornerRadius="10" Padding="10,4" Margin="3,0,0,3">
                 <StackPanel>
-                    <TextBlock Text="MEMORIA" Style="{StaticResource MonTileLabel}" />
+                    <TextBlock Text="{x:Static loc:Strings.Tile_Memory}" Style="{StaticResource MonTileLabel}" />
                     <TextBlock Text="{Binding MemoryText}" Style="{StaticResource MonTileValue}" />
                     <ProgressBar Height="3" Minimum="0" Maximum="1" Value="{Binding MemoryValue, Mode=OneWay}"
                                  Template="{StaticResource MonBar}" Foreground="{DynamicResource IslandAccent}" />
@@ -100,7 +101,7 @@
             <Border Grid.Row="2" Grid.Column="1" Background="{StaticResource MonTileBrush}" CornerRadius="10" Padding="10,4" Margin="3,3,0,0"
                     Visibility="{Binding HasBattery, Converter={StaticResource MonBoolToVisibility}}">
                 <StackPanel>
-                    <TextBlock Text="BATERÍA" Style="{StaticResource MonTileLabel}" />
+                    <TextBlock Text="{x:Static loc:Strings.Tile_Battery}" Style="{StaticResource MonTileLabel}" />
                     <TextBlock Text="{Binding BatteryText}" FontSize="12.5" FontWeight="SemiBold" Margin="0,3,0,0"
                                Foreground="{DynamicResource IslandForeground}" />
                 </StackPanel>
@@ -161,10 +162,10 @@
             <TextBlock Grid.Row="1" Text="{Binding Detail}" FontSize="12.5" TextWrapping="Wrap" Margin="0,8,0,0" MaxHeight="52"
                        TextTrimming="CharacterEllipsis" Foreground="{DynamicResource IslandForegroundMuted}" />
             <StackPanel Grid.Row="2" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,4,0,0">
-                <Button Style="{DynamicResource IslandPillButton}" Command="{Binding DismissCommand}" Content="Entendido"
-                        AutomationProperties.Name="Cerrar alerta" Margin="0,0,6,0" />
-                <Button Style="{DynamicResource IslandPillButton}" Command="{Binding OpenPanelCommand}" Content="Ver sistema"
-                        AutomationProperties.Name="Ver panel del sistema"
+                <Button Style="{DynamicResource IslandPillButton}" Command="{Binding DismissCommand}" Content="{x:Static loc:Strings.Alert_GotIt}"
+                        AutomationProperties.Name="{x:Static loc:Strings.Alert_CloseA11y}" Margin="0,0,6,0" />
+                <Button Style="{DynamicResource IslandPillButton}" Command="{Binding OpenPanelCommand}" Content="{x:Static loc:Strings.Alert_ViewSystem}"
+                        AutomationProperties.Name="{x:Static loc:Strings.Alert_ViewSystemA11y}"
                         Visibility="{Binding CanOpenPanel, Converter={StaticResource MonBoolToVisibility}}" />
             </StackPanel>
         </Grid>

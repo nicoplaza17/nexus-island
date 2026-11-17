@@ -5,10 +5,12 @@ using NexusIsland.Core.Island;
 using NexusIsland.Core.Monitoring;
 using NexusIsland.Core.Mvvm;
 
+using NexusIsland.Modules.Monitor.Properties;
+
 namespace NexusIsland.Modules.Monitor;
 
 /// <summary>Panel "Sistema". Se actualiza 1 vez por segundo solo mientras está a la vista.</summary>
-public sealed class MonitorPanelViewModel : ObservableObject, IIslandAware
+public sealed class MonitorPanelViewModel : ObservableObject, IIslandAware, IAccessibleActivity
 {
     private readonly ISystemMetricsSource _source;
     private readonly DispatcherTimer _tick = new(DispatcherPriority.Background) { Interval = TimeSpan.FromSeconds(1) };
@@ -36,6 +38,10 @@ public sealed class MonitorPanelViewModel : ObservableObject, IIslandAware
     public string TemperatureText { get => _temp; private set => SetProperty(ref _temp, value); }
     public bool HasTemperature { get => _hasTemp; private set => SetProperty(ref _hasTemp, value); }
 
+    /// <summary>Accesibilidad: lo que lee el Narrador.</summary>
+    public string AccessibleSummary => string.Format(Strings.A11y_Panel, CpuText, MemoryText, NetworkText)
+        + (HasBattery ? string.Format(Strings.A11y_PanelBattery, BatteryText) : "");
+
     public void OnIslandStateChanged(IslandState state, bool isShown)
     {
         if (isShown && state == IslandState.Expanded) _tick.Start();
@@ -52,31 +58,31 @@ public sealed class MonitorPanelViewModel : ObservableObject, IIslandAware
             CpuText = $"{cpu:0} %";
             CpuValue = cpu / 100;
         }
-        MemoryText = $"{MetricFormat.Gigabytes(s.MemoryUsedBytes)} de {MetricFormat.Gigabytes(s.MemoryTotalBytes)}";
+        MemoryText = string.Format(Strings.Memory_Of, MetricFormat.Gigabytes(s.MemoryUsedBytes), MetricFormat.Gigabytes(s.MemoryTotalBytes));
         MemoryValue = s.MemoryPercent / 100;
         DownloadText = "↓ " + MetricFormat.Rate(s.DownloadBytesPerSecond);
         UploadText = "↑ " + MetricFormat.Rate(s.UploadBytesPerSecond);
         IsOffline = s.Connectivity is Connectivity.None or Connectivity.LocalOnly;
         NetworkText = s.Connectivity switch
         {
-            Connectivity.Internet => s.NetworkName ?? "Conectado",
-            Connectivity.Constrained => $"{s.NetworkName ?? "Red"} · pide iniciar sesión",
-            Connectivity.LocalOnly => "Red local sin Internet",
-            Connectivity.None => "Sin conexión",
-            _ => "Red",
+            Connectivity.Internet => s.NetworkName ?? Strings.Net_Connected,
+            Connectivity.Constrained => string.Format(Strings.Net_Captive, s.NetworkName ?? Strings.Net_Network),
+            Connectivity.LocalOnly => Strings.Net_LocalOnly,
+            Connectivity.None => Strings.Net_None,
+            _ => Strings.Net_Network,
         };
         HasBattery = s.HasBattery && s.BatteryPercent is not null;
-        BatteryText = HasBattery ? $"{s.BatteryPercent} %{(s.IsPluggedIn ? " · enchufada" : "")}" : "";
+        BatteryText = HasBattery ? $"{s.BatteryPercent} %{(s.IsPluggedIn ? Strings.Battery_Plugged : "")}" : "";
         if (includeTemperature)
         {
             HasTemperature = s.ApproxTemperatureCelsius is not null;
-            TemperatureText = s.ApproxTemperatureCelsius is { } t ? $"{t:0} °C aprox." : "";
+            TemperatureText = s.ApproxTemperatureCelsius is { } t ? string.Format(Strings.Temp_Approx, t.ToString("0")) : "";
         }
     }
 }
 
 /// <summary>Una alerta del monitoreo (CPU, RAM, batería, red).</summary>
-public sealed class MonitorAlertViewModel : ObservableObject
+public sealed class MonitorAlertViewModel : ObservableObject, IAccessibleActivity
 {
     private string _detail;
 
@@ -103,25 +109,28 @@ public sealed class MonitorAlertViewModel : ObservableObject
     public ICommand DismissCommand { get; }
     public ICommand OpenPanelCommand { get; }
 
+    /// <summary>Accesibilidad: lo que lee el Narrador.</summary>
+    public string AccessibleSummary => string.Format(Strings.A11y_Alert, Title, Detail);
+
     public void SetCulprit(string? process)
     {
-        if (!string.IsNullOrEmpty(process)) Detail = $"{Detail} Más uso: {process}.";
+        if (!string.IsNullOrEmpty(process)) Detail = string.Format(Strings.Alert_Culprit, Detail, process);
     }
 
     public static MonitorAlertViewModel CpuHigh(double value) =>
-        new("\uE9D9", $"CPU al {value:0} %", "Hace más de 30 s que el procesador está casi al máximo.", critical: false);
+        new("\uE9D9", string.Format(Strings.Alert_CpuTitle, value.ToString("0")), Strings.Alert_CpuDetail, critical: false);
 
     public static MonitorAlertViewModel MemoryHigh(double value) =>
-        new("\uE964", $"Memoria al {value:0} %", "Queda poca RAM libre: la PC puede ponerse lenta.", critical: false);
+        new("\uE964", string.Format(Strings.Alert_MemTitle, value.ToString("0")), Strings.Alert_MemDetail, critical: false);
 
     public static MonitorAlertViewModel Battery(int percent, bool critical) =>
-        new(critical ? "\uEBA0" : "\uEBA2", $"Batería al {percent} %",
-            critical ? "Enchufá la notebook: queda muy poca carga." : "Conviene enchufar la notebook.", critical);
+        new(critical ? "\uEBA0" : "\uEBA2", string.Format(Strings.Alert_BatteryTitle, percent),
+            critical ? Strings.Alert_BatteryCritical : Strings.Alert_BatteryLow, critical);
 
     public static MonitorAlertViewModel Offline() =>
-        new("\uEB55", "Sin Internet", "Se perdió la conexión. Te aviso cuando vuelva.", critical: true, canOpenPanel: false);
+        new("\uEB55", Strings.Alert_OfflineTitle, Strings.Alert_OfflineDetail, critical: true, canOpenPanel: false);
 
     public static MonitorAlertViewModel Restored(string? network) =>
-        new("\uE701", "Conectado", network is null ? "Volvió la conexión a Internet." : $"Volvió la conexión ({network}).",
+        new("\uE701", Strings.Net_Connected, network is null ? Strings.Alert_RestoredDetail : string.Format(Strings.Alert_RestoredOn, network),
             critical: false, canOpenPanel: false);
 }

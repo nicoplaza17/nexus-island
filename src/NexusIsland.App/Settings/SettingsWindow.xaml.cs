@@ -5,6 +5,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using Microsoft.Extensions.Logging;
 using NexusIsland.App.Island;
+using NexusIsland.App.Properties;
 using NexusIsland.Core;
 using NexusIsland.Core.Activities;
 using NexusIsland.Core.Media;
@@ -62,6 +63,9 @@ public partial class SettingsWindow : Window
         StartWithWindowsBox.IsChecked = s.General.StartWithWindows;
         UpdateStartupWarning();
         HideFullscreenBox.IsChecked = s.General.HideInFullscreen;
+        LanguageBox.SelectedItem = LanguageBox.Items.OfType<ComboBoxItem>()
+            .FirstOrDefault(i => (string)i.Tag == AppLanguage.Normalize(s.General.Language)) ?? LanguageBox.Items[0];
+        UpdateLanguageRestartPanel();
 
         SizeSmall.IsChecked = s.Island.Size == IslandSize.Small;
         SizeNormal.IsChecked = s.Island.Size == IslandSize.Normal;
@@ -85,8 +89,8 @@ public partial class SettingsWindow : Window
         ShowContentBox.IsChecked = s.Notifications.ShowContent;
         BuildMutedList();
         NotificationStatus.Text = NexusIsland.Services.Windows.Notifications.PackageIdentity.HasIdentity
-            ? "La isla tiene identidad de paquete: puede leer notificaciones (si diste permiso)."
-            : "Sin identidad de paquete: Windows no deja leer notificaciones. Ver tools\\register-identity.ps1 en el README.";
+            ? Strings.Settings_HasIdentity
+            : Strings.Settings_NoIdentity;
         TaskDownloadsBox.IsChecked = s.Tasks.Downloads;
         TaskCopiesBox.IsChecked = s.Tasks.FileCopies;
         TaskInstallersBox.IsChecked = s.Tasks.Installers;
@@ -97,7 +101,7 @@ public partial class SettingsWindow : Window
         BuildAppList();
 
         var version = typeof(SettingsWindow).Assembly.GetName().Version;
-        VersionText.Text = $"Nexus Island {version?.ToString(3)} · .NET {Environment.Version}\nConfiguración: {_settings.FilePath}";
+        VersionText.Text = $"Nexus Island {version?.ToString(3)} · .NET {Environment.Version}\n{Strings.Settings_ConfigFile} {_settings.FilePath}";
         _loading = false;
     }
 
@@ -113,7 +117,7 @@ public partial class SettingsWindow : Window
         for (var i = 0; i < monitors.Count; i++)
         {
             var m = monitors[i];
-            var label = $"Monitor {i + 1}{(m.IsPrimary ? " (principal)" : "")} · {m.Bounds.Width}×{m.Bounds.Height} · {m.Scale:P0}";
+            var label = $"Monitor {i + 1}{(m.IsPrimary ? Strings.Settings_Primary : "")} · {m.Bounds.Width}×{m.Bounds.Height} · {m.Scale:P0}";
             var radio = new RadioButton
             {
                 GroupName = "Monitor",
@@ -132,7 +136,7 @@ public partial class SettingsWindow : Window
         }
 
         FloatingInfo.Visibility = docked ? Visibility.Collapsed : Visibility.Visible;
-        FloatingInfo.Text = "Ahora está suelta donde la dejaste. Elegí un monitor para volver a anclarla arriba al centro.";
+        FloatingInfo.Text = Strings.Settings_Floating;
     }
 
     private void BuildAppList()
@@ -184,6 +188,13 @@ public partial class SettingsWindow : Window
         StartWithWindowsBox.Unchecked += (_, _) => SetStartup(false);
         HideFullscreenBox.Checked += (_, _) => Save(s => s.General.HideInFullscreen = true);
         HideFullscreenBox.Unchecked += (_, _) => Save(s => s.General.HideInFullscreen = false);
+        LanguageBox.SelectionChanged += (_, _) =>
+        {
+            if (LanguageBox.SelectedItem is not ComboBoxItem { Tag: string lang }) return;
+            Save(s => s.General.Language = lang);
+            UpdateLanguageRestartPanel();
+        };
+        LanguageRestartButton.Click += (_, _) => _restart();
 
         SizeSmall.Checked += (_, _) => Save(s => s.Island.Size = IslandSize.Small);
         SizeNormal.Checked += (_, _) => Save(s => s.Island.Size = IslandSize.Normal);
@@ -213,7 +224,7 @@ public partial class SettingsWindow : Window
 
         ChangeHotkeyButton.Click += (_, _) => StartHotkeyCapture();
         PreviewKeyDown += OnPreviewKeyDown;
-        Deactivated += (_, _) => { if (_capturingHotkey) StopHotkeyCapture("Cambio cancelado."); };
+        Deactivated += (_, _) => { if (_capturingHotkey) StopHotkeyCapture(Strings.Hotkey_Cancelled); };
 
         RestartButton.Click += (_, _) => _restart();
         RefreshAppsButton.Click += (_, _) => BuildAppList();
@@ -252,7 +263,7 @@ public partial class SettingsWindow : Window
         catch (Exception ex)
         {
             _logger.LogError(ex, "No se pudo cambiar el inicio con Windows");
-            MessageBox.Show(this, "No se pudo cambiar el inicio con Windows. El detalle quedó en el log.",
+            MessageBox.Show(this, Strings.Settings_StartupError,
                 "Nexus Island", MessageBoxButton.OK, MessageBoxImage.Warning);
             _loading = true;
             StartWithWindowsBox.IsChecked = !enabled;
@@ -279,6 +290,12 @@ public partial class SettingsWindow : Window
         RestartPanel.Visibility = pending ? Visibility.Visible : Visibility.Collapsed;
     }
 
+    /// <summary>El idioma se aplica al arrancar: si el elegido no es el que está corriendo, ofrece reiniciar.</summary>
+    private void UpdateLanguageRestartPanel() =>
+        LanguageRestartPanel.Visibility = AppLanguage.Normalize(_settings.Current.General.Language) != App.StartupLanguage
+            ? Visibility.Visible
+            : Visibility.Collapsed;
+
     private void OnIgnoredToggled(object sender, RoutedEventArgs e)
     {
         if (_loading || sender is not CheckBox { Tag: (string id, string name) } box) return;
@@ -295,8 +312,8 @@ public partial class SettingsWindow : Window
     private void StartHotkeyCapture()
     {
         _capturingHotkey = true;
-        HotkeyText.Text = "Presioná la combinación…";
-        HotkeyStatus.Text = "Usá Ctrl, Alt, Shift o Win + una tecla. Esc para cancelar.";
+        HotkeyText.Text = Strings.Hotkey_Press;
+        HotkeyStatus.Text = Strings.Hotkey_Help;
         ChangeHotkeyButton.IsEnabled = false;
     }
 
@@ -316,7 +333,7 @@ public partial class SettingsWindow : Window
         var key = e.Key == Key.System ? e.SystemKey : e.Key;
         if (key == Key.Escape)
         {
-            StopHotkeyCapture("Cambio cancelado.");
+            StopHotkeyCapture(Strings.Hotkey_Cancelled);
             return;
         }
         // Solo modificadores todavía: esperar la tecla principal.
@@ -328,7 +345,7 @@ public partial class SettingsWindow : Window
         var win = Keyboard.IsKeyDown(Key.LWin) || Keyboard.IsKeyDown(Key.RWin);
         if (mods == ModifierKeys.None && !win)
         {
-            HotkeyStatus.Text = "Falta un modificador (Ctrl, Alt, Shift o Win): una tecla sola interferiría con lo que escribís.";
+            HotkeyStatus.Text = Strings.Hotkey_NeedModifier;
             return;
         }
 
@@ -342,8 +359,8 @@ public partial class SettingsWindow : Window
         };
 
         StopHotkeyCapture(_island.TryApplyHotkey(hotkey)
-            ? $"Listo: {hotkey} muestra y oculta la isla."
-            : $"{hotkey} ya lo usa otra app o Windows. Se mantiene {_island.HotkeyText}.");
+            ? string.Format(Strings.Hotkey_Done, hotkey)
+            : string.Format(Strings.Hotkey_Taken, hotkey, _island.HotkeyText));
     }
 
     private void OpenFolder(string path)

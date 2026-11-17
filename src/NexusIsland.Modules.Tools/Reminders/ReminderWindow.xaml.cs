@@ -3,6 +3,8 @@ using System.Windows;
 using System.Windows.Controls;
 using NexusIsland.Core.Tools;
 
+using NexusIsland.Modules.Tools.Properties;
+
 namespace NexusIsland.Modules.Tools.Reminders;
 
 /// <summary>Ventana para crear y ver recordatorios (ventana normal: acá sí se puede escribir).</summary>
@@ -31,7 +33,7 @@ public partial class ReminderWindow : Window
         var text = ReminderText.Text.Trim();
         if (text.Length == 0)
         {
-            Status.Text = "Escribí qué hay que recordar.";
+            Status.Text = Strings.Reminders_NeedText;
             ReminderText.Focus();
             return;
         }
@@ -44,7 +46,7 @@ public partial class ReminderWindow : Window
 
         _store.Add(text, due);
         ReminderText.Clear();
-        Status.Text = $"Listo: te aviso a las {due.LocalDateTime:HH:mm}{(due.Date > DateTimeOffset.Now.Date ? " (mañana)" : "")}.";
+        Status.Text = string.Format(Strings.Reminders_Scheduled, due.LocalDateTime.ToString("HH:mm"), due.Date > DateTimeOffset.Now.Date ? Strings.Reminders_Tomorrow : "");
         ReminderText.Focus();
     }
 
@@ -58,7 +60,7 @@ public partial class ReminderWindow : Window
         {
             if (!int.TryParse(MinutesInput.Text.Trim(), out var minutes) || minutes < 1 || minutes > 10_080)
             {
-                error = "Los minutos tienen que ser un número entre 1 y 10080 (una semana).";
+                error = Strings.Reminders_BadMinutes;
                 return false;
             }
             due = now.AddMinutes(minutes);
@@ -68,7 +70,7 @@ public partial class ReminderWindow : Window
         if (!TimeSpan.TryParseExact(TimeInput.Text.Trim(), [@"h\:mm", @"hh\:mm", "%h"], CultureInfo.InvariantCulture, out var time)
             || time >= TimeSpan.FromDays(1))
         {
-            error = "La hora tiene que ser HH:mm, por ejemplo 18:30.";
+            error = Strings.Reminders_BadTime;
             return false;
         }
         var today = new DateTimeOffset(now.Date + time, now.Offset);
@@ -85,7 +87,7 @@ public partial class ReminderWindow : Window
             When = r.DueAt.LocalDateTime.Date == DateTime.Today
                 ? r.DueAt.LocalDateTime.ToString("HH:mm")
                 : r.DueAt.LocalDateTime.ToString("dd/MM HH:mm"),
-            DeleteLabel = $"Borrar recordatorio: {r.Text}",
+            DeleteLabel = string.Format(Strings.Reminders_DeleteA11y, r.Text),
         }).ToList();
         EmptyText.Visibility = _store.Pending.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
     }

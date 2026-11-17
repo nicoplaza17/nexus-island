@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="A11y_Count" xml:space="preserve"><value>{0} recent</value></data>
+  <data name="A11y_Notification" xml:space="preserve"><value>Notification from {0}: {1}. {2}</value></data>
+  <data name="A11y_Panel" xml:space="preserve"><value>Notifications: {0}</value></data>
+  <data name="Clear_A11y" xml:space="preserve"><value>Clear recent notifications</value></data>
+  <data name="Clear_All" xml:space="preserve"><value>Clear all</value></data>
+  <data name="Close" xml:space="preserve"><value>Close</value></data>
+  <data name="Close_A11y" xml:space="preserve"><value>Close notification</value></data>
+  <data name="Empty" xml:space="preserve"><value>None yet. The last 20 are kept, in memory only.</value></data>
+  <data name="Generic" xml:space="preserve"><value>Notification</value></data>
+  <data name="Grant" xml:space="preserve"><value>Grant access</value></data>
+  <data name="Grant_A11y" xml:space="preserve"><value>Allow reading notifications</value></data>
+  <data name="Module_Name" xml:space="preserve"><value>Notifications</value></data>
+  <data name="Mute" xml:space="preserve"><value>Mute</value></data>
+  <data name="Mute_App" xml:space="preserve"><value>Mute {0}</value></data>
+  <data name="New_From" xml:space="preserve"><value>New notification from {0}</value></data>
+  <data name="Open_App" xml:space="preserve"><value>Open app</value></data>
+  <data name="Open_AppA11y" xml:space="preserve"><value>Open the notification's app</value></data>
+  <data name="Open_AppTip" xml:space="preserve"><value>Open the app</value></data>
+  <data name="Open_Settings" xml:space="preserve"><value>Open Windows settings</value></data>
+  <data name="Open_SettingsA11y" xml:space="preserve"><value>Open notification privacy in Windows</value></data>
+  <data name="Status_Denied" xml:space="preserve"><value>Permission is denied. Turn it on in Windows Settings → Privacy → Notifications.</value></data>
+  <data name="Status_NoIdentity" xml:space="preserve"><value>To read notifications, Windows requires registering the app identity (tools\register-identity.ps1).</value></data>
+  <data name="Status_Unavailable" xml:space="preserve"><value>Windows doesn't allow reading notifications right now.</value></data>
+  <data name="Status_Unspecified" xml:space="preserve"><value>The island needs your permission to read notifications.</value></data>
+</root>

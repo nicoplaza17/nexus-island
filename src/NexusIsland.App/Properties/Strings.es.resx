@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="A11y_Clock" xml:space="preserve"><value>Nexus Island. {0}, {1}</value></data>
+  <data name="A11y_KeyboardMode" xml:space="preserve"><value>Modo teclado de Nexus Island. Tab recorre los botones, las flechas izquierda y derecha cambian de página, Escape sale.</value></data>
+  <data name="A11y_Launcher" xml:space="preserve"><value>Herramientas: {0}</value></data>
+  <data name="A11y_Page" xml:space="preserve"><value>Página {0} de {1}. {2}</value></data>
+  <data name="Clock_DragHint" xml:space="preserve"><value>Arrastrá para mover</value></data>
+  <data name="Clock_HotkeyHint" xml:space="preserve"><value>{0} oculta la isla</value></data>
+  <data name="Hotkey_Cancelled" xml:space="preserve"><value>Cambio cancelado.</value></data>
+  <data name="Hotkey_Done" xml:space="preserve"><value>Listo: {0} muestra y oculta la isla.</value></data>
+  <data name="Hotkey_Help" xml:space="preserve"><value>Usá Ctrl, Alt, Shift o Win + una tecla. Esc para cancelar.</value></data>
+  <data name="Hotkey_NeedModifier" xml:space="preserve"><value>Falta un modificador (Ctrl, Alt, Shift o Win): una tecla sola interferiría con lo que escribís.</value></data>
+  <data name="Hotkey_Press" xml:space="preserve"><value>Presioná la combinación…</value></data>
+  <data name="Hotkey_Taken" xml:space="preserve"><value>{0} ya lo usa otra app o Windows. Se mantiene {1}.</value></data>
+  <data name="Settings_About" xml:space="preserve"><value>Acerca de</value></data>
+  <data name="Settings_AlertBattery" xml:space="preserve"><value>Batería al 20 % y al 10 % (sin enchufar)</value></data>
+  <data name="Settings_AlertCpu" xml:space="preserve"><value>CPU al 90 % o más durante 30 segundos</value></data>
+  <data name="Settings_AlertMemory" xml:space="preserve"><value>Memoria al 90 % o más</value></data>
+  <data name="Settings_AlertNetwork" xml:space="preserve"><value>Sin Internet / conexión recuperada</value></data>
+  <data name="Settings_Alerts" xml:space="preserve"><value>Alertas del sistema</value></data>
+  <data name="Settings_AlertsHint" xml:space="preserve"><value>La isla se revisa sola cada 3 segundos y avisa solo cuando hace falta. El panel 'Sistema' (botón de herramientas) siempre está disponible.</value></data>
+  <data name="Settings_Change" xml:space="preserve"><value>Cambiar…</value></data>
+  <data name="Settings_ConfigFile" xml:space="preserve"><value>Configuración:</value></data>
+  <data name="Settings_Floating" xml:space="preserve"><value>Ahora está suelta donde la dejaste. Elegí un monitor para volver a anclarla arriba al centro.</value></data>
+  <data name="Settings_General" xml:space="preserve"><value>General</value></data>
+  <data name="Settings_HasIdentity" xml:space="preserve"><value>La isla tiene identidad de paquete: puede leer notificaciones (si diste permiso).</value></data>
+  <data name="Settings_HideFullscreen" xml:space="preserve"><value>Ocultar la isla cuando una app está en pantalla completa</value></data>
+  <data name="Settings_Hotkey" xml:space="preserve"><value>Atajo para mostrar / ocultar</value></data>
+  <data name="Settings_IgnoredApps" xml:space="preserve"><value>Apps ignoradas</value></data>
+  <data name="Settings_IgnoredHint" xml:space="preserve"><value>La isla no muestra la reproducción de estas apps (útil para WhatsApp, Discord o navegadores que no son tu reproductor de música). Aparecen las apps que reprodujeron algo desde que se abrió la isla.</value></data>
+  <data name="Settings_Language" xml:space="preserve"><value>Idioma · Language</value></data>
+  <data name="Settings_LanguageAuto" xml:space="preserve"><value>Automático (idioma de Windows)</value></data>
+  <data name="Settings_Media" xml:space="preserve"><value>Multimedia</value></data>
+  <data name="Settings_Modules" xml:space="preserve"><value>Módulos</value></data>
+  <data name="Settings_MutedApps" xml:space="preserve"><value>Apps silenciadas</value></data>
+  <data name="Settings_MutedHint" xml:space="preserve"><value>Se silencian desde la isla (botón 'Silenciar'). Destildá una app para volver a verla.</value></data>
+  <data name="Settings_NoApps" xml:space="preserve"><value>Todavía no se detectó ninguna app. Reproducí algo y tocá Actualizar.</value></data>
+  <data name="Settings_NoIdentity" xml:space="preserve"><value>Sin identidad de paquete: Windows no deja leer notificaciones. Ver tools\register-identity.ps1 en el README.</value></data>
+  <data name="Settings_None" xml:space="preserve"><value>Ninguna.</value></data>
+  <data name="Settings_Notifications" xml:space="preserve"><value>Notificaciones de otras apps</value></data>
+  <data name="Settings_NotifyTrack" xml:space="preserve"><value>Mostrar la canción unos segundos cuando cambia</value></data>
+  <data name="Settings_OpenConfigFolder" xml:space="preserve"><value>Abrir carpeta de configuración</value></data>
+  <data name="Settings_OpenLogs" xml:space="preserve"><value>Abrir logs</value></data>
+  <data name="Settings_Position" xml:space="preserve"><value>Posición</value></data>
+  <data name="Settings_PositionHint" xml:space="preserve"><value>Anclada arriba al centro del monitor elegido. También podés arrastrarla con el mouse: si la soltás lejos del centro, queda suelta en ese lugar.</value></data>
+  <data name="Settings_Primary" xml:space="preserve"><value> (principal)</value></data>
+  <data name="Settings_Refresh" xml:space="preserve"><value>Actualizar lista</value></data>
+  <data name="Settings_RestartNeeded" xml:space="preserve"><value>Se aplica al reiniciar la isla.</value></data>
+  <data name="Settings_RestartNow" xml:space="preserve"><value>Reiniciar ahora</value></data>
+  <data name="Settings_ShowContent" xml:space="preserve"><value>Mostrar el texto de las notificaciones</value></data>
+  <data name="Settings_ShowContentHint" xml:space="preserve"><value>Si lo desactivás, la isla solo dice de qué app es (útil al compartir pantalla).</value></data>
+  <data name="Settings_Size" xml:space="preserve"><value>Tamaño de la isla</value></data>
+  <data name="Settings_SizeLarge" xml:space="preserve"><value>Grande</value></data>
+  <data name="Settings_SizeNormal" xml:space="preserve"><value>Normal</value></data>
+  <data name="Settings_SizeSmall" xml:space="preserve"><value>Chica</value></data>
+  <data name="Settings_StartWithWindows" xml:space="preserve"><value>Iniciar con Windows</value></data>
+  <data name="Settings_StartupBlocked" xml:space="preserve"><value>Windows tiene desactivado el inicio de Nexus Island (Administrador de tareas → Aplicaciones de inicio). Activalo ahí para que funcione.</value></data>
+  <data name="Settings_StartupError" xml:space="preserve"><value>No se pudo cambiar el inicio con Windows. El detalle quedó en el log.</value></data>
+  <data name="Settings_TaskCopies" xml:space="preserve"><value>Copias de archivos del Explorador</value></data>
+  <data name="Settings_TaskDownloads" xml:space="preserve"><value>Descargas del navegador (carpeta Descargas)</value></data>
+  <data name="Settings_TaskInstalls" xml:space="preserve"><value>Instalaciones</value></data>
+  <data name="Settings_Tasks" xml:space="preserve"><value>Tareas en segundo plano</value></data>
+  <data name="Settings_TasksHint" xml:space="preserve"><value>Solo aparece lo que dura más de 3 segundos. Las descargas muestran tamaño y velocidad (los navegadores no informan el total); las copias del Explorador, el porcentaje.</value></data>
+  <data name="Settings_Title" xml:space="preserve"><value>Nexus Island — Configuración</value></data>
+  <data name="Tools" xml:space="preserve"><value>Herramientas</value></data>
+  <data name="Tray_Exit" xml:space="preserve"><value>Salir</value></data>
+  <data name="Tray_Hide" xml:space="preserve"><value>Ocultar isla</value></data>
+  <data name="Tray_Logs" xml:space="preserve"><value>Abrir carpeta de logs</value></data>
+  <data name="Tray_Settings" xml:space="preserve"><value>Configuración…</value></data>
+  <data name="Tray_Show" xml:space="preserve"><value>Mostrar isla</value></data>
+</root>

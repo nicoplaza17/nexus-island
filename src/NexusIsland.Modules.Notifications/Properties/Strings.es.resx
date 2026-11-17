@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="A11y_Count" xml:space="preserve"><value>{0} recientes</value></data>
+  <data name="A11y_Notification" xml:space="preserve"><value>Notificación de {0}: {1}. {2}</value></data>
+  <data name="A11y_Panel" xml:space="preserve"><value>Notificaciones: {0}</value></data>
+  <data name="Clear_A11y" xml:space="preserve"><value>Borrar notificaciones recientes</value></data>
+  <data name="Clear_All" xml:space="preserve"><value>Borrar todo</value></data>
+  <data name="Close" xml:space="preserve"><value>Cerrar</value></data>
+  <data name="Close_A11y" xml:space="preserve"><value>Cerrar notificación</value></data>
+  <data name="Empty" xml:space="preserve"><value>Todavía no llegó ninguna. Se guardan las últimas 20, solo en memoria.</value></data>
+  <data name="Generic" xml:space="preserve"><value>Notificación</value></data>
+  <data name="Grant" xml:space="preserve"><value>Dar permiso</value></data>
+  <data name="Grant_A11y" xml:space="preserve"><value>Dar permiso para leer notificaciones</value></data>
+  <data name="Module_Name" xml:space="preserve"><value>Notificaciones</value></data>
+  <data name="Mute" xml:space="preserve"><value>Silenciar</value></data>
+  <data name="Mute_App" xml:space="preserve"><value>Silenciar {0}</value></data>
+  <data name="New_From" xml:space="preserve"><value>Nueva notificación de {0}</value></data>
+  <data name="Open_App" xml:space="preserve"><value>Abrir app</value></data>
+  <data name="Open_AppA11y" xml:space="preserve"><value>Abrir la app de la notificación</value></data>
+  <data name="Open_AppTip" xml:space="preserve"><value>Abrir la app</value></data>
+  <data name="Open_Settings" xml:space="preserve"><value>Abrir configuración de Windows</value></data>
+  <data name="Open_SettingsA11y" xml:space="preserve"><value>Abrir privacidad de notificaciones en Windows</value></data>
+  <data name="Status_Denied" xml:space="preserve"><value>El permiso está negado. Se activa en Configuración de Windows → Privacidad → Notificaciones.</value></data>
+  <data name="Status_NoIdentity" xml:space="preserve"><value>Para leer notificaciones, Windows exige registrar la identidad de la app (tools\register-identity.ps1).</value></data>
+  <data name="Status_Unavailable" xml:space="preserve"><value>Windows no permite leer notificaciones en este momento.</value></data>
+  <data name="Status_Unspecified" xml:space="preserve"><value>Falta tu permiso para que la isla lea las notificaciones.</value></data>
+</root>

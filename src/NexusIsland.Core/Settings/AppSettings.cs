@@ -49,6 +49,7 @@ public sealed class AppSettings
             .ToList();
         if (!Enum.IsDefined(Island.Size)) Island.Size = IslandSize.Normal;
         if (!Enum.IsDefined(Island.Placement)) Island.Placement = IslandPlacementMode.DockedTopCenter;
+        General.Language = AppLanguage.Normalize(General.Language);
         if (string.IsNullOrWhiteSpace(Hotkey.Key)) Hotkey.Key = HotkeySettings.DefaultKey;
         if (!Hotkey.Ctrl && !Hotkey.Alt && !Hotkey.Shift && !Hotkey.Win) // un atajo sin modificadores sería una tecla común
         {
@@ -62,6 +63,9 @@ public sealed class GeneralSettings
 {
     public bool StartWithWindows { get; set; }
     public bool HideInFullscreen { get; set; } = true;
+
+    /// <summary>Idioma de la interfaz: "auto" (el de Windows), "es" o "en". Se aplica al reiniciar.</summary>
+    public string Language { get; set; } = AppLanguage.Auto;
 }
 
 [JsonConverter(typeof(JsonStringEnumConverter<IslandPlacementMode>))]

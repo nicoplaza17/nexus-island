@@ -1,5 +1,6 @@
 using System.Windows.Input;
 using NexusIsland.Core.Activities;
+using NexusIsland.App.Properties;
 using NexusIsland.Core.Mvvm;
 
 namespace NexusIsland.App.Island;
@@ -13,7 +14,7 @@ public sealed class LauncherItem(QuickAction action, ICommand command)
 }
 
 /// <summary>Panel de herramientas: reúne los botones que aportan los módulos activos.</summary>
-public sealed class LauncherViewModel : ObservableObject
+public sealed class LauncherViewModel : ObservableObject, IAccessibleActivity
 {
     public LauncherViewModel(IEnumerable<IQuickActionProvider> providers, Action<QuickAction> run)
     {
@@ -25,4 +26,7 @@ public sealed class LauncherViewModel : ObservableObject
     }
 
     public IReadOnlyList<LauncherItem> Items { get; }
+
+    /// <summary>Accesibilidad: lo que lee el Narrador.</summary>
+    public string AccessibleSummary => string.Format(Strings.A11y_Launcher, string.Join(", ", Items.Select(i => i.Label)));
 }

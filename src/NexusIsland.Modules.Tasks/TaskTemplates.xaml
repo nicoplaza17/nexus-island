@@ -1,5 +1,6 @@
 <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:loc="clr-namespace:NexusIsland.Modules.Tasks.Properties">
     <!--
       tasks.*       → tareas en curso (RunningTasksViewModel)
       tasks.done.*  → aviso de tarea terminada (TaskDoneViewModel)
@@ -55,7 +56,7 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
-            <TextBlock Text="En segundo plano" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,8"
+            <TextBlock Text="{x:Static loc:Strings.Panel_Title}" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,8"
                        Foreground="{DynamicResource IslandForegroundMuted}" />
             <ItemsControl Grid.Row="1" ItemsSource="{Binding Rows}" Focusable="False">
                 <ItemsControl.ItemTemplate>
@@ -139,11 +140,11 @@
             <TextBlock Grid.Row="1" Text="{Binding Detail}" FontSize="12.5" Margin="0,8,0,0" TextWrapping="Wrap" MaxHeight="36"
                        TextTrimming="CharacterEllipsis" Foreground="{DynamicResource IslandForegroundMuted}" />
             <StackPanel Grid.Row="2" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,4,0,0">
-                <Button Style="{DynamicResource IslandPillButton}" Command="{Binding ShowInFolderCommand}" Content="Mostrar en la carpeta"
-                        AutomationProperties.Name="Mostrar la descarga en la carpeta" Margin="0,0,6,0"
+                <Button Style="{DynamicResource IslandPillButton}" Command="{Binding ShowInFolderCommand}" Content="{x:Static loc:Strings.Show_InFolder}"
+                        AutomationProperties.Name="{x:Static loc:Strings.Show_InFolderA11y}" Margin="0,0,6,0"
                         Visibility="{Binding CanShowInFolder, Converter={StaticResource TskBoolToVisibility}}" />
-                <Button Style="{DynamicResource IslandPillButton}" Command="{Binding CloseCommand}" Content="Cerrar"
-                        AutomationProperties.Name="Cerrar aviso" />
+                <Button Style="{DynamicResource IslandPillButton}" Command="{Binding CloseCommand}" Content="{x:Static loc:Strings.Close}"
+                        AutomationProperties.Name="{x:Static loc:Strings.Close_A11y}" />
             </StackPanel>
         </Grid>
     </DataTemplate>

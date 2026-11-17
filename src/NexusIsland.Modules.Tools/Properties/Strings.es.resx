@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="A11y_Clipboard" xml:space="preserve"><value>Historial del portapapeles: {0}</value></data>
+  <data name="A11y_Reminder" xml:space="preserve"><value>Recordatorio: {0}</value></data>
+  <data name="A11y_Stopwatch" xml:space="preserve"><value>Cronómetro: {0}</value></data>
+  <data name="A11y_TimerDone" xml:space="preserve"><value>El temporizador terminó</value></data>
+  <data name="A11y_TimerPaused" xml:space="preserve"><value>Temporizador en pausa: quedan {0}</value></data>
+  <data name="A11y_TimerRunning" xml:space="preserve"><value>Temporizador: quedan {0}</value></data>
+  <data name="Clipboard_Busy" xml:space="preserve"><value>El portapapeles está ocupado por otra app. Probá de nuevo.</value></data>
+  <data name="Clipboard_ClearA11y" xml:space="preserve"><value>Borrar el historial del portapapeles</value></data>
+  <data name="Clipboard_ClearAll" xml:space="preserve"><value>Borrar todo</value></data>
+  <data name="Clipboard_CopyAgainTip" xml:space="preserve"><value>Clic para copiar de nuevo</value></data>
+  <data name="Clipboard_Days" xml:space="preserve"><value>{0} d</value></data>
+  <data name="Clipboard_Empty" xml:space="preserve"><value>Copiá un texto (Ctrl+C) en cualquier app y aparece acá. El historial vive solo en memoria: se borra al cerrar la isla.</value></data>
+  <data name="Clipboard_Hours" xml:space="preserve"><value>{0} h</value></data>
+  <data name="Clipboard_Minutes" xml:space="preserve"><value>{0} min</value></data>
+  <data name="Clipboard_Name" xml:space="preserve"><value>Portapapeles</value></data>
+  <data name="Clipboard_Now" xml:space="preserve"><value>ahora</value></data>
+  <data name="Clipboard_OneText" xml:space="preserve"><value>1 texto</value></data>
+  <data name="Clipboard_Texts" xml:space="preserve"><value>{0} textos</value></data>
+  <data name="Common_Cancel" xml:space="preserve"><value>Cancelar</value></data>
+  <data name="Common_Close" xml:space="preserve"><value>Cerrar</value></data>
+  <data name="Common_Delete" xml:space="preserve"><value>Borrar</value></data>
+  <data name="Common_Done" xml:space="preserve"><value>Listo</value></data>
+  <data name="Common_Pause" xml:space="preserve"><value>Pausar</value></data>
+  <data name="Reminder_Action" xml:space="preserve"><value>Recordatorio</value></data>
+  <data name="Reminder_At" xml:space="preserve"><value>Recordatorio · {0}</value></data>
+  <data name="Reminder_LateOn" xml:space="preserve"><value>Vencía el {0} a las {1}</value></data>
+  <data name="Reminder_LateToday" xml:space="preserve"><value>Vencía hoy a las {0}</value></data>
+  <data name="Reminder_MarkDone" xml:space="preserve"><value>Marcar recordatorio como listo</value></data>
+  <data name="Reminder_Snooze" xml:space="preserve"><value>Posponer 10 min</value></data>
+  <data name="Reminder_SnoozeA11y" xml:space="preserve"><value>Posponer 10 minutos</value></data>
+  <data name="Reminders_Add" xml:space="preserve"><value>Agregar</value></data>
+  <data name="Reminders_At" xml:space="preserve"><value>A las</value></data>
+  <data name="Reminders_BadMinutes" xml:space="preserve"><value>Los minutos tienen que ser un número entre 1 y 10080 (una semana).</value></data>
+  <data name="Reminders_BadTime" xml:space="preserve"><value>La hora tiene que ser HH:mm, por ejemplo 18:30.</value></data>
+  <data name="Reminders_DeleteA11y" xml:space="preserve"><value>Borrar recordatorio: {0}</value></data>
+  <data name="Reminders_Empty" xml:space="preserve"><value>No hay recordatorios pendientes.</value></data>
+  <data name="Reminders_In" xml:space="preserve"><value>En</value></data>
+  <data name="Reminders_Minutes" xml:space="preserve"><value>minutos</value></data>
+  <data name="Reminders_MinutesA11y" xml:space="preserve"><value>Minutos</value></data>
+  <data name="Reminders_Name" xml:space="preserve"><value>Recordatorios</value></data>
+  <data name="Reminders_NeedText" xml:space="preserve"><value>Escribí qué hay que recordar.</value></data>
+  <data name="Reminders_New" xml:space="preserve"><value>Nuevo recordatorio</value></data>
+  <data name="Reminders_Pending" xml:space="preserve"><value>Pendientes</value></data>
+  <data name="Reminders_Scheduled" xml:space="preserve"><value>Listo: te aviso a las {0}{1}.</value></data>
+  <data name="Reminders_TextA11y" xml:space="preserve"><value>Texto del recordatorio</value></data>
+  <data name="Reminders_TimeA11y" xml:space="preserve"><value>Hora (HH:mm)</value></data>
+  <data name="Reminders_TimeHint" xml:space="preserve"><value>(HH:mm; si ya pasó, es mañana)</value></data>
+  <data name="Reminders_Tomorrow" xml:space="preserve"><value> (mañana)</value></data>
+  <data name="Reminders_WhatTip" xml:space="preserve"><value>¿Qué hay que recordar?</value></data>
+  <data name="Reminders_WindowTitle" xml:space="preserve"><value>Nexus Island — Recordatorios</value></data>
+  <data name="Stopwatch_Close" xml:space="preserve"><value>Cerrar cronómetro</value></data>
+  <data name="Stopwatch_Continue" xml:space="preserve"><value>Seguir</value></data>
+  <data name="Stopwatch_Lap" xml:space="preserve"><value>Vuelta</value></data>
+  <data name="Stopwatch_LapFormat" xml:space="preserve"><value>Vuelta {0}   {1}</value></data>
+  <data name="Stopwatch_MarkLap" xml:space="preserve"><value>Marcar vuelta</value></data>
+  <data name="Stopwatch_Name" xml:space="preserve"><value>Cronómetro</value></data>
+  <data name="Timer_AddMinute" xml:space="preserve"><value>Agregar un minuto</value></data>
+  <data name="Timer_MinutesShort" xml:space="preserve"><value>{0} min</value></data>
+  <data name="Timer_Name" xml:space="preserve"><value>Temporizador</value></data>
+  <data name="Timer_Resume" xml:space="preserve"><value>Reanudar</value></data>
+  <data name="Timer_TimesUp" xml:space="preserve"><value>¡Tiempo!</value></data>
+  <data name="Timer_TitleFormat" xml:space="preserve"><value>Temporizador · {0}</value></data>
+</root>

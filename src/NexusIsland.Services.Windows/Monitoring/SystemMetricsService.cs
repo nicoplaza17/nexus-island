@@ -2,6 +2,7 @@ using System.Diagnostics;
 using System.Net.NetworkInformation;
 using System.Runtime.InteropServices;
 using Microsoft.Extensions.Logging;
+using NexusIsland.Services.Windows.Properties;
 using NexusIsland.Core.Monitoring;
 using WinNet = Windows.Networking.Connectivity;
 
@@ -201,9 +202,9 @@ public sealed class SystemMetricsService : ISystemMetricsSource
         "firefox" => "Firefox",
         "code" => "Visual Studio Code",
         "devenv" => "Visual Studio",
-        "explorer" => "Explorador de Windows",
-        "msmpeng" => "Antivirus de Windows",
-        "searchindexer" => "Indexador de búsqueda",
+        "explorer" => Strings.Process_Explorer,
+        "msmpeng" => Strings.Process_Defender,
+        "searchindexer" => Strings.Process_SearchIndexer,
         _ => processName,
     };
 

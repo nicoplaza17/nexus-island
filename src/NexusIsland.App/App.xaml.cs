@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Globalization;
 using System.Windows;
 using System.Windows.Threading;
 using Microsoft.Extensions.DependencyInjection;
@@ -45,6 +46,9 @@ public partial class App : Application
     private HashSet<string> _runningModuleIds = new(StringComparer.OrdinalIgnoreCase);
     private bool _restartRequested;
 
+    /// <summary>Idioma con el que arrancó la interfaz ("auto", "es" o "en"); cambiarlo pide reiniciar.</summary>
+    public static string StartupLanguage { get; private set; } = AppLanguage.Auto;
+
     protected override void OnStartup(StartupEventArgs e)
     {
         base.OnStartup(e);
@@ -72,6 +76,8 @@ public partial class App : Application
         _logger.LogInformation("Identidad de paquete: {Identity}", PackageIdentity.FullName ?? "ninguna (sin acceso a notificaciones)");
 
         var settings = _services.GetRequiredService<SettingsStore>();
+        // NEXUS_LANG=en|es|auto → fuerza el idioma sin tocar la configuración (diagnóstico).
+        ApplyLanguage(Environment.GetEnvironmentVariable("NEXUS_LANG") ?? settings.Current.General.Language);
         SyncStartupRegistration(settings.Current);
 
         // 3) Módulos activados (configuración) + plantillas visuales de cada uno.
@@ -109,6 +115,21 @@ public partial class App : Application
         foreach (var module in modules) StartModule(module);
 
         LogMemoryUsageLater();
+    }
+
+    /// <summary>
+    /// Idioma de la interfaz. Tiene que aplicarse antes de crear ventanas y plantillas: los textos de XAML
+    /// ({x:Static}) se leen una sola vez al cargarse. Por eso cambiarlo requiere reiniciar.
+    /// </summary>
+    private void ApplyLanguage(string? setting)
+    {
+        StartupLanguage = AppLanguage.Normalize(setting);
+        if (AppLanguage.Resolve(setting, CultureInfo.CurrentUICulture) is { } culture)
+        {
+            CultureInfo.DefaultThreadCurrentUICulture = culture;
+            CultureInfo.CurrentUICulture = culture;
+        }
+        _logger?.LogInformation("Idioma: {Setting} → interfaz en {Culture}", StartupLanguage, CultureInfo.CurrentUICulture.Name);
     }
 
     /// <summary>Abre la configuración (una sola ventana; si ya está abierta, la trae al frente).</summary>
@@ -245,6 +266,7 @@ public partial class App : Application
 
         // Núcleo de la isla
         services.AddSingleton<ActivityArbiter>();
+        services.AddSingleton<NexusIsland.Services.Windows.Accessibility.TextScaleWatcher>();
         services.AddSingleton<ClockViewModel>();
         services.AddSingleton<IslandWindow>();
         services.AddSingleton<TrayIconService>();

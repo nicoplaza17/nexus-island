@@ -1,6 +1,7 @@
 using Microsoft.Extensions.Logging;
 using NexusIsland.Core.Activities;
 using NexusIsland.Core.Media;
+using NexusIsland.Modules.Media.Properties;
 using NexusIsland.Core.Settings;
 
 namespace NexusIsland.Modules.Media;
@@ -38,7 +39,7 @@ public sealed class MediaModule : IIslandModule
 
     public string Id => ModuleId;
 
-    public string DisplayName => "Multimedia";
+    public string DisplayName => Strings.Module_Name;
 
     public Uri? TemplatesUri { get; } =
         new("pack://application:,,,/NexusIsland.Modules.Media;component/MediaTemplates.xaml", UriKind.Absolute);

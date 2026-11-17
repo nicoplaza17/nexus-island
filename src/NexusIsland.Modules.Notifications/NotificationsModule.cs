@@ -9,6 +9,8 @@ using NexusIsland.Core.Mvvm;
 using NexusIsland.Core.Notifications;
 using NexusIsland.Core.Settings;
 
+using NexusIsland.Modules.Notifications.Properties;
+
 namespace NexusIsland.Modules.Notifications;
 
 /// <summary>
@@ -35,7 +37,7 @@ public sealed class NotificationsModule(INotificationSource source, SettingsStor
     private NotificationsPanelViewModel? _panel;
 
     public string Id => ModuleId;
-    public string DisplayName => "Notificaciones";
+    public string DisplayName => Strings.Module_Name;
     public Uri? TemplatesUri { get; } =
         new("pack://application:,,,/NexusIsland.Modules.Notifications;component/NotificationTemplates.xaml", UriKind.Absolute);
 
@@ -51,7 +53,7 @@ public sealed class NotificationsModule(INotificationSource source, SettingsStor
     }
 
     public IEnumerable<QuickAction> GetQuickActions() =>
-        [new("notifications.panel", "Notificaciones", "\uE91C", 60, OpenPanel)];
+        [new("notifications.panel", Strings.Module_Name, "\uE91C", 60, OpenPanel)];
 
     private void Show(IslandNotification n)
     {
@@ -133,16 +135,16 @@ public sealed class NotificationsModule(INotificationSource source, SettingsStor
 }
 
 /// <summary>La notificación que se está mostrando.</summary>
-public sealed class NotificationViewModel : ObservableObject, IIslandAware
+public sealed class NotificationViewModel : ObservableObject, IIslandAware, IAccessibleActivity
 {
     public NotificationViewModel(IslandNotification n, bool showContent, Action open, Action mute, Action close)
     {
         AppName = n.AppName;
         // Sin contenido: solo se dice de qué app es (para compartir pantalla sin exponer mensajes).
-        Title = showContent ? n.Title : $"Nueva notificación de {n.AppName}";
+        Title = showContent ? n.Title : string.Format(Strings.New_From, n.AppName);
         Body = showContent ? n.Body : "";
         Time = n.At.LocalDateTime.ToString("HH:mm");
-        MuteLabel = $"Silenciar {n.AppName}";
+        MuteLabel = string.Format(Strings.Mute_App, n.AppName);
         OpenCommand = new RelayCommand(open);
         MuteCommand = new RelayCommand(mute);
         CloseCommand = new RelayCommand(close);
@@ -158,6 +160,9 @@ public sealed class NotificationViewModel : ObservableObject, IIslandAware
     public ICommand MuteCommand { get; }
     public ICommand CloseCommand { get; }
 
+    /// <summary>Accesibilidad: lo que lee el Narrador (sin contenido si el usuario lo ocultó).</summary>
+    public string AccessibleSummary => string.Format(Strings.A11y_Notification, AppName, Title, Body).TrimEnd(' ', '.') + ".";
+
     /// <summary>True mientras está expandida a la vista (no se oculta sola).</summary>
     public bool IsBeingRead { get; private set; }
 
@@ -168,13 +173,13 @@ public sealed class NotificationViewModel : ObservableObject, IIslandAware
 public sealed class NotificationItemViewModel(IslandNotification n, bool showContent, ICommand open)
 {
     public string AppName => n.AppName;
-    public string Title => showContent ? n.Title : "Notificación";
+    public string Title => showContent ? n.Title : Strings.Generic;
     public string Time => n.At.LocalDateTime.ToString("HH:mm");
     public ICommand OpenCommand => open;
 }
 
 /// <summary>Panel "Notificaciones": las últimas recibidas, o qué falta para que funcionen.</summary>
-public sealed class NotificationsPanelViewModel : ObservableObject
+public sealed class NotificationsPanelViewModel : ObservableObject, IAccessibleActivity
 {
     private readonly Action<IslandNotification> _open;
     private string _status = "";
@@ -200,15 +205,18 @@ public sealed class NotificationsPanelViewModel : ObservableObject
     public ICommand RequestAccessCommand { get; }
     public ICommand OpenPrivacyCommand { get; }
 
+    /// <summary>Accesibilidad: lo que lee el Narrador.</summary>
+    public string AccessibleSummary => string.Format(Strings.A11y_Panel, _ready ? string.Format(Strings.A11y_Count, Items.Count) : StatusText);
+
     public void Refresh(IReadOnlyList<IslandNotification> items, NotificationAccess access, bool showContent, DateTimeOffset now)
     {
         IsReady = access == NotificationAccess.Allowed;
         StatusText = access switch
         {
-            NotificationAccess.NoPackageIdentity => "Para leer notificaciones, Windows exige registrar la identidad de la app (tools\\register-identity.ps1).",
-            NotificationAccess.Unspecified => "Falta tu permiso para que la isla lea las notificaciones.",
-            NotificationAccess.Denied => "El permiso está negado. Se activa en Configuración de Windows → Privacidad → Notificaciones.",
-            NotificationAccess.Unavailable => "Windows no permite leer notificaciones en este momento.",
+            NotificationAccess.NoPackageIdentity => Strings.Status_NoIdentity,
+            NotificationAccess.Unspecified => Strings.Status_Unspecified,
+            NotificationAccess.Denied => Strings.Status_Denied,
+            NotificationAccess.Unavailable => Strings.Status_Unavailable,
             _ => "",
         };
         CanRequestAccess = access == NotificationAccess.Unspecified;

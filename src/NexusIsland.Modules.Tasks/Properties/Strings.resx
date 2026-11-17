@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="A11y_Done" xml:space="preserve"><value>{0}. {1}</value></data>
+  <data name="A11y_Running" xml:space="preserve"><value>{0}: {1}</value></data>
+  <data name="Close" xml:space="preserve"><value>Close</value></data>
+  <data name="Close_A11y" xml:space="preserve"><value>Close notice</value></data>
+  <data name="Copying_Files" xml:space="preserve"><value>Copying files</value></data>
+  <data name="Done_Copy" xml:space="preserve"><value>Copy finished</value></data>
+  <data name="Done_Download" xml:space="preserve"><value>Download complete</value></data>
+  <data name="Done_Failed" xml:space="preserve"><value>Didn't complete</value></data>
+  <data name="Done_Install" xml:space="preserve"><value>Installation finished</value></data>
+  <data name="Done_InstallFailed" xml:space="preserve"><value>Installation failed</value></data>
+  <data name="Done_InstallerClosed" xml:space="preserve"><value>The installer closed</value></data>
+  <data name="Done_Uninstall" xml:space="preserve"><value>Uninstall finished</value></data>
+  <data name="Module_Name" xml:space="preserve"><value>Background tasks</value></data>
+  <data name="More_Count" xml:space="preserve"><value>+{0} more</value></data>
+  <data name="Panel_Title" xml:space="preserve"><value>In the background</value></data>
+  <data name="Preparing" xml:space="preserve"><value>Preparing…</value></data>
+  <data name="Show_InFolder" xml:space="preserve"><value>Show in folder</value></data>
+  <data name="Show_InFolderA11y" xml:space="preserve"><value>Show the download in its folder</value></data>
+  <data name="Task_Count" xml:space="preserve"><value>{0} tasks</value></data>
+  <data name="Verb_Copy" xml:space="preserve"><value>Copying</value></data>
+  <data name="Verb_Download" xml:space="preserve"><value>Downloading</value></data>
+  <data name="Verb_Install" xml:space="preserve"><value>Installing</value></data>
+</root>

@@ -7,6 +7,8 @@ using NexusIsland.Core.Island;
 using NexusIsland.Core.Mvvm;
 using NexusIsland.Core.Tools;
 
+using NexusIsland.Modules.Tools.Properties;
+
 namespace NexusIsland.Modules.Tools.Timer;
 
 /// <summary>Temporizador: 1, 5, 10 o 25 min desde el panel de herramientas. Al terminar, alerta con sonido.</summary>
@@ -19,7 +21,7 @@ public sealed class TimerModule(ILogger<TimerModule> logger) : IIslandModule, IQ
     private TimerViewModel? _vm;
 
     public string Id => "timer";
-    public string DisplayName => "Temporizador";
+    public string DisplayName => Strings.Timer_Name;
     public Uri? TemplatesUri => Glyphs.TemplatesUri;
 
     public Task StartAsync(IActivityHost host, CancellationToken cancellationToken)
@@ -38,7 +40,7 @@ public sealed class TimerModule(ILogger<TimerModule> logger) : IIslandModule, IQ
 
     public IEnumerable<QuickAction> GetQuickActions() =>
         new[] { 1, 5, 10, 25 }.Select((minutes, i) =>
-            new QuickAction($"timer.{minutes}", $"{minutes} min", Glyphs.Timer, 10 + i, () => StartTimer(TimeSpan.FromMinutes(minutes))));
+            new QuickAction($"timer.{minutes}", string.Format(Strings.Timer_MinutesShort, minutes), Glyphs.Timer, 10 + i, () => StartTimer(TimeSpan.FromMinutes(minutes))));
 
     private void StartTimer(TimeSpan duration)
     {
@@ -62,11 +64,11 @@ public sealed class TimerModule(ILogger<TimerModule> logger) : IIslandModule, IQ
     public void Dispose() => _vm?.Stop();
 }
 
-public sealed class TimerViewModel : ObservableObject
+public sealed class TimerViewModel : ObservableObject, IAccessibleActivity
 {
     private readonly CountdownTimer _timer = new();
     private readonly DispatcherTimer _tick = new(DispatcherPriority.Background) { Interval = TimeSpan.FromMilliseconds(250) };
-    private string _remaining = "0:00", _title = "Temporizador";
+    private string _remaining = "0:00", _title = Strings.Timer_Name;
     private double _progress;
 
     public TimerViewModel()
@@ -104,8 +106,13 @@ public sealed class TimerViewModel : ObservableObject
     public bool IsNotFinished => !IsFinished;
     public bool IsPaused => _timer.State == CountdownState.Paused;
     public string PauseResumeGlyph => IsPaused ? Glyphs.Play : Glyphs.Pause;
-    public string PauseResumeLabel => IsPaused ? "Reanudar" : "Pausar";
-    public string CloseLabel => IsFinished ? "Listo" : "Cancelar";
+    public string PauseResumeLabel => IsPaused ? Strings.Timer_Resume : Strings.Common_Pause;
+    public string CloseLabel => IsFinished ? Strings.Common_Done : Strings.Common_Cancel;
+
+    /// <summary>Accesibilidad: lo que lee el Narrador.</summary>
+    public string AccessibleSummary => IsFinished
+        ? Strings.A11y_TimerDone
+        : string.Format(IsPaused ? Strings.A11y_TimerPaused : Strings.A11y_TimerRunning, RemainingText);
 
     public ICommand PauseResumeCommand { get; }
     public ICommand AddMinuteCommand { get; }
@@ -114,7 +121,7 @@ public sealed class TimerViewModel : ObservableObject
     public void Start(TimeSpan duration)
     {
         _timer.Start(duration, DateTimeOffset.Now);
-        Title = $"Temporizador · {CountdownTimer.Format(duration)}";
+        Title = string.Format(Strings.Timer_TitleFormat, CountdownTimer.Format(duration));
         _tick.Start();
         Refresh();
     }
@@ -145,7 +152,7 @@ public sealed class TimerViewModel : ObservableObject
     private void Refresh()
     {
         var now = DateTimeOffset.Now;
-        RemainingText = IsFinished ? "¡Tiempo!" : CountdownTimer.Format(_timer.Remaining(now));
+        RemainingText = IsFinished ? Strings.Timer_TimesUp : CountdownTimer.Format(_timer.Remaining(now));
         Progress = IsFinished ? 1 : _timer.Progress(now);
         OnPropertyChanged(nameof(IsFinished));
         OnPropertyChanged(nameof(IsNotFinished));

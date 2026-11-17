@@ -90,7 +90,7 @@ internal sealed class DownloadWatcher : IDisposable
         // Firefox borra el ".part" y deja el archivo final; si el final no está, se canceló.
         Thread.Sleep(300); // el navegador puede tardar un instante en dejar el final
         var finalPath = Path.Combine(_folder, prev.FinalName);
-        var completed = prev.FinalName != "Descarga" && File.Exists(finalPath);
+        var completed = prev.FinalName != DownloadFiles.UnnamedName && File.Exists(finalPath);
         _raise(Done(prev, prev.FinalName, completed ? finalPath : _folder, completed));
     }
 

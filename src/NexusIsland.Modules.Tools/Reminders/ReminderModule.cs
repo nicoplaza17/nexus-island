@@ -6,6 +6,8 @@ using NexusIsland.Core.Activities;
 using NexusIsland.Core.Mvvm;
 using NexusIsland.Core.Tools;
 
+using NexusIsland.Modules.Tools.Properties;
+
 namespace NexusIsland.Modules.Tools.Reminders;
 
 /// <summary>
@@ -24,7 +26,7 @@ public sealed class ReminderModule(ReminderStore store, ILogger<ReminderModule> 
     private ReminderWindow? _window;
 
     public string Id => "reminders";
-    public string DisplayName => "Recordatorios";
+    public string DisplayName => Strings.Reminders_Name;
     public Uri? TemplatesUri => Glyphs.TemplatesUri;
 
     public Task StartAsync(IActivityHost host, CancellationToken cancellationToken)
@@ -38,7 +40,7 @@ public sealed class ReminderModule(ReminderStore store, ILogger<ReminderModule> 
     }
 
     public IEnumerable<QuickAction> GetQuickActions() =>
-        [new("reminders.new", "Recordatorio", Glyphs.Bell, 30, OpenWindow)];
+        [new("reminders.new", Strings.Reminder_Action, Glyphs.Bell, 30, OpenWindow)];
 
     private void OpenWindow()
     {
@@ -94,7 +96,7 @@ public sealed class ReminderModule(ReminderStore store, ILogger<ReminderModule> 
     }
 }
 
-public sealed class ReminderAlertViewModel : ObservableObject
+public sealed class ReminderAlertViewModel : ObservableObject, IAccessibleActivity
 {
     private Reminder? _current;
     private string _text = "", _when = "";
@@ -121,9 +123,14 @@ public sealed class ReminderAlertViewModel : ObservableObject
         IsLate = now - reminder.DueAt > TimeSpan.FromMinutes(2);
         var at = reminder.DueAt.LocalDateTime;
         WhenText = IsLate
-            ? $"Vencía {(at.Date == DateTime.Today ? "hoy" : at.ToString("dd/MM"))} a las {at:HH:mm}"
-            : $"Recordatorio · {at:HH:mm}";
+            ? (at.Date == DateTime.Today
+                ? string.Format(Strings.Reminder_LateToday, at.ToString("HH:mm"))
+                : string.Format(Strings.Reminder_LateOn, at.ToString("d"), at.ToString("HH:mm")))
+            : string.Format(Strings.Reminder_At, at.ToString("HH:mm"));
     }
 
     public void Clear() => _current = null;
+
+    /// <summary>Accesibilidad: lo que lee el Narrador.</summary>
+    public string AccessibleSummary => string.Format(Strings.A11y_Reminder, Text);
 }

@@ -4,6 +4,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using Microsoft.Extensions.Logging;
 using NexusIsland.Core.Tasks;
+using NexusIsland.Services.Windows.Properties;
 
 namespace NexusIsland.Services.Windows.Tasks;
 
@@ -90,7 +91,7 @@ public sealed class BackgroundTaskService : IBackgroundTaskSource
                 {
                     task = _copies.TryGetValue(hwnd, out var prev)
                         ? prev with { Progress = progress ?? prev.Progress, UpdatedAt = now, Detail = title }
-                        : new BackgroundTask($"copy:{hwnd}", TaskKind.FileCopy, "Copiando archivos", TaskState.Running, now, now, progress, Detail: title);
+                        : new BackgroundTask($"copy:{hwnd}", TaskKind.FileCopy, Strings.Task_CopyingFiles, TaskState.Running, now, now, progress, Detail: title);
                     _copies[hwnd] = task;
                 }
                 Raise(task);
@@ -163,7 +164,7 @@ public sealed class BackgroundTaskService : IBackgroundTaskSource
                         continue;
                     }
                     var task = new BackgroundTask($"setup:{p.Id}", TaskKind.Install, title, TaskState.Running, started, now,
-                        Detail: "Instalador en curso");
+                        Detail: Strings.Task_InstallerRunning);
                     lock (_sync) _installers[p.Id] = task;
                     Raise(task);
                 }
@@ -176,7 +177,7 @@ public sealed class BackgroundTaskService : IBackgroundTaskSource
                 foreach (var key in _installers.Keys.Where(k => !alive.Contains(k)).ToList()) _installers.Remove(key);
             }
             // Un setup.exe que se cierra no dice si salió bien: se informa como "terminó".
-            foreach (var e in ended) Raise(e with { State = TaskState.Ended, UpdatedAt = now, Detail = "El instalador se cerró" });
+            foreach (var e in ended) Raise(e with { State = TaskState.Ended, UpdatedAt = now, Detail = Strings.Task_InstallerClosed });
         }
         catch (Exception ex) { _logger.LogDebug(ex, "No se pudieron revisar los procesos"); }
     }
@@ -201,15 +202,15 @@ public sealed class BackgroundTaskService : IBackgroundTaskSource
                     try
                     {
                         var props = r.Properties;
-                        var product = props.Count > 0 ? props[0].Value?.ToString() ?? "Programa" : "Programa";
+                        var product = props.Count > 0 ? props[0].Value?.ToString() ?? Strings.Task_UnknownProduct : Strings.Task_UnknownProduct;
                         var status = props.Count > 3 && int.TryParse(props[3].Value?.ToString(), out var s) ? s : -1;
                         var removal = r.Id == 1034;
                         var ok = status is 0 or 3010; // 3010 = OK, requiere reiniciar
                         var detail = ok
-                            ? (removal ? "Desinstalado" : "Instalado") + (status == 3010 ? " · requiere reiniciar" : "")
-                            : $"{(removal ? "La desinstalación" : "La instalación")} falló (código {status})";
+                            ? (removal ? Strings.Task_Uninstalled : Strings.Task_Installed) + (status == 3010 ? Strings.Task_RestartRequired : "")
+                            : string.Format(removal ? Strings.Task_UninstallFailed : Strings.Task_InstallFailed, status);
                         var at = r.TimeCreated is { } t ? new DateTimeOffset(t) : DateTimeOffset.Now;
-                        Raise(new BackgroundTask($"msi:{r.RecordId}", TaskKind.Install, product,
+                        Raise(new BackgroundTask($"{(removal ? BackgroundTaskIds.MsiRemovalPrefix : BackgroundTaskIds.MsiInstallPrefix)}{r.RecordId}", TaskKind.Install, product,
                             ok ? TaskState.Completed : TaskState.Failed, at, at, ok ? 1 : null, Detail: detail));
                     }
                     catch (Exception ex) { _logger.LogDebug(ex, "Evento de Windows Installer con formato inesperado"); }

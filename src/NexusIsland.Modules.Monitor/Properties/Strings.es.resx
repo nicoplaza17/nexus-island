@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="A11y_Alert" xml:space="preserve"><value>Alerta: {0}. {1}</value></data>
+  <data name="A11y_Panel" xml:space="preserve"><value>Sistema. CPU {0}. Memoria {1}. Red: {2}.</value></data>
+  <data name="A11y_PanelBattery" xml:space="preserve"><value> Batería {0}.</value></data>
+  <data name="Alert_BatteryCritical" xml:space="preserve"><value>Enchufá la notebook: queda muy poca carga.</value></data>
+  <data name="Alert_BatteryLow" xml:space="preserve"><value>Conviene enchufar la notebook.</value></data>
+  <data name="Alert_BatteryTitle" xml:space="preserve"><value>Batería al {0} %</value></data>
+  <data name="Alert_CloseA11y" xml:space="preserve"><value>Cerrar alerta</value></data>
+  <data name="Alert_CpuDetail" xml:space="preserve"><value>Hace más de 30 s que el procesador está casi al máximo.</value></data>
+  <data name="Alert_CpuTitle" xml:space="preserve"><value>CPU al {0} %</value></data>
+  <data name="Alert_Culprit" xml:space="preserve"><value>{0} Más uso: {1}.</value></data>
+  <data name="Alert_GotIt" xml:space="preserve"><value>Entendido</value></data>
+  <data name="Alert_MemDetail" xml:space="preserve"><value>Queda poca RAM libre: la PC puede ponerse lenta.</value></data>
+  <data name="Alert_MemTitle" xml:space="preserve"><value>Memoria al {0} %</value></data>
+  <data name="Alert_OfflineDetail" xml:space="preserve"><value>Se perdió la conexión. Te aviso cuando vuelva.</value></data>
+  <data name="Alert_OfflineTitle" xml:space="preserve"><value>Sin Internet</value></data>
+  <data name="Alert_RestoredDetail" xml:space="preserve"><value>Volvió la conexión a Internet.</value></data>
+  <data name="Alert_RestoredOn" xml:space="preserve"><value>Volvió la conexión ({0}).</value></data>
+  <data name="Alert_ViewSystem" xml:space="preserve"><value>Ver sistema</value></data>
+  <data name="Alert_ViewSystemA11y" xml:space="preserve"><value>Ver panel del sistema</value></data>
+  <data name="Battery_Plugged" xml:space="preserve"><value> · enchufada</value></data>
+  <data name="Memory_Of" xml:space="preserve"><value>{0} de {1}</value></data>
+  <data name="Module_Name" xml:space="preserve"><value>Monitoreo del sistema</value></data>
+  <data name="Net_Captive" xml:space="preserve"><value>{0} · pide iniciar sesión</value></data>
+  <data name="Net_Connected" xml:space="preserve"><value>Conectado</value></data>
+  <data name="Net_LocalOnly" xml:space="preserve"><value>Red local sin Internet</value></data>
+  <data name="Net_Network" xml:space="preserve"><value>Red</value></data>
+  <data name="Net_None" xml:space="preserve"><value>Sin conexión</value></data>
+  <data name="Panel_Title" xml:space="preserve"><value>Sistema</value></data>
+  <data name="Temp_Approx" xml:space="preserve"><value>{0} °C aprox.</value></data>
+  <data name="Temp_Tip" xml:space="preserve"><value>Zona térmica ACPI: aproximada, no es exactamente la temperatura del procesador</value></data>
+  <data name="Tile_Battery" xml:space="preserve"><value>BATERÍA</value></data>
+  <data name="Tile_Cpu" xml:space="preserve"><value>CPU</value></data>
+  <data name="Tile_Memory" xml:space="preserve"><value>MEMORIA</value></data>
+</root>

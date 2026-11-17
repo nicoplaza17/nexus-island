@@ -1,6 +1,7 @@
-<Application x:Class="NexusIsland.App.App"
+﻿<Application x:Class="NexusIsland.App.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:sys="clr-namespace:System;assembly=System.Runtime"
              ShutdownMode="OnExplicitShutdown">
     <!-- Sin StartupUri: la ventana se crea a mano en App.xaml.cs (después del control de instancia única). -->
     <Application.Resources>
@@ -17,29 +18,39 @@
         <SolidColorBrush x:Key="IslandForeground" Color="#F2FFFFFF" />
         <SolidColorBrush x:Key="IslandForegroundMuted" Color="#99FFFFFF" />
         <SolidColorBrush x:Key="IslandAccent" Color="#FF34D399" />
+        <!-- Modo teclado (Ctrl+Alt+K): los botones de la isla solo pueden tomar el foco mientras está activo. -->
+        <sys:Boolean x:Key="IslandKeyboardMode">False</sys:Boolean>
         <FontFamily x:Key="IslandFont">Segoe UI Variable Text, Segoe UI</FontFamily>
         <FontFamily x:Key="IslandGlyphFont">Segoe Fluent Icons, Segoe MDL2 Assets</FontFamily>
 
         <!-- Botón chico con ícono (controles de la isla: panel de herramientas). Nunca toma el foco. -->
         <Style x:Key="IslandSmallButton" TargetType="Button">
-            <Setter Property="Focusable" Value="False" />
+            <Setter Property="Focusable" Value="{DynamicResource IslandKeyboardMode}" />
+            <Setter Property="FocusVisualStyle" Value="{x:Null}" />
             <Setter Property="Cursor" Value="Hand" />
             <Setter Property="Width" Value="26" />
             <Setter Property="Height" Value="26" />
             <Setter Property="FontSize" Value="12" />
             <Setter Property="FontFamily" Value="{StaticResource IslandGlyphFont}" />
-            <Setter Property="Foreground" Value="{StaticResource IslandForegroundMuted}" />
+            <Setter Property="Foreground" Value="{DynamicResource IslandForegroundMuted}" />
             <Setter Property="Background" Value="Transparent" />
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
-                        <Border x:Name="Bg" Background="{TemplateBinding Background}" CornerRadius="13">
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
-                        </Border>
+                        <Grid>
+                            <Border x:Name="Bg" Background="{TemplateBinding Background}" CornerRadius="13">
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                            </Border>
+                            <Border x:Name="FocusRing" CornerRadius="15" Margin="-2" BorderThickness="2"
+                                    BorderBrush="{DynamicResource IslandAccent}" Visibility="Collapsed" />
+                        </Grid>
                         <ControlTemplate.Triggers>
+                            <Trigger Property="IsKeyboardFocused" Value="True">
+                                <Setter TargetName="FocusRing" Property="Visibility" Value="Visible" />
+                            </Trigger>
                             <Trigger Property="IsMouseOver" Value="True">
                                 <Setter TargetName="Bg" Property="Background" Value="#24FFFFFF" />
-                                <Setter Property="Foreground" Value="{StaticResource IslandForeground}" />
+                                <Setter Property="Foreground" Value="{DynamicResource IslandForeground}" />
                             </Trigger>
                             <Trigger Property="IsPressed" Value="True">
                                 <Setter TargetName="Bg" Property="Background" Value="#3DFFFFFF" />
@@ -55,20 +66,28 @@
 
         <!-- Botón de acción con ícono y texto (paneles y alertas). -->
         <Style x:Key="IslandPillButton" TargetType="Button">
-            <Setter Property="Focusable" Value="False" />
+            <Setter Property="Focusable" Value="{DynamicResource IslandKeyboardMode}" />
+            <Setter Property="FocusVisualStyle" Value="{x:Null}" />
             <Setter Property="Cursor" Value="Hand" />
-            <Setter Property="Foreground" Value="{StaticResource IslandForeground}" />
+            <Setter Property="Foreground" Value="{DynamicResource IslandForeground}" />
             <Setter Property="Background" Value="#1AFFFFFF" />
             <Setter Property="FontSize" Value="12" />
             <Setter Property="Padding" Value="12,6" />
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
-                        <Border x:Name="Bg" Background="{TemplateBinding Background}" CornerRadius="10"
-                                Padding="{TemplateBinding Padding}">
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
-                        </Border>
+                        <Grid>
+                            <Border x:Name="Bg" Background="{TemplateBinding Background}" CornerRadius="10"
+                                    Padding="{TemplateBinding Padding}">
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                            </Border>
+                            <Border x:Name="FocusRing" CornerRadius="12" Margin="-2" BorderThickness="2"
+                                    BorderBrush="{DynamicResource IslandAccent}" Visibility="Collapsed" />
+                        </Grid>
                         <ControlTemplate.Triggers>
+                            <Trigger Property="IsKeyboardFocused" Value="True">
+                                <Setter TargetName="FocusRing" Property="Visibility" Value="Visible" />
+                            </Trigger>
                             <Trigger Property="IsMouseOver" Value="True">
                                 <Setter TargetName="Bg" Property="Background" Value="#2EFFFFFF" />
                             </Trigger>

@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using Microsoft.Extensions.Logging;
 using NexusIsland.App.Island;
+using NexusIsland.App.Properties;
 using NexusIsland.Core;
 using NexusIsland.Services.Windows.Shell;
 using Forms = System.Windows.Forms;
@@ -35,12 +36,12 @@ public sealed class TrayIconService : IDisposable
         var menu = new Forms.ContextMenuStrip();
         menu.Items.Add(_toggleItem);
         menu.Items.Add(new Forms.ToolStripSeparator());
-        var settingsItem = new Forms.ToolStripMenuItem("Configuración…", null, (_, _) => SettingsRequested?.Invoke());
+        var settingsItem = new Forms.ToolStripMenuItem(Strings.Tray_Settings, null, (_, _) => SettingsRequested?.Invoke());
         settingsItem.Font = new Font(settingsItem.Font, FontStyle.Bold); // acción principal (también con doble clic)
         menu.Items.Add(settingsItem);
-        menu.Items.Add(new Forms.ToolStripMenuItem("Abrir carpeta de logs", null, (_, _) => OpenLogsFolder()));
+        menu.Items.Add(new Forms.ToolStripMenuItem(Strings.Tray_Logs, null, (_, _) => OpenLogsFolder()));
         menu.Items.Add(new Forms.ToolStripSeparator());
-        menu.Items.Add(new Forms.ToolStripMenuItem("Salir", null, (_, _) => System.Windows.Application.Current.Shutdown()));
+        menu.Items.Add(new Forms.ToolStripMenuItem(Strings.Tray_Exit, null, (_, _) => System.Windows.Application.Current.Shutdown()));
         menu.Opening += (_, _) => _toggleItem.Text = ToggleText();
 
         _notifyIcon = new Forms.NotifyIcon
@@ -66,7 +67,7 @@ public sealed class TrayIconService : IDisposable
     public event Action? SettingsRequested;
 
     private string ToggleText() =>
-        $"{(_island.IsUserVisible ? "Ocultar isla" : "Mostrar isla")}\t{_island.HotkeyText}";
+        $"{(_island.IsUserVisible ? Strings.Tray_Hide : Strings.Tray_Show)}\t{_island.HotkeyText}";
 
     private void OpenLogsFolder()
     {

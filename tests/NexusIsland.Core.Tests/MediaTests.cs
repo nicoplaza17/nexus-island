@@ -81,23 +81,23 @@ public class SourceAppNamesTests
     [InlineData("MSEdge", "Microsoft Edge")]
     [InlineData("Chrome", "Google Chrome")]
     [InlineData("308046B0AF4A39CB", "Firefox")]
-    [InlineData("Microsoft.ZuneMusic_8wekyb3d8bbwe!Microsoft.ZuneMusic", "Reproductor multimedia")]
-    [InlineData("Chrome._crx_pjibgcllelbfgfagdaldikeohf", "App web (Chrome)")]
-    [InlineData("MSEdge._crx_abcdef", "App web (Edge)")]
+    [InlineData("Microsoft.ZuneMusic_8wekyb3d8bbwe!Microsoft.ZuneMusic", "@App_MediaPlayer")]
+    [InlineData("Chrome._crx_pjibgcllelbfgfagdaldikeohf", "@App_WebChrome")]
+    [InlineData("MSEdge._crx_abcdef", "@App_WebEdge")]
     public void Known_apps(string aumid, string expected)
     {
         Assert.True(SourceAppNames.TryGetKnown(aumid, out var name));
-        Assert.Equal(expected, name);
+        Assert.Equal(TestText.R(expected), name);
     }
 
     [Theory]
     [InlineData("miReproductor.exe", "MiReproductor")]
     [InlineData("Empresa.App_abc123!Player", "Player")]
     [InlineData(@"C:\Apps\radio.exe", "Radio")]
-    [InlineData("", "Multimedia")]
+    [InlineData("", "@Media_Generic")]
     public void Unknown_apps_are_cleaned_up(string aumid, string expected)
     {
         Assert.False(SourceAppNames.TryGetKnown(aumid, out _));
-        Assert.Equal(expected, SourceAppNames.Prettify(aumid));
+        Assert.Equal(TestText.R(expected), SourceAppNames.Prettify(aumid));
     }
 }

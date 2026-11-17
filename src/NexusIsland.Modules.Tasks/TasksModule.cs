@@ -11,6 +11,8 @@ using NexusIsland.Core.Mvvm;
 using NexusIsland.Core.Settings;
 using NexusIsland.Core.Tasks;
 
+using NexusIsland.Modules.Tasks.Properties;
+
 namespace NexusIsland.Modules.Tasks;
 
 /// <summary>
@@ -37,7 +39,7 @@ public sealed class TasksModule(IBackgroundTaskSource source, SettingsStore sett
     private bool _runningPublished;
 
     public string Id => ModuleId;
-    public string DisplayName => "Tareas en segundo plano";
+    public string DisplayName => Strings.Module_Name;
     public Uri? TemplatesUri { get; } =
         new("pack://application:,,,/NexusIsland.Modules.Tasks;component/TaskTemplates.xaml", UriKind.Absolute);
 
@@ -135,9 +137,9 @@ internal static class TaskText
 
     public static string Verb(BackgroundTask t) => t.Kind switch
     {
-        TaskKind.Download => "Descargando",
-        TaskKind.FileCopy => "Copiando",
-        _ => "Instalando",
+        TaskKind.Download => Strings.Verb_Download,
+        TaskKind.FileCopy => Strings.Verb_Copy,
+        _ => Strings.Verb_Install,
     };
 
     /// <summary>"45,3 MB · 3,2 MB/s", "37 %", "Instalador en curso".</summary>
@@ -146,7 +148,7 @@ internal static class TaskText
         TaskKind.Download => t.BytesPerSecond is > 0
             ? $"{MetricFormat.Size(t.Bytes)} · {MetricFormat.Rate(t.BytesPerSecond)}"
             : MetricFormat.Size(t.Bytes),
-        TaskKind.FileCopy => t.Progress is { } p ? $"{p:P0}" : "Preparando…",
+        TaskKind.FileCopy => t.Progress is { } p ? $"{p:P0}" : Strings.Preparing,
         _ => t.Detail ?? "",
     };
 }
@@ -154,14 +156,14 @@ internal static class TaskText
 public sealed class TaskRowViewModel(BackgroundTask t)
 {
     public string Glyph => TaskText.Glyph(t.Kind);
-    public string Title => t.Kind == TaskKind.FileCopy ? "Copiando archivos" : $"{TaskText.Verb(t)} {t.Title}";
+    public string Title => t.Kind == TaskKind.FileCopy ? Strings.Copying_Files : $"{TaskText.Verb(t)} {t.Title}";
     public string Detail => TaskText.Detail(t);
     public bool HasProgress => t.Progress is not null;
     public double Progress => t.Progress ?? 0;
 }
 
 /// <summary>Las tareas en curso (la principal + el resto).</summary>
-public sealed class RunningTasksViewModel : ObservableObject
+public sealed class RunningTasksViewModel : ObservableObject, IAccessibleActivity
 {
     private string _glyph = "", _title = "", _short = "", _detail = "", _more = "";
     private double _progress;
@@ -176,17 +178,20 @@ public sealed class RunningTasksViewModel : ObservableObject
     public bool HasProgress { get => _hasProgress; private set => SetProperty(ref _hasProgress, value); }
     public ObservableCollection<TaskRowViewModel> Rows { get; } = [];
 
+    /// <summary>Accesibilidad: lo que lee el Narrador.</summary>
+    public string AccessibleSummary => string.Format(Strings.A11y_Running, Title, Detail) + (MoreText.Length > 0 ? " " + MoreText : "");
+
     public void Update(TaskSummary s)
     {
         var p = s.Primary;
         Glyph = TaskText.Glyph(p.Kind);
-        Title = p.Kind == TaskKind.FileCopy ? "Copiando archivos" : p.Title;
+        Title = p.Kind == TaskKind.FileCopy ? Strings.Copying_Files : p.Title;
         Detail = TaskText.Detail(p);
         HasProgress = p.Progress is not null;
         Progress = p.Progress ?? 0;
         // Compacto: "37 %" si hay porcentaje; si no, la cantidad de tareas o el tamaño descargado.
-        ShortText = p.Progress is { } pr ? $"{pr:P0}" : s.RunningCount > 1 ? $"{s.RunningCount} tareas" : MetricFormat.Size(p.Bytes);
-        MoreText = s.RunningCount > 1 ? $"+{s.RunningCount - 1} más" : "";
+        ShortText = p.Progress is { } pr ? $"{pr:P0}" : s.RunningCount > 1 ? string.Format(Strings.Task_Count, s.RunningCount) : MetricFormat.Size(p.Bytes);
+        MoreText = s.RunningCount > 1 ? string.Format(Strings.More_Count, s.RunningCount - 1) : "";
 
         Rows.Clear();
         foreach (var t in s.Running.Take(3)) Rows.Add(new TaskRowViewModel(t));
@@ -194,7 +199,7 @@ public sealed class RunningTasksViewModel : ObservableObject
 }
 
 /// <summary>Aviso de tarea terminada.</summary>
-public sealed class TaskDoneViewModel : ObservableObject, IIslandAware
+public sealed class TaskDoneViewModel : ObservableObject, IIslandAware, IAccessibleActivity
 {
     public TaskDoneViewModel(BackgroundTask t, Action<string> showInFolder, Action close)
     {
@@ -202,11 +207,11 @@ public sealed class TaskDoneViewModel : ObservableObject, IIslandAware
         IsFailed = t.State == TaskState.Failed;
         Title = (t.Kind, t.State) switch
         {
-            (_, TaskState.Failed) => t.Kind == TaskKind.Install ? "Falló la instalación" : "No se completó",
-            (TaskKind.Download, _) => "Descarga completa",
-            (TaskKind.FileCopy, _) => "Copia terminada",
-            (TaskKind.Install, TaskState.Ended) => "El instalador se cerró",
-            _ => t.Detail?.StartsWith("Desinstalado", StringComparison.Ordinal) == true ? "Desinstalación terminada" : "Instalación terminada",
+            (_, TaskState.Failed) => t.Kind == TaskKind.Install ? Strings.Done_InstallFailed : Strings.Done_Failed,
+            (TaskKind.Download, _) => Strings.Done_Download,
+            (TaskKind.FileCopy, _) => Strings.Done_Copy,
+            (TaskKind.Install, TaskState.Ended) => Strings.Done_InstallerClosed,
+            _ => BackgroundTaskIds.IsRemoval(t) ? Strings.Done_Uninstall : Strings.Done_Install,
         };
         Detail = t.Kind == TaskKind.FileCopy ? "" : t.Title + (t.Kind == TaskKind.Install && t.Detail is { } d ? $" · {d}" : "");
         CanShowInFolder = t.Kind == TaskKind.Download && t.State == TaskState.Completed && t.Location is not null;
@@ -223,6 +228,9 @@ public sealed class TaskDoneViewModel : ObservableObject, IIslandAware
     public ICommand ShowInFolderCommand { get; }
     public ICommand CloseCommand { get; }
     public bool IsBeingRead { get; private set; }
+
+    /// <summary>Accesibilidad: lo que lee el Narrador.</summary>
+    public string AccessibleSummary => Detail.Length > 0 ? string.Format(Strings.A11y_Done, Title, Detail) : Title;
 
     public void OnIslandStateChanged(IslandState state, bool isShown) =>
         IsBeingRead = isShown && state == IslandState.Expanded;

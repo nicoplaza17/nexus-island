@@ -41,9 +41,29 @@ public sealed class IslandStateMachine
             Schedule(IslandTimer.None); // volvió a entrar: se cancela cualquier contracción pendiente
     }
 
+    /// <summary>Modo teclado: la isla queda expandida hasta <see cref="Release"/> (el mouse no la contrae).</summary>
+    public bool IsHeld { get; private set; }
+
+    /// <summary>Expande y mantiene expandida (modo teclado).</summary>
+    public void Hold()
+    {
+        IsHeld = true;
+        Schedule(IslandTimer.None);
+        SetState(IslandState.Expanded);
+    }
+
+    /// <summary>Sale del modo teclado: se contrae.</summary>
+    public void Release()
+    {
+        if (!IsHeld) return;
+        IsHeld = false;
+        ForceCollapse();
+    }
+
     public void PointerExited()
     {
         IsPointerInside = false;
+        if (IsHeld) return;
         switch (State)
         {
             case IslandState.Collapsed: Schedule(IslandTimer.None); break;
@@ -58,6 +78,7 @@ public sealed class IslandStateMachine
         // (por ejemplo con pantalla táctil). Así la contracción automática funciona igual al salir.
         IsPointerInside = true;
         Schedule(IslandTimer.None);
+        if (IsHeld) return; // en modo teclado un clic no la contrae (se sale con Esc)
         if (State == IslandState.Expanded)
             SetState(IsPointerInside ? IslandState.Peek : IslandState.Collapsed);
         else
@@ -108,6 +129,7 @@ public sealed class IslandStateMachine
     /// <summary>Vuelve a contraída de inmediato (por ejemplo al empezar a arrastrar u ocultar).</summary>
     public void ForceCollapse()
     {
+        IsHeld = false;
         Schedule(IslandTimer.None);
         SetState(IslandState.Collapsed);
     }

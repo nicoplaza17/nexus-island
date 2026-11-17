@@ -1,6 +1,7 @@
 <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:controls="clr-namespace:NexusIsland.Modules.Media.Controls">
+                    xmlns:controls="clr-namespace:NexusIsland.Modules.Media.Controls"
+                    xmlns:loc="clr-namespace:NexusIsland.Modules.Media.Properties">
     <!--
       Plantillas del módulo Multimedia. La isla las busca por nombre:
         media.Compact  (148 x 32)   media.Peek  (248 x 40)   media.Expanded  (398 x 182)
@@ -12,7 +13,8 @@
 
     <!-- Botón redondo con ícono, sin foco (la isla nunca roba el foco). -->
     <Style x:Key="MediaIconButton" TargetType="Button">
-        <Setter Property="Focusable" Value="False" />
+        <Setter Property="Focusable" Value="{DynamicResource IslandKeyboardMode}" />
+        <Setter Property="FocusVisualStyle" Value="{x:Null}" />
         <Setter Property="Cursor" Value="Hand" />
         <Setter Property="Width" Value="38" />
         <Setter Property="Height" Value="38" />
@@ -23,11 +25,18 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
-                    <Border x:Name="Bg" Background="{TemplateBinding Background}"
-                            CornerRadius="{Binding ActualHeight, RelativeSource={RelativeSource Self}}">
-                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
-                    </Border>
+                    <Grid>
+                        <Border x:Name="Bg" Background="{TemplateBinding Background}"
+                                CornerRadius="{Binding ActualHeight, RelativeSource={RelativeSource Self}}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <Ellipse x:Name="FocusRing" Margin="-2" StrokeThickness="2"
+                                 Stroke="{DynamicResource IslandAccent}" Visibility="Collapsed" />
+                    </Grid>
                     <ControlTemplate.Triggers>
+                        <Trigger Property="IsKeyboardFocused" Value="True">
+                            <Setter TargetName="FocusRing" Property="Visibility" Value="Visible" />
+                        </Trigger>
                         <Trigger Property="IsMouseOver" Value="True">
                             <Setter TargetName="Bg" Property="Background" Value="#1FFFFFFF" />
                         </Trigger>
@@ -188,12 +197,12 @@
             <!-- Controles -->
             <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
                 <Button Style="{StaticResource MediaIconButton}" Content="&#xE892;"
-                        Command="{Binding PreviousCommand}" AutomationProperties.Name="Anterior" ToolTip="Anterior" />
+                        Command="{Binding PreviousCommand}" AutomationProperties.Name="{x:Static loc:Strings.Media_Previous}" ToolTip="{x:Static loc:Strings.Media_Previous}" />
                 <Button Style="{StaticResource MediaIconButton}" Margin="14,0" Width="44" Height="44" FontSize="20"
                         Content="{Binding PlayPauseGlyph}" Command="{Binding PlayPauseCommand}"
                         AutomationProperties.Name="{Binding PlayPauseLabel}" ToolTip="{Binding PlayPauseLabel}" />
                 <Button Style="{StaticResource MediaIconButton}" Content="&#xE893;"
-                        Command="{Binding NextCommand}" AutomationProperties.Name="Siguiente" ToolTip="Siguiente" />
+                        Command="{Binding NextCommand}" AutomationProperties.Name="{x:Static loc:Strings.Media_Next}" ToolTip="{x:Static loc:Strings.Media_Next}" />
             </StackPanel>
         </Grid>
     </DataTemplate>

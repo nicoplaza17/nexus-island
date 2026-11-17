@@ -1,5 +1,6 @@
 <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:loc="clr-namespace:NexusIsland.App.Properties">
     <!-- Panel de herramientas (se abre con el botón ⊞ de la isla expandida). -->
 
     <DataTemplate x:Key="launcher.Compact">
@@ -9,7 +10,7 @@
     </DataTemplate>
 
     <DataTemplate x:Key="launcher.Peek">
-        <TextBlock Text="Herramientas" FontSize="13" FontWeight="SemiBold"
+        <TextBlock Text="{x:Static loc:Strings.Tools}" FontSize="13" FontWeight="SemiBold"
                    Foreground="{DynamicResource IslandForeground}"
                    HorizontalAlignment="Center" VerticalAlignment="Center" />
     </DataTemplate>
@@ -20,12 +21,13 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
-            <TextBlock Text="Herramientas" FontSize="12" FontWeight="SemiBold" Margin="4,0,0,8"
+            <TextBlock Text="{x:Static loc:Strings.Tools}" FontSize="12" FontWeight="SemiBold" Margin="4,0,0,8"
                        Foreground="{DynamicResource IslandForegroundMuted}" />
             <ItemsControl Grid.Row="1" ItemsSource="{Binding Items}" Focusable="False">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <UniformGrid Columns="4" />
+                        <!-- 5 columnas: con 9-10 herramientas entran en 2 filas sin cortar los nombres. -->
+                        <UniformGrid Columns="5" />
                     </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>

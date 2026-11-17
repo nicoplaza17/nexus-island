@@ -7,13 +7,14 @@ using NexusIsland.Core.Activities;
 using NexusIsland.Core.Island;
 using NexusIsland.Core.Media;
 using NexusIsland.Core.Mvvm;
+using NexusIsland.Modules.Media.Properties;
 
 namespace NexusIsland.Modules.Media;
 
 /// <summary>
 /// Datos y comandos que muestran las plantillas multimedia. Vive en el hilo de la interfaz.
 /// </summary>
-public sealed class MediaViewModel : ObservableObject, IIslandAware
+public sealed class MediaViewModel : ObservableObject, IIslandAware, IAccessibleActivity
 {
     // Glifos de Segoe Fluent Icons / Segoe MDL2 Assets.
     private const string GlyphPlay = "\uE768";
@@ -80,7 +81,13 @@ public sealed class MediaViewModel : ObservableObject, IIslandAware
 
     public bool IsNotPlaying => !_isPlaying;
     public string PlayPauseGlyph => _isPlaying ? GlyphPause : GlyphPlay;
-    public string PlayPauseLabel => _isPlaying ? "Pausar" : "Reproducir";
+    public string PlayPauseLabel => _isPlaying ? Strings.Media_Pause : Strings.Media_Play;
+
+    /// <summary>Accesibilidad: lo que lee el Narrador.</summary>
+    public string AccessibleSummary => string.Format(_isPlaying ? Strings.A11y_Playing : Strings.A11y_Paused, Title, Artist, AppName);
+
+    /// <summary>Lo que se anuncia al cambiar de canción.</summary>
+    public string Announcement => string.Format(Strings.A11y_NewTrack, Title, Artist);
 
     public bool HasTimeline { get => _hasTimeline; private set => SetProperty(ref _hasTimeline, value); }
     public double Progress { get => _progress; private set => SetProperty(ref _progress, value); }

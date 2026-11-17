@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using Microsoft.Extensions.Logging;
+using NexusIsland.Services.Windows.Properties;
 using NexusIsland.Core.Notifications;
 using Windows.UI.Notifications;
 using Windows.UI.Notifications.Management;
@@ -128,7 +129,7 @@ public sealed class UserNotificationService : INotificationSource
     {
         try
         {
-            var appName = n.AppInfo?.DisplayInfo?.DisplayName ?? "Notificación";
+            var appName = n.AppInfo?.DisplayInfo?.DisplayName ?? Strings.Notification_Generic;
             var appId = n.AppInfo?.AppUserModelId ?? n.AppInfo?.Id ?? "";
             var binding = n.Notification?.Visual?.GetBinding(KnownNotificationBindings.ToastGeneric);
             var texts = binding?.GetTextElements().Select(t => t.Text?.Trim()).Where(t => !string.IsNullOrEmpty(t)).ToList() ?? [];

@@ -4,6 +4,8 @@ using NexusIsland.Core.Activities;
 using NexusIsland.Core.Monitoring;
 using NexusIsland.Core.Settings;
 
+using NexusIsland.Modules.Monitor.Properties;
+
 namespace NexusIsland.Modules.Monitor;
 
 /// <summary>
@@ -42,7 +44,7 @@ public sealed class MonitorModule : IIslandModule, IQuickActionProvider
     }
 
     public string Id => ModuleId;
-    public string DisplayName => "Monitoreo del sistema";
+    public string DisplayName => Strings.Module_Name;
     public Uri? TemplatesUri { get; } =
         new("pack://application:,,,/NexusIsland.Modules.Monitor;component/MonitorTemplates.xaml", UriKind.Absolute);
 
@@ -59,7 +61,7 @@ public sealed class MonitorModule : IIslandModule, IQuickActionProvider
     }
 
     public IEnumerable<QuickAction> GetQuickActions() =>
-        [new("monitor.panel", "Sistema", "\uE9D9", 50, OpenPanel)];
+        [new("monitor.panel", Strings.Panel_Title, "\uE9D9", 50, OpenPanel)];
 
     private void OpenPanel()
     {

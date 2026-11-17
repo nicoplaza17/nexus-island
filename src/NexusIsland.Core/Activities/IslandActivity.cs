@@ -57,6 +57,18 @@ public interface IIslandAware
     void OnIslandStateChanged(IslandState state, bool isShown);
 }
 
+/// <summary>
+/// Accesibilidad: resumen hablado de lo que muestra la actividad (lo lee el Narrador u otro lector de
+/// pantalla). Debe ser una frase completa y corta, por ejemplo "Reproduciendo Chase the Sun de Planet Funk".
+/// </summary>
+public interface IAccessibleActivity
+{
+    string AccessibleSummary { get; }
+
+    /// <summary>Lo que se anuncia cuando la actividad pide atención (por defecto, el resumen).</summary>
+    string Announcement => AccessibleSummary;
+}
+
 /// <summary>Contrato de un módulo de la isla.</summary>
 public interface IIslandModule : IDisposable
 {

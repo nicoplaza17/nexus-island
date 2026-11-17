@@ -1,3 +1,5 @@
+using NexusIsland.Core.Properties;
+
 namespace NexusIsland.Core.Media;
 
 /// <summary>
@@ -7,7 +9,8 @@ namespace NexusIsland.Core.Media;
 public static class SourceAppNames
 {
     // Se busca "contiene" sin distinguir mayúsculas, en este orden.
-    private static readonly (string Fragment, string Name)[] Known =
+    // Se arma en cada consulta (no una sola vez) para que los nombres sigan el idioma actual.
+    private static (string Fragment, string Name)[] Known =>
     [
         ("spotify", "Spotify"),
         ("msedge", "Microsoft Edge"),
@@ -20,8 +23,8 @@ public static class SourceAppNames
         ("vivaldi", "Vivaldi"),
         ("applemusic", "Apple Music"),
         ("AppleInc.iTunes", "iTunes"),
-        ("ZuneMusic", "Reproductor multimedia"),
-        ("ZuneVideo", "Películas y TV"),
+        ("ZuneMusic", Strings.App_MediaPlayer),
+        ("ZuneVideo", Strings.App_MoviesTv),
         ("deezer", "Deezer"),
         ("tidal", "TIDAL"),
         ("amazonmusic", "Amazon Music"),
@@ -40,7 +43,7 @@ public static class SourceAppNames
         if (appUserModelId.Contains("_crx_", StringComparison.OrdinalIgnoreCase))
         {
             name = appUserModelId.StartsWith("MSEdge", StringComparison.OrdinalIgnoreCase)
-                ? "App web (Edge)" : "App web (Chrome)";
+                ? Strings.App_WebEdge : Strings.App_WebChrome;
             return true;
         }
 
@@ -59,13 +62,13 @@ public static class SourceAppNames
     /// <summary>Último recurso: limpia el identificador ("MiApp.exe" → "MiApp", "Paquete_xyz!App" → "App").</summary>
     public static string Prettify(string appUserModelId)
     {
-        if (string.IsNullOrWhiteSpace(appUserModelId)) return "Multimedia";
+        if (string.IsNullOrWhiteSpace(appUserModelId)) return Strings.Media_Generic;
         var name = appUserModelId;
         var bang = name.LastIndexOf('!');
         if (bang >= 0 && bang < name.Length - 1) name = name[(bang + 1)..];
         if (name.EndsWith(".exe", StringComparison.OrdinalIgnoreCase)) name = name[..^4];
         var slash = name.LastIndexOfAny(['\\', '/']);
         if (slash >= 0) name = name[(slash + 1)..];
-        return name.Length > 0 ? char.ToUpperInvariant(name[0]) + name[1..] : "Multimedia";
+        return name.Length > 0 ? char.ToUpperInvariant(name[0]) + name[1..] : Strings.Media_Generic;
     }
 }

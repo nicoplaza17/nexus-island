@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="A11y_Clock" xml:space="preserve"><value>Nexus Island. {0}, {1}</value></data>
+  <data name="A11y_KeyboardMode" xml:space="preserve"><value>Nexus Island keyboard mode. Tab moves between buttons, left and right arrows change page, Escape exits.</value></data>
+  <data name="A11y_Launcher" xml:space="preserve"><value>Tools: {0}</value></data>
+  <data name="A11y_Page" xml:space="preserve"><value>Page {0} of {1}. {2}</value></data>
+  <data name="Clock_DragHint" xml:space="preserve"><value>Drag to move</value></data>
+  <data name="Clock_HotkeyHint" xml:space="preserve"><value>{0} hides the island</value></data>
+  <data name="Hotkey_Cancelled" xml:space="preserve"><value>Change cancelled.</value></data>
+  <data name="Hotkey_Done" xml:space="preserve"><value>Done: {0} shows and hides the island.</value></data>
+  <data name="Hotkey_Help" xml:space="preserve"><value>Use Ctrl, Alt, Shift or Win + a key. Esc to cancel.</value></data>
+  <data name="Hotkey_NeedModifier" xml:space="preserve"><value>A modifier is missing (Ctrl, Alt, Shift or Win): a single key would interfere with your typing.</value></data>
+  <data name="Hotkey_Press" xml:space="preserve"><value>Press the combination…</value></data>
+  <data name="Hotkey_Taken" xml:space="preserve"><value>{0} is already used by another app or Windows. Keeping {1}.</value></data>
+  <data name="Settings_About" xml:space="preserve"><value>About</value></data>
+  <data name="Settings_AlertBattery" xml:space="preserve"><value>Battery at 20 % and 10 % (unplugged)</value></data>
+  <data name="Settings_AlertCpu" xml:space="preserve"><value>CPU at 90 % or more for 30 seconds</value></data>
+  <data name="Settings_AlertMemory" xml:space="preserve"><value>Memory at 90 % or more</value></data>
+  <data name="Settings_AlertNetwork" xml:space="preserve"><value>No Internet / connection restored</value></data>
+  <data name="Settings_Alerts" xml:space="preserve"><value>System alerts</value></data>
+  <data name="Settings_AlertsHint" xml:space="preserve"><value>The island checks itself every 3 seconds and only alerts when needed. The 'System' panel (tools button) is always available.</value></data>
+  <data name="Settings_Change" xml:space="preserve"><value>Change…</value></data>
+  <data name="Settings_ConfigFile" xml:space="preserve"><value>Settings:</value></data>
+  <data name="Settings_Floating" xml:space="preserve"><value>It's now loose where you left it. Pick a monitor to dock it at the top center again.</value></data>
+  <data name="Settings_General" xml:space="preserve"><value>General</value></data>
+  <data name="Settings_HasIdentity" xml:space="preserve"><value>The island has package identity: it can read notifications (if you granted permission).</value></data>
+  <data name="Settings_HideFullscreen" xml:space="preserve"><value>Hide the island when an app is full screen</value></data>
+  <data name="Settings_Hotkey" xml:space="preserve"><value>Show / hide shortcut</value></data>
+  <data name="Settings_IgnoredApps" xml:space="preserve"><value>Ignored apps</value></data>
+  <data name="Settings_IgnoredHint" xml:space="preserve"><value>The island doesn't show playback from these apps (handy for WhatsApp, Discord or browsers that aren't your music player). Apps that played something since the island started are listed.</value></data>
+  <data name="Settings_Language" xml:space="preserve"><value>Language · Idioma</value></data>
+  <data name="Settings_LanguageAuto" xml:space="preserve"><value>Automatic (Windows language)</value></data>
+  <data name="Settings_Media" xml:space="preserve"><value>Media</value></data>
+  <data name="Settings_Modules" xml:space="preserve"><value>Modules</value></data>
+  <data name="Settings_MutedApps" xml:space="preserve"><value>Muted apps</value></data>
+  <data name="Settings_MutedHint" xml:space="preserve"><value>Apps are muted from the island ('Mute' button). Uncheck an app to see it again.</value></data>
+  <data name="Settings_NoApps" xml:space="preserve"><value>No app detected yet. Play something and click Refresh.</value></data>
+  <data name="Settings_NoIdentity" xml:space="preserve"><value>No package identity: Windows doesn't allow reading notifications. See tools\register-identity.ps1 in the README.</value></data>
+  <data name="Settings_None" xml:space="preserve"><value>None.</value></data>
+  <data name="Settings_Notifications" xml:space="preserve"><value>Notifications from other apps</value></data>
+  <data name="Settings_NotifyTrack" xml:space="preserve"><value>Show the song for a few seconds when it changes</value></data>
+  <data name="Settings_OpenConfigFolder" xml:space="preserve"><value>Open settings folder</value></data>
+  <data name="Settings_OpenLogs" xml:space="preserve"><value>Open logs</value></data>
+  <data name="Settings_Position" xml:space="preserve"><value>Position</value></data>
+  <data name="Settings_PositionHint" xml:space="preserve"><value>Docked at the top center of the chosen monitor. You can also drag it with the mouse: if you drop it far from the center, it stays loose there.</value></data>
+  <data name="Settings_Primary" xml:space="preserve"><value> (primary)</value></data>
+  <data name="Settings_Refresh" xml:space="preserve"><value>Refresh list</value></data>
+  <data name="Settings_RestartNeeded" xml:space="preserve"><value>Applies when the island restarts.</value></data>
+  <data name="Settings_RestartNow" xml:space="preserve"><value>Restart now</value></data>
+  <data name="Settings_ShowContent" xml:space="preserve"><value>Show notification text</value></data>
+  <data name="Settings_ShowContentHint" xml:space="preserve"><value>If you turn it off, the island only says which app it's from (handy when sharing your screen).</value></data>
+  <data name="Settings_Size" xml:space="preserve"><value>Island size</value></data>
+  <data name="Settings_SizeLarge" xml:space="preserve"><value>Large</value></data>
+  <data name="Settings_SizeNormal" xml:space="preserve"><value>Normal</value></data>
+  <data name="Settings_SizeSmall" xml:space="preserve"><value>Small</value></data>
+  <data name="Settings_StartWithWindows" xml:space="preserve"><value>Start with Windows</value></data>
+  <data name="Settings_StartupBlocked" xml:space="preserve"><value>Windows has Nexus Island's startup turned off (Task Manager → Startup apps). Turn it on there for this to work.</value></data>
+  <data name="Settings_StartupError" xml:space="preserve"><value>Couldn't change start with Windows. The details are in the log.</value></data>
+  <data name="Settings_TaskCopies" xml:space="preserve"><value>File copies in Explorer</value></data>
+  <data name="Settings_TaskDownloads" xml:space="preserve"><value>Browser downloads (Downloads folder)</value></data>
+  <data name="Settings_TaskInstalls" xml:space="preserve"><value>Installations</value></data>
+  <data name="Settings_Tasks" xml:space="preserve"><value>Background tasks</value></data>
+  <data name="Settings_TasksHint" xml:space="preserve"><value>Only things lasting more than 3 seconds show up. Downloads show size and speed (browsers don't report the total); Explorer copies show the percentage.</value></data>
+  <data name="Settings_Title" xml:space="preserve"><value>Nexus Island — Settings</value></data>
+  <data name="Tools" xml:space="preserve"><value>Tools</value></data>
+  <data name="Tray_Exit" xml:space="preserve"><value>Exit</value></data>
+  <data name="Tray_Hide" xml:space="preserve"><value>Hide island</value></data>
+  <data name="Tray_Logs" xml:space="preserve"><value>Open logs folder</value></data>
+  <data name="Tray_Settings" xml:space="preserve"><value>Settings…</value></data>
+  <data name="Tray_Show" xml:space="preserve"><value>Show island</value></data>
+</root>

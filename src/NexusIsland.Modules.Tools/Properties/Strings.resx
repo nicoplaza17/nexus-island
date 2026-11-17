@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="A11y_Clipboard" xml:space="preserve"><value>Clipboard history: {0}</value></data>
+  <data name="A11y_Reminder" xml:space="preserve"><value>Reminder: {0}</value></data>
+  <data name="A11y_Stopwatch" xml:space="preserve"><value>Stopwatch: {0}</value></data>
+  <data name="A11y_TimerDone" xml:space="preserve"><value>The timer finished</value></data>
+  <data name="A11y_TimerPaused" xml:space="preserve"><value>Timer paused: {0} left</value></data>
+  <data name="A11y_TimerRunning" xml:space="preserve"><value>Timer: {0} left</value></data>
+  <data name="Clipboard_Busy" xml:space="preserve"><value>The clipboard is busy in another app. Try again.</value></data>
+  <data name="Clipboard_ClearA11y" xml:space="preserve"><value>Clear clipboard history</value></data>
+  <data name="Clipboard_ClearAll" xml:space="preserve"><value>Clear all</value></data>
+  <data name="Clipboard_CopyAgainTip" xml:space="preserve"><value>Click to copy again</value></data>
+  <data name="Clipboard_Days" xml:space="preserve"><value>{0} d</value></data>
+  <data name="Clipboard_Empty" xml:space="preserve"><value>Copy some text (Ctrl+C) in any app and it shows up here. The history lives only in memory: it's cleared when the island closes.</value></data>
+  <data name="Clipboard_Hours" xml:space="preserve"><value>{0} h</value></data>
+  <data name="Clipboard_Minutes" xml:space="preserve"><value>{0} min</value></data>
+  <data name="Clipboard_Name" xml:space="preserve"><value>Clipboard</value></data>
+  <data name="Clipboard_Now" xml:space="preserve"><value>now</value></data>
+  <data name="Clipboard_OneText" xml:space="preserve"><value>1 text</value></data>
+  <data name="Clipboard_Texts" xml:space="preserve"><value>{0} texts</value></data>
+  <data name="Common_Cancel" xml:space="preserve"><value>Cancel</value></data>
+  <data name="Common_Close" xml:space="preserve"><value>Close</value></data>
+  <data name="Common_Delete" xml:space="preserve"><value>Delete</value></data>
+  <data name="Common_Done" xml:space="preserve"><value>Done</value></data>
+  <data name="Common_Pause" xml:space="preserve"><value>Pause</value></data>
+  <data name="Reminder_Action" xml:space="preserve"><value>Reminder</value></data>
+  <data name="Reminder_At" xml:space="preserve"><value>Reminder · {0}</value></data>
+  <data name="Reminder_LateOn" xml:space="preserve"><value>Was due on {0} at {1}</value></data>
+  <data name="Reminder_LateToday" xml:space="preserve"><value>Was due today at {0}</value></data>
+  <data name="Reminder_MarkDone" xml:space="preserve"><value>Mark reminder as done</value></data>
+  <data name="Reminder_Snooze" xml:space="preserve"><value>Snooze 10 min</value></data>
+  <data name="Reminder_SnoozeA11y" xml:space="preserve"><value>Snooze 10 minutes</value></data>
+  <data name="Reminders_Add" xml:space="preserve"><value>Add</value></data>
+  <data name="Reminders_At" xml:space="preserve"><value>At</value></data>
+  <data name="Reminders_BadMinutes" xml:space="preserve"><value>Minutes must be a number between 1 and 10080 (one week).</value></data>
+  <data name="Reminders_BadTime" xml:space="preserve"><value>Time must be HH:mm, for example 18:30.</value></data>
+  <data name="Reminders_DeleteA11y" xml:space="preserve"><value>Delete reminder: {0}</value></data>
+  <data name="Reminders_Empty" xml:space="preserve"><value>No pending reminders.</value></data>
+  <data name="Reminders_In" xml:space="preserve"><value>In</value></data>
+  <data name="Reminders_Minutes" xml:space="preserve"><value>minutes</value></data>
+  <data name="Reminders_MinutesA11y" xml:space="preserve"><value>Minutes</value></data>
+  <data name="Reminders_Name" xml:space="preserve"><value>Reminders</value></data>
+  <data name="Reminders_NeedText" xml:space="preserve"><value>Type what you want to be reminded of.</value></data>
+  <data name="Reminders_New" xml:space="preserve"><value>New reminder</value></data>
+  <data name="Reminders_Pending" xml:space="preserve"><value>Pending</value></data>
+  <data name="Reminders_Scheduled" xml:space="preserve"><value>Done: I'll remind you at {0}{1}.</value></data>
+  <data name="Reminders_TextA11y" xml:space="preserve"><value>Reminder text</value></data>
+  <data name="Reminders_TimeA11y" xml:space="preserve"><value>Time (HH:mm)</value></data>
+  <data name="Reminders_TimeHint" xml:space="preserve"><value>(HH:mm; if it already passed, it's tomorrow)</value></data>
+  <data name="Reminders_Tomorrow" xml:space="preserve"><value> (tomorrow)</value></data>
+  <data name="Reminders_WhatTip" xml:space="preserve"><value>What should I remind you of?</value></data>
+  <data name="Reminders_WindowTitle" xml:space="preserve"><value>Nexus Island — Reminders</value></data>
+  <data name="Stopwatch_Close" xml:space="preserve"><value>Close stopwatch</value></data>
+  <data name="Stopwatch_Continue" xml:space="preserve"><value>Resume</value></data>
+  <data name="Stopwatch_Lap" xml:space="preserve"><value>Lap</value></data>
+  <data name="Stopwatch_LapFormat" xml:space="preserve"><value>Lap {0}   {1}</value></data>
+  <data name="Stopwatch_MarkLap" xml:space="preserve"><value>Mark lap</value></data>
+  <data name="Stopwatch_Name" xml:space="preserve"><value>Stopwatch</value></data>
+  <data name="Timer_AddMinute" xml:space="preserve"><value>Add one minute</value></data>
+  <data name="Timer_MinutesShort" xml:space="preserve"><value>{0} min</value></data>
+  <data name="Timer_Name" xml:space="preserve"><value>Timer</value></data>
+  <data name="Timer_Resume" xml:space="preserve"><value>Resume</value></data>
+  <data name="Timer_TimesUp" xml:space="preserve"><value>Time's up!</value></data>
+  <data name="Timer_TitleFormat" xml:space="preserve"><value>Timer · {0}</value></data>
+</root>

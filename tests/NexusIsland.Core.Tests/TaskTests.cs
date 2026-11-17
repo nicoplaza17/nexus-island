@@ -66,13 +66,13 @@ public class DownloadFilesTests
 {
     [Theory]
     [InlineData(@"C:\Users\x\Downloads\setup.exe.crdownload", "setup.exe", "Chrome / Edge")]
-    [InlineData(@"C:\Users\x\Downloads\Unconfirmed 812345.crdownload", "Descarga", "Chrome / Edge")]
+    [InlineData(@"C:\Users\x\Downloads\Unconfirmed 812345.crdownload", "@Download_Unnamed", "Chrome / Edge")]
     [InlineData(@"C:\Users\x\Downloads\video.mp4.part", "video.mp4", "Firefox")]
     [InlineData(@"C:\Users\x\Downloads\doc.pdf.partial", "doc.pdf", "Edge")]
     public void Recognizes_browser_temp_files(string path, string expectedName, string expectedBrowser)
     {
         Assert.True(DownloadFiles.TryParseTemp(path, out var name, out var browser));
-        Assert.Equal(expectedName, name);
+        Assert.Equal(TestText.R(expectedName), name);
         Assert.Equal(expectedBrowser, browser);
     }
 

@@ -5,6 +5,8 @@ using NexusIsland.Core.Activities;
 using NexusIsland.Core.Mvvm;
 using NexusIsland.Core.Tools;
 
+using NexusIsland.Modules.Tools.Properties;
+
 namespace NexusIsland.Modules.Tools.Clipboard;
 
 /// <summary>
@@ -21,7 +23,7 @@ public sealed class ClipboardModule(IClipboardMonitor monitor, ILogger<Clipboard
     private ClipboardViewModel? _vm;
 
     public string Id => "clipboard";
-    public string DisplayName => "Portapapeles";
+    public string DisplayName => Strings.Clipboard_Name;
     public Uri? TemplatesUri => Glyphs.TemplatesUri;
 
     public Task StartAsync(IActivityHost host, CancellationToken cancellationToken)
@@ -35,7 +37,7 @@ public sealed class ClipboardModule(IClipboardMonitor monitor, ILogger<Clipboard
 
     public IEnumerable<QuickAction> GetQuickActions() =>
     [
-        new("clipboard.open", "Portapapeles", Glyphs.Clipboard, 40, () =>
+        new("clipboard.open", Strings.Clipboard_Name, Glyphs.Clipboard, 40, () =>
         {
             if (_vm is null || _host is null) return;
             _vm.Refresh(_history.Entries, DateTimeOffset.Now);
@@ -57,7 +59,7 @@ public sealed class ClipboardModule(IClipboardMonitor monitor, ILogger<Clipboard
         }
         else
         {
-            _vm?.ShowMessage("El portapapeles está ocupado por otra app. Probá de nuevo.");
+            _vm?.ShowMessage(Strings.Clipboard_Busy);
         }
     }
 
@@ -84,7 +86,7 @@ public sealed class ClipboardItemViewModel(ClipboardEntry entry, string ago, ICo
     public ICommand CopyCommand => copy;
 }
 
-public sealed class ClipboardViewModel : ObservableObject
+public sealed class ClipboardViewModel : ObservableObject, IAccessibleActivity
 {
     private readonly Action<ClipboardEntry> _copy;
     private string _message = "";
@@ -98,7 +100,10 @@ public sealed class ClipboardViewModel : ObservableObject
     public ObservableCollection<ClipboardItemViewModel> Items { get; } = [];
     public bool HasItems => Items.Count > 0;
     public bool IsEmpty => Items.Count == 0;
-    public string CountText => Items.Count == 1 ? "1 texto" : $"{Items.Count} textos";
+    public string CountText => Items.Count == 1 ? Strings.Clipboard_OneText : string.Format(Strings.Clipboard_Texts, Items.Count);
+
+    /// <summary>Accesibilidad: lo que lee el Narrador.</summary>
+    public string AccessibleSummary => string.Format(Strings.A11y_Clipboard, CountText);
     public string Message { get => _message; private set => SetProperty(ref _message, value); }
     public ICommand ClearCommand { get; }
 
@@ -118,8 +123,8 @@ public sealed class ClipboardViewModel : ObservableObject
 
     public void ShowMessage(string message) => Message = message;
 
-    private static string Ago(TimeSpan t) => t.TotalMinutes < 1 ? "ahora"
-        : t.TotalHours < 1 ? $"{(int)t.TotalMinutes} min"
-        : t.TotalDays < 1 ? $"{(int)t.TotalHours} h"
-        : $"{(int)t.TotalDays} d";
+    private static string Ago(TimeSpan t) => t.TotalMinutes < 1 ? Strings.Clipboard_Now
+        : t.TotalHours < 1 ? string.Format(Strings.Clipboard_Minutes, (int)t.TotalMinutes)
+        : t.TotalDays < 1 ? string.Format(Strings.Clipboard_Hours, (int)t.TotalHours)
+        : string.Format(Strings.Clipboard_Days, (int)t.TotalDays);
 }

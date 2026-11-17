@@ -9,6 +9,7 @@ using NexusIsland.Core.Activities;
 using NexusIsland.Core.Geometry;
 using NexusIsland.Core.Island;
 using NexusIsland.Core.Settings;
+using NexusIsland.Services.Windows.Accessibility;
 using NexusIsland.Services.Windows.Display;
 using NexusIsland.Services.Windows.Input;
 using NexusIsland.Services.Windows.Shell;
@@ -29,6 +30,7 @@ public partial class IslandWindow : Window
     private readonly ActivityArbiter _arbiter;
     private readonly ClockViewModel _clock;
     private readonly SettingsStore _settings;
+    private readonly TextScaleWatcher _textScale;
     private double _appliedScale = 1.0;
     private HotkeySettings? _registeredHotkey;
     private readonly IslandStateMachine _stateMachine = new();
@@ -49,15 +51,20 @@ public partial class IslandWindow : Window
     private bool _pressed;
     private PixelPoint _pressCursor;
 
-    public IslandWindow(ILogger<IslandWindow> logger, ActivityArbiter arbiter, ClockViewModel clock, SettingsStore settings)
+    public IslandWindow(ILogger<IslandWindow> logger, ActivityArbiter arbiter, ClockViewModel clock, SettingsStore settings,
+        TextScaleWatcher textScale)
     {
         _logger = logger;
         _arbiter = arbiter;
         _clock = clock;
         _settings = settings;
+        _textScale = textScale;
         InitializeComponent();
-        ApplyScale(_settings.Current.Island.Scale, reposition: false);
+        ApplyScale(EffectiveScale(_settings.Current), reposition: false);
         _settings.Changed += OnSettingsChanged;
+        // El evento llega en otro hilo: se pasa al de la interfaz.
+        _textScale.Changed += () => Dispatcher.BeginInvoke(() => OnSettingsChanged(_settings.Current));
+        InitializeAccessibility();
 
         _animator = new IslandAnimator(IslandFrame, IslandShape, ShadowInner, ShadowOuter, ContentHost,
             CollapsedLayer, PeekLayer, ExpandedLayer)
@@ -98,7 +105,7 @@ public partial class IslandWindow : Window
 
         _housekeeping.Tick += (_, _) => Housekeeping();
         SourceInitialized += OnSourceInitialized;
-        Closed += (_, _) => { _hotkey?.Dispose(); _housekeeping.Stop(); };
+        Closed += (_, _) => { _hotkey?.Dispose(); _keyboardHotkey?.Dispose(); _housekeeping.Stop(); };
 
         // Actividades: el reloj siempre está (prioridad mínima); los módulos agregan las suyas.
         _arbiter.CurrentChanged += current =>
@@ -166,9 +173,13 @@ public partial class IslandWindow : Window
 
     private void OnSettingsChanged(AppSettings settings)
     {
-        if (Math.Abs(settings.Island.Scale - _appliedScale) > 0.001)
-            ApplyScale(settings.Island.Scale, reposition: true);
+        var scale = EffectiveScale(settings);
+        if (Math.Abs(scale - _appliedScale) > 0.001)
+            ApplyScale(scale, reposition: true);
     }
+
+    /// <summary>Tamaño elegido × "Tamaño del texto" de Windows (accesibilidad), hasta 150 %.</summary>
+    private double EffectiveScale(AppSettings settings) => IslandScale.Effective(settings.Island.Scale, _textScale.Factor);
 
     /// <summary>Tamaño de la isla: escala todo el contenido y el lienzo de la ventana.</summary>
     private void ApplyScale(double scale, bool reposition)
@@ -205,6 +216,7 @@ public partial class IslandWindow : Window
 
         _hotkey = new GlobalHotkey(_hwnd, ToggleHotkeyId);
         TryRegister(_settings.Current.Hotkey);
+        RegisterKeyboardModeHotkey();
 
         _housekeeping.Start();
         if (Environment.GetEnvironmentVariable("NEXUS_BENCH") == "1") StartBenchmark();
@@ -216,7 +228,8 @@ public partial class IslandWindow : Window
 
     private IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
     {
-        if (OverlayWindowStyles.TryHandleMouseActivate(msg, out var result))
+        // En modo teclado la isla sí puede activarse (si no, el clic no le robaría el foco a nadie).
+        if (!_keyboardMode && OverlayWindowStyles.TryHandleMouseActivate(msg, out var result))
         {
             handled = true;
             return result;
@@ -225,6 +238,13 @@ public partial class IslandWindow : Window
         if (_hotkey?.Matches(msg, wParam) == true)
         {
             ToggleUserVisibility();
+            handled = true;
+            return IntPtr.Zero;
+        }
+
+        if (_keyboardHotkey?.Matches(msg, wParam) == true)
+        {
+            ToggleKeyboardMode();
             handled = true;
             return IntPtr.Zero;
         }
@@ -355,9 +375,11 @@ public partial class IslandWindow : Window
         var pages = Pages();
         if (pages.Count < 2 || _shownActivity is null || _shownActivity.Priority >= ActivityPriority.Panel) return;
         var index = pages.FindIndex(a => a.Key == _shownActivity.Key);
-        var next = pages[((index < 0 ? 0 : index) + direction + pages.Count) % pages.Count];
+        var nextIndex = ((index < 0 ? 0 : index) + direction + pages.Count) % pages.Count;
+        var next = pages[nextIndex];
         _pinnedKey = next.Key == _arbiter.Current?.Key ? null : next.Key;
         RefreshDisplay();
+        if (_keyboardMode) AnnouncePage(nextIndex + 1, pages.Count, next);
     }
 
     private void OnMouseWheel(object sender, MouseWheelEventArgs e)
@@ -419,6 +441,8 @@ public partial class IslandWindow : Window
         SetHost(PeekHost, activity, "Peek");
         SetHost(ExpandedHost, activity, "Expanded");
         NotifyAware(activity, _stateMachine.State, isShown: true);
+        UpdateAccessibleName();
+        if (_keyboardMode) FocusFirstControlLater(); // los botones anteriores ya no existen
     }
 
     private void SetHost(System.Windows.Controls.ContentControl host, IslandActivity? activity, string variant)
@@ -453,6 +477,7 @@ public partial class IslandWindow : Window
         if (!_wantVisible || !IsVisible) return;
         _logger.LogDebug("Notificación temporal de {Key} por {Seconds} s", activity.Key, duration.TotalSeconds);
         _stateMachine.ShowTransient(duration);
+        if (activity.ViewModel is IAccessibleActivity accessible) Announce(accessible.Announcement);
     }
 
     private void OnTimerRequested(IslandTimer timer, TimeSpan delay)
@@ -560,6 +585,7 @@ public partial class IslandWindow : Window
     private void Housekeeping()
     {
         _clock.Refresh();
+        UpdateAccessibleName();
         if (_hwnd == IntPtr.Zero) return;
 
         // Pantalla completa en el monitor de la isla → apartarse.

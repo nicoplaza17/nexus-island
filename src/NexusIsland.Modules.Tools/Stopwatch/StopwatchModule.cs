@@ -6,6 +6,8 @@ using NexusIsland.Core.Activities;
 using NexusIsland.Core.Mvvm;
 using NexusIsland.Core.Tools;
 
+using NexusIsland.Modules.Tools.Properties;
+
 namespace NexusIsland.Modules.Tools.Stopwatch;
 
 /// <summary>Cronómetro con vueltas. Queda en la isla hasta que se cierra.</summary>
@@ -16,7 +18,7 @@ public sealed class StopwatchModule(ILogger<StopwatchModule> logger) : IIslandMo
     private StopwatchViewModel? _vm;
 
     public string Id => "stopwatch";
-    public string DisplayName => "Cronómetro";
+    public string DisplayName => Strings.Stopwatch_Name;
     public Uri? TemplatesUri => Glyphs.TemplatesUri;
 
     public Task StartAsync(IActivityHost host, CancellationToken cancellationToken)
@@ -33,7 +35,7 @@ public sealed class StopwatchModule(ILogger<StopwatchModule> logger) : IIslandMo
 
     public IEnumerable<QuickAction> GetQuickActions() =>
     [
-        new("stopwatch.start", "Cronómetro", Glyphs.Stopwatch, 20, () =>
+        new("stopwatch.start", Strings.Stopwatch_Name, Glyphs.Stopwatch, 20, () =>
         {
             if (_vm is null || _host is null) return;
             _vm.StartFresh();
@@ -45,7 +47,7 @@ public sealed class StopwatchModule(ILogger<StopwatchModule> logger) : IIslandMo
     public void Dispose() => _vm?.Stop();
 }
 
-public sealed class StopwatchViewModel : ObservableObject
+public sealed class StopwatchViewModel : ObservableObject, IAccessibleActivity
 {
     private readonly StopwatchClock _clock = new();
     private readonly DispatcherTimer _tick = new(DispatcherPriority.Background) { Interval = TimeSpan.FromMilliseconds(250) };
@@ -66,7 +68,7 @@ public sealed class StopwatchViewModel : ObservableObject
             _clock.Lap(DateTimeOffset.Now);
             Laps.Clear();
             for (var i = 0; i < Math.Min(3, _clock.Laps.Count); i++)
-                Laps.Add($"Vuelta {_clock.Laps.Count - i}   {StopwatchClock.Format(_clock.Laps[i])}");
+                Laps.Add(string.Format(Strings.Stopwatch_LapFormat, _clock.Laps.Count - i, StopwatchClock.Format(_clock.Laps[i])));
         }, () => _clock.IsRunning);
         CloseCommand = new RelayCommand(() =>
         {
@@ -82,7 +84,10 @@ public sealed class StopwatchViewModel : ObservableObject
     public string ElapsedText { get => _elapsed; private set => SetProperty(ref _elapsed, value); }
     public bool IsRunning => _clock.IsRunning;
     public string StartPauseGlyph => _clock.IsRunning ? Glyphs.Pause : Glyphs.Play;
-    public string StartPauseLabel => _clock.IsRunning ? "Pausar" : "Seguir";
+    public string StartPauseLabel => _clock.IsRunning ? Strings.Common_Pause : Strings.Stopwatch_Continue;
+
+    /// <summary>Accesibilidad: lo que lee el Narrador.</summary>
+    public string AccessibleSummary => string.Format(Strings.A11y_Stopwatch, ElapsedText);
 
     /// <summary>Las últimas 3 vueltas, la más reciente primero.</summary>
     public ObservableCollection<string> Laps { get; } = [];

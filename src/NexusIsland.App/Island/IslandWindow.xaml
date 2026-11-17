@@ -1,6 +1,7 @@
 <Window x:Class="NexusIsland.App.Island.IslandWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:loc="clr-namespace:NexusIsland.App.Properties"
         Title="Nexus Island"
         Width="460" Height="220"
         WindowStyle="None"
@@ -39,8 +40,8 @@
 
         <Border x:Name="IslandShape"
                 CornerRadius="17"
-                Background="{StaticResource IslandBackground}"
-                BorderBrush="{StaticResource IslandStroke}"
+                Background="{DynamicResource IslandBackground}"
+                BorderBrush="{DynamicResource IslandStroke}"
                 BorderThickness="1"
                 Cursor="Hand">
 
@@ -59,7 +60,8 @@
                     <ContentControl x:Name="PeekHost" Focusable="False" IsTabStop="False" />
                 </Grid>
                 <Grid x:Name="ExpandedLayer" Width="398" Height="182"
-                      HorizontalAlignment="Center" VerticalAlignment="Top">
+                      HorizontalAlignment="Center" VerticalAlignment="Top"
+                      KeyboardNavigation.TabNavigation="Cycle">
                     <ContentControl x:Name="ExpandedHost" Focusable="False" IsTabStop="False" />
 
                     <!-- Controles de la isla (no de los módulos): páginas y panel de herramientas -->
@@ -67,11 +69,19 @@
                                 HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,7" />
                     <Button x:Name="LauncherButton" Style="{StaticResource IslandSmallButton}"
                             HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,12,8"
-                            Content="&#xE8A9;" ToolTip="Herramientas" AutomationProperties.Name="Herramientas"
+                            Content="&#xE8A9;" ToolTip="{x:Static loc:Strings.Tools}" AutomationProperties.Name="{x:Static loc:Strings.Tools}"
                             Visibility="Collapsed" />
                 </Grid>
             </Grid>
         </Border>
       </Grid>
+
+      <!--
+        Región "en vivo" para el Narrador: invisible (opacidad 0, pero presente para la accesibilidad).
+        Cuando una actividad pide atención, se escribe acá su resumen y el lector de pantalla lo anuncia.
+      -->
+      <TextBlock x:Name="LiveRegion" Width="1" Height="1" Opacity="0" IsHitTestVisible="False"
+                 HorizontalAlignment="Left" VerticalAlignment="Top"
+                 AutomationProperties.LiveSetting="Polite" />
     </Grid>
 </Window>

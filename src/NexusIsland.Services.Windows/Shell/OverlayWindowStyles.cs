@@ -20,6 +20,26 @@ public static class OverlayWindowStyles
     }
 
     /// <summary>
+    /// Modo teclado: permite (o vuelve a impedir) que la isla se active y reciba el foco del teclado.
+    /// Sin esto, Windows nunca le da el foco a una ventana WS_EX_NOACTIVATE.
+    /// </summary>
+    public static void SetActivatable(IntPtr hwnd, bool activatable)
+    {
+        var ex = NativeMethods.GetWindowLong(hwnd, NativeMethods.GWL_EXSTYLE);
+        ex = activatable ? ex & ~NativeMethods.WS_EX_NOACTIVATE : ex | NativeMethods.WS_EX_NOACTIVATE;
+        NativeMethods.SetWindowLong(hwnd, NativeMethods.GWL_EXSTYLE, ex);
+    }
+
+    /// <summary>
+    /// Devuelve el foco a la ventana que lo tenía. Windows solo lo permite si esta app es la activa
+    /// (lo es mientras dura el modo teclado); si la ventana ya no existe, no hace nada.
+    /// </summary>
+    public static void ReturnFocusTo(IntPtr hwnd)
+    {
+        if (hwnd != IntPtr.Zero && NativeMethods.IsWindow(hwnd)) NativeMethods.SetForegroundWindow(hwnd);
+    }
+
+    /// <summary>
     /// Re-afirma el "siempre encima" sin mover, redimensionar ni activar la ventana.
     /// Útil porque otras apps "topmost" pueden quedar por encima.
     /// </summary>

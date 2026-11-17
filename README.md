@@ -36,6 +36,7 @@ Genera `artifacts\installer\NexusIsland-Setup-X.Y.Z.exe` (~59 MB, con .NET inclu
 | `tools\build-installer.ps1` | Publica con .NET incluido y arma el instalador |
 | `tools\make-icon.ps1` | Regenera `assets\NexusIsland.ico` (todos los tamaños) |
 | `tools\register-identity.ps1` | Registra la identidad de paquete (necesaria para leer notificaciones). `-Installed` para la versión instalada, `-Unregister` para quitarla. Requiere Modo de desarrollador |
+| `tools\i18n.py` | Textos en español e inglés: agrega textos a los `.resx` de un proyecto y regenera `Properties\Strings.cs` (ver "Idiomas") |
 | `tools\soak.ps1` | Prueba de resistencia: registra memoria, handles y objetos gráficos en un CSV. Para 24 h: `.\tools\soak.ps1 -Minutes 1440 -IntervalSeconds 300` |
 
 ## Estructura
@@ -78,6 +79,8 @@ Datos de la app:
 | `NEXUS_OPEN_SETTINGS=1` | Abre la Configuración al arrancar (para pruebas con UI Automation) |
 | `NEXUS_PIN_EXPANDED=1` | La isla no se contrae al irse el mouse (pruebas automáticas con la PC en uso) |
 | `NEXUS_MONITOR_TEST=1` | Umbrales de alerta mínimos (CPU/RAM ≥ 1 % por 2 s) para probar las alertas sin forzar la PC |
+| `NEXUS_LANG=en` | Fuerza el idioma (`es`, `en` o `auto`) sin tocar la configuración |
+| `NEXUS_HIGH_CONTRAST=1` | Simula el alto contraste de Windows (colores del sistema, sin sombras) |
 
 ## Cómo agregar un módulo
 
@@ -86,9 +89,28 @@ Datos de la app:
    (clave, id de módulo, prioridad y ViewModel) cuando tenga algo para mostrar; la quita con `Remove`.
 3. Incluir un `ResourceDictionary` con tres `DataTemplate`: `X.Compact` (148×32), `X.Peek` (248×40) y `X.Expanded` (398×182).
 4. Registrarlo en `App.ConfigureServices` con `services.AddSingleton<IIslandModule, XModule>()`.
+5. Textos visibles: en `Properties\Strings.resx` (inglés) y `Strings.es.resx` (español), nunca escritos en el código
+   (ver "Idiomas"). Los ViewModels implementan `IAccessibleActivity` (resumen para el Narrador).
+6. Botones: usar los estilos `IslandPillButton` / `IslandSmallButton` (ya soportan el modo teclado y el alto contraste).
 
 El **árbitro** (`ActivityArbiter`) decide qué se muestra: mayor prioridad gana (reloj 0, multimedia 50,
 tareas activas 100, alertas 200); si empatan, la más reciente. `RequestAttention` dispara la notificación temporal.
+
+## Idiomas
+
+Cada proyecto con interfaz tiene `Properties\Strings.resx` (inglés, idioma de respaldo), `Strings.es.resx` (español)
+y `Strings.cs`, una clase generada por `tools\i18n.py` (la generación automática de Visual Studio no funciona en
+proyectos WPF). En XAML: `xmlns:loc="clr-namespace:<Proyecto>.Properties"` y `{x:Static loc:Strings.Clave}`;
+en C#: `Strings.Clave` o `string.Format(Strings.Clave, …)`.
+
+```
+python tools\i18n.py cambios.json          # agrega textos y aplica reemplazos (verifica todo antes de escribir)
+python tools\i18n.py cambios.json --dry    # solo verifica
+python tools\i18n.py --regen src\Proyecto  # regenera Strings.cs tras editar un .resx a mano
+```
+
+Un test (`LocalizationTests`) falla si un texto existe en un idioma y no en el otro, o si los huecos `{0}` no
+coinciden. Los mensajes del log quedan en español (son para diagnóstico, no para el usuario).
 
 ---
 
@@ -487,6 +509,48 @@ Las pruebas automáticas se corren desde la app de escritorio de Claude, que es 
 - Las copias de otros programas (o con otros diálogos) no se detectan. Si se oculta la ventana de progreso del Explorador, tampoco.
 - Un aviso de "terminado" no se oculta solo mientras se está leyendo con la isla expandida.
 
+### Etapa 9 — Idiomas y accesibilidad ✅ (17/11/2026, v0.9.0)
+
+**Idiomas**
+
+- Toda la interfaz en **español e inglés** (≈ 300 textos en 8 proyectos): isla, plantillas, configuración,
+  recordatorios, bandeja, alertas, anuncios del Narrador. Cualquier otro idioma de Windows cae en inglés.
+- Configuración → **Idioma · Language**: Automático (el de Windows) / Español / English. Se aplica al reiniciar
+  (aparece el botón *Reiniciar ahora*): los textos de XAML se leen una sola vez al cargar.
+- La fecha del reloj sigue el idioma elegido ("Martes, 17 de noviembre" / "Tuesday, November 17").
+- El aviso de desinstalación MSI ya no depende del texto en español (usa el id de la tarea).
+
+**Accesibilidad**
+
+| Qué | Cómo |
+|---|---|
+| Narrador: qué muestra la isla | La ventana expone el resumen de la actividad visible ("Reproduciendo X de Y en Spotify", "Temporizador: quedan 4:12"…). Cada módulo lo define con `IAccessibleActivity` |
+| Narrador: avisos | Región "en vivo" (cortés): canción nueva, notificación, alerta, tarea terminada y recordatorio se anuncian sin mover el foco. Respeta "Mostrar el texto de las notificaciones" |
+| **Modo teclado: Ctrl+Alt+K** | La isla toma el foco y se expande. **Tab** recorre los botones (borde de foco visible), **Enter/Espacio** los activa, **← →** cambian de página, **Esc** sale y devuelve el foco a la app anterior. Si se hace clic en otra app, sale sola |
+| Alto contraste | Con un tema de contraste de Windows la isla usa los colores del sistema, borde de 2 px y sin sombras; cambia en vivo |
+| Tamaño del texto | Configuración de Windows → Accesibilidad → Tamaño del texto agranda la isla (hasta 150 %, multiplicado por Chica/Normal/Grande) |
+| Reducir movimiento | (desde la Etapa 1) sin animaciones si Windows tiene desactivados los efectos |
+
+**Verificado**
+
+| Prueba | Resultado |
+|---|---|
+| Tests unitarios (+ idioma, textos completos en los 8 proyectos, modo teclado, escala) | ✅ 150/150 |
+| Configuración, reloj y panel de herramientas en español y en inglés (UI Automation + capturas) | ✅ |
+| Narrador: nombre de la isla = "Nexus Island. 12:04, Martes, 17 de noviembre" | ✅ UI Automation |
+| Ctrl+Alt+K: la isla pasa al frente con foco en "Herramientas"; Enter abre el panel y el foco va a "1 min"; Tab → "5 min" → "10 min"; Esc devuelve el foco a la app anterior | ✅ teclas simuladas + UI Automation |
+| Borde de foco visible, normal y en alto contraste simulado | ✅ capturas |
+| **Bug encontrado y corregido:** con 9 herramientas el panel pasaba a 3 filas y los nombres quedaban cortados (venía de la Etapa 7) | ✅ ahora 5 columnas |
+| Anuncios de la región en vivo con el Narrador real | ⚠️ no verificado aquí (el cliente de UI Automation de PowerShell no recibe ese evento): probar con el Narrador |
+| Alto contraste y tamaño de texto reales de Windows | ⚠️ no se cambiaron (afectan a toda la PC); lógica cubierta por tests y por la simulación |
+
+**Limitaciones conocidas**
+
+- Ctrl+Alt+K es fijo (si otra app lo usa, el log lo avisa y el modo teclado no está disponible).
+- Los puntitos de página no son botones: se cambia de página con ← →.
+- En alto contraste los fondos de los botones (blancos translúcidos) casi no se ven; el borde de foco sí.
+- Cambiar el idioma requiere reiniciar la isla.
+
 ## Próximas etapas
 
-9. Producto: accesibilidad completa, idiomas, actualizaciones, firma y distribución.
+10. Distribución: firma de código, actualizaciones automáticas, publicación (cuando deje de ser de uso personal).

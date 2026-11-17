@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="Notification_Generic" xml:space="preserve"><value>Notification</value></data>
+  <data name="Process_Defender" xml:space="preserve"><value>Windows Security antivirus</value></data>
+  <data name="Process_Explorer" xml:space="preserve"><value>Windows Explorer</value></data>
+  <data name="Process_SearchIndexer" xml:space="preserve"><value>Search indexer</value></data>
+  <data name="Task_CopyingFiles" xml:space="preserve"><value>Copying files</value></data>
+  <data name="Task_InstallFailed" xml:space="preserve"><value>Installation failed (code {0})</value></data>
+  <data name="Task_Installed" xml:space="preserve"><value>Installed</value></data>
+  <data name="Task_InstallerClosed" xml:space="preserve"><value>The installer closed</value></data>
+  <data name="Task_InstallerRunning" xml:space="preserve"><value>Installer running</value></data>
+  <data name="Task_RestartRequired" xml:space="preserve"><value> · restart required</value></data>
+  <data name="Task_UninstallFailed" xml:space="preserve"><value>Uninstall failed (code {0})</value></data>
+  <data name="Task_Uninstalled" xml:space="preserve"><value>Uninstalled</value></data>
+  <data name="Task_UnknownProduct" xml:space="preserve"><value>Program</value></data>
+</root>

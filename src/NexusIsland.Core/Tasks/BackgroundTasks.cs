@@ -1,4 +1,15 @@
+using NexusIsland.Core.Properties;
+
 namespace NexusIsland.Core.Tasks;
+
+/// <summary>Prefijos de identificador con significado (para no depender de textos traducidos).</summary>
+public static class BackgroundTaskIds
+{
+    public const string MsiInstallPrefix = "msi:";
+    public const string MsiRemovalPrefix = "msi-remove:";
+
+    public static bool IsRemoval(BackgroundTask t) => t.Id.StartsWith(MsiRemovalPrefix, StringComparison.Ordinal);
+}
 
 public enum TaskKind
 {
@@ -123,7 +134,7 @@ public static class DownloadFiles
             finalName = name[..^ext.Length];
             browser = b;
             // "Unconfirmed 123456" (Chrome aún no sabe el nombre): se muestra genérico.
-            if (finalName.StartsWith("Unconfirmed ", StringComparison.OrdinalIgnoreCase)) finalName = "Descarga";
+            if (finalName.StartsWith("Unconfirmed ", StringComparison.OrdinalIgnoreCase)) finalName = UnnamedName;
             return true;
         }
         finalName = browser = "";
@@ -131,6 +142,9 @@ public static class DownloadFiles
     }
 
     public static bool IsTemp(string path) => TryParseTemp(path, out _, out _);
+
+    /// <summary>Nombre que se muestra cuando el navegador todavía no informó el nombre del archivo.</summary>
+    public static string UnnamedName => Strings.Download_Unnamed;
 }
 
 /// <summary>Lectura del porcentaje en el título de la ventana de progreso del Explorador ("37 % completado").</summary>
