@@ -373,7 +373,7 @@ coinciden. Los mensajes del log quedan en español (son para diagnóstico, no pa
 - **Panel de herramientas**: botón ⊞ abajo a la derecha de la isla expandida. Lo arman los módulos que implementan `IQuickActionProvider` (cada botón es una `QuickAction`).
 - **Páginas**: si hay varias actividades (temporizador + música + reloj), la isla expandida muestra puntitos abajo al centro. Se cambia con la rueda del mouse o con clic en un puntito. Al contraerse vuelve a lo más importante. Las alertas le ganan a la página elegida a mano.
 - **Paneles** (prioridad 300): se cierran solos al contraer la isla.
-- **Temporizador** (1 / 5 / 10 / 25 min): pausa, +1 min, cancelar. Al terminar pasa a alerta (prioridad urgente), con sonido de Windows y notificación temporal. *+1 min* desde la alerta lo reinicia.
+- **Temporizador** (desde la v0.10.1: un solo botón que abre un selector de 1 a 180 min con − / + y accesos 5 · 10 · 15 · 25): pausa, +1 min, cancelar. Al terminar pasa a alerta (prioridad urgente), con sonido de Windows y notificación temporal. *+1 min* desde la alerta lo reinicia.
 - **Cronómetro**: pausa / seguir, vueltas (se muestran las últimas 3), cerrar.
 - **Recordatorios**: se crean en una ventana aparte (la isla no toma el foco, así que no se puede escribir en ella), "en N minutos" o "a las HH:mm" (si ya pasó, es mañana). Se guardan en `%AppData%\NexusIsland\reminders.json`. Al vencer: alerta con sonido, *Listo* o *Posponer 10 min*. Si la PC estaba apagada, avisan al volver ("Vencía hoy a las…").
 - **Portapapeles**: últimos 20 textos; clic para volver a copiar; *Borrar todo*.
@@ -625,6 +625,14 @@ muestra la traducción con **Copiar** e **Invertir** (por si detectó mal). Hast
 - La primera traducción tarda ~2–3 s más (carga el modelo). Textos largos: varios segundos.
 - La detección de idioma es por palabras frecuentes: con textos muy cortos o mezclados puede errar → *Invertir*.
 - Configuración → Traductor muestra cuánto ocupan los modelos y permite borrarlos.
+
+### v0.10.1 — Temporizador más simple (17/11/2026)
+
+- Los 4 botones de temporizador (1, 5, 10, 25 min) se reemplazan por **uno solo**: abre un selector con − / +
+  (de a 1 min hasta 10, de a 5 hasta 60, de a 15 hasta 180), accesos rápidos 5 · 10 · 15 · 25 e **Iniciar**.
+  Recuerda los últimos minutos elegidos mientras la isla está abierta.
+- El panel de herramientas queda en 7 botones y siempre en 2 filas: las columnas se ajustan solas, sin nombres cortados.
+- Verificado en español e inglés con UI Automation (10 → + + = 20 → 25 → − = 20 → Iniciar → "Temporizador · 20:00") y capturas. Tests: 185/185.
 
 ## Próximas etapas
 

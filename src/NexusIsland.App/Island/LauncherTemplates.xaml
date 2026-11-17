@@ -26,8 +26,9 @@
             <ItemsControl Grid.Row="1" ItemsSource="{Binding Items}" Focusable="False">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <!-- 5 columnas: con 9-10 herramientas entran en 2 filas sin cortar los nombres. -->
-                        <UniformGrid Columns="5" />
+                        <!-- Siempre 2 filas: las columnas se ajustan a la cantidad de herramientas
+                             (7 → 4 columnas anchas; 9-10 → 5), así los nombres no se cortan ni sobra una fila. -->
+                        <UniformGrid Rows="2" />
                     </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>

@@ -36,6 +36,9 @@ public static class Strings
     /// <summary>Timer: {0} left</summary>
     public static string A11y_TimerRunning => ResourceManager.GetString("A11y_TimerRunning", Culture) ?? "A11y_TimerRunning";
 
+    /// <summary>Timer: {0} minutes. Choose the duration and press Start.</summary>
+    public static string A11y_TimerSetup => ResourceManager.GetString("A11y_TimerSetup", Culture) ?? "A11y_TimerSetup";
+
     /// <summary>Translation, {0}: {1}</summary>
     public static string A11y_Translation => ResourceManager.GetString("A11y_Translation", Culture) ?? "A11y_Translation";
 
@@ -192,14 +195,26 @@ public static class Strings
     /// <summary>Add one minute</summary>
     public static string Timer_AddMinute => ResourceManager.GetString("Timer_AddMinute", Culture) ?? "Timer_AddMinute";
 
+    /// <summary>Fewer minutes</summary>
+    public static string Timer_Less => ResourceManager.GetString("Timer_Less", Culture) ?? "Timer_Less";
+
     /// <summary>{0} min</summary>
     public static string Timer_MinutesShort => ResourceManager.GetString("Timer_MinutesShort", Culture) ?? "Timer_MinutesShort";
+
+    /// <summary>More minutes</summary>
+    public static string Timer_More => ResourceManager.GetString("Timer_More", Culture) ?? "Timer_More";
 
     /// <summary>Timer</summary>
     public static string Timer_Name => ResourceManager.GetString("Timer_Name", Culture) ?? "Timer_Name";
 
+    /// <summary>{0} minutes</summary>
+    public static string Timer_PresetA11y => ResourceManager.GetString("Timer_PresetA11y", Culture) ?? "Timer_PresetA11y";
+
     /// <summary>Resume</summary>
     public static string Timer_Resume => ResourceManager.GetString("Timer_Resume", Culture) ?? "Timer_Resume";
+
+    /// <summary>Start</summary>
+    public static string Timer_Start => ResourceManager.GetString("Timer_Start", Culture) ?? "Timer_Start";
 
     /// <summary>Time's up!</summary>
     public static string Timer_TimesUp => ResourceManager.GetString("Timer_TimesUp", Culture) ?? "Timer_TimesUp";

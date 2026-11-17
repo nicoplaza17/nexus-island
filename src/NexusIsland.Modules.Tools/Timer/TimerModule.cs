@@ -11,14 +11,19 @@ using NexusIsland.Modules.Tools.Properties;
 
 namespace NexusIsland.Modules.Tools.Timer;
 
-/// <summary>Temporizador: 1, 5, 10 o 25 min desde el panel de herramientas. Al terminar, alerta con sonido.</summary>
+/// <summary>
+/// Temporizador: un botón en el panel de herramientas abre un selector de minutos (1 a 180, con accesos
+/// rápidos). Al terminar, alerta con sonido.
+/// </summary>
 public sealed class TimerModule(ILogger<TimerModule> logger) : IIslandModule, IQuickActionProvider
 {
     private const string Key = "timer";
+    private const string SetupKey = "timer.setup";
     private static readonly TimeSpan AlertAttention = TimeSpan.FromSeconds(12);
 
     private IActivityHost? _host;
     private TimerViewModel? _vm;
+    private TimerSetupViewModel? _setup;
 
     public string Id => "timer";
     public string DisplayName => Strings.Timer_Name;
@@ -35,12 +40,24 @@ public sealed class TimerModule(ILogger<TimerModule> logger) : IIslandModule, IQ
             _host.Remove(Key);
             logger.LogInformation("Temporizador cerrado");
         };
+        _setup = new TimerSetupViewModel(
+            start: minutes =>
+            {
+                _host.Remove(SetupKey);
+                StartTimer(TimeSpan.FromMinutes(minutes));
+            },
+            cancel: () => _host.Remove(SetupKey));
         return Task.CompletedTask;
     }
 
+    /// <summary>Un solo botón: abre el selector con los minutos usados la última vez.</summary>
     public IEnumerable<QuickAction> GetQuickActions() =>
-        new[] { 1, 5, 10, 25 }.Select((minutes, i) =>
-            new QuickAction($"timer.{minutes}", string.Format(Strings.Timer_MinutesShort, minutes), Glyphs.Timer, 10 + i, () => StartTimer(TimeSpan.FromMinutes(minutes))));
+        [new("timer.setup", Strings.Timer_Name, Glyphs.Timer, 10, () =>
+        {
+            if (_setup is null) return;
+            // Panel: se cierra solo si la isla se contrae (no queda un selector olvidado).
+            _host?.Publish(new IslandActivity(SetupKey, SetupKey, ActivityPriority.Panel, _setup));
+        })];
 
     private void StartTimer(TimeSpan duration)
     {

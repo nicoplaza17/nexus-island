@@ -10,6 +10,7 @@
   <data name="A11y_TimerDone" xml:space="preserve"><value>El temporizador terminó</value></data>
   <data name="A11y_TimerPaused" xml:space="preserve"><value>Temporizador en pausa: quedan {0}</value></data>
   <data name="A11y_TimerRunning" xml:space="preserve"><value>Temporizador: quedan {0}</value></data>
+  <data name="A11y_TimerSetup" xml:space="preserve"><value>Temporizador: {0} minutos. Elegí la duración y tocá Iniciar.</value></data>
   <data name="A11y_Translation" xml:space="preserve"><value>Traducción, {0}: {1}</value></data>
   <data name="Clipboard_Busy" xml:space="preserve"><value>El portapapeles está ocupado por otra app. Probá de nuevo.</value></data>
   <data name="Clipboard_ClearA11y" xml:space="preserve"><value>Borrar el historial del portapapeles</value></data>
@@ -62,9 +63,13 @@
   <data name="Stopwatch_MarkLap" xml:space="preserve"><value>Marcar vuelta</value></data>
   <data name="Stopwatch_Name" xml:space="preserve"><value>Cronómetro</value></data>
   <data name="Timer_AddMinute" xml:space="preserve"><value>Agregar un minuto</value></data>
+  <data name="Timer_Less" xml:space="preserve"><value>Menos minutos</value></data>
   <data name="Timer_MinutesShort" xml:space="preserve"><value>{0} min</value></data>
+  <data name="Timer_More" xml:space="preserve"><value>Más minutos</value></data>
   <data name="Timer_Name" xml:space="preserve"><value>Temporizador</value></data>
+  <data name="Timer_PresetA11y" xml:space="preserve"><value>{0} minutos</value></data>
   <data name="Timer_Resume" xml:space="preserve"><value>Reanudar</value></data>
+  <data name="Timer_Start" xml:space="preserve"><value>Iniciar</value></data>
   <data name="Timer_TimesUp" xml:space="preserve"><value>¡Tiempo!</value></data>
   <data name="Timer_TitleFormat" xml:space="preserve"><value>Temporizador · {0}</value></data>
   <data name="Translate_CancelDownloadA11y" xml:space="preserve"><value>Cancelar la descarga</value></data>

@@ -80,6 +80,75 @@
         </Grid>
     </DataTemplate>
 
+    <!-- ============================================================ TEMPORIZADOR: ELEGIR MINUTOS -->
+    <DataTemplate x:Key="timer.setup.Compact">
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <TextBlock Text="&#xE823;" FontFamily="{StaticResource ToolGlyphFont}" FontSize="12" Margin="0,1,8,0"
+                       Foreground="{DynamicResource IslandAccent}" />
+            <TextBlock Text="{Binding MinutesText}" FontSize="13" FontWeight="SemiBold" Foreground="{DynamicResource IslandForeground}" />
+        </StackPanel>
+    </DataTemplate>
+
+    <DataTemplate x:Key="timer.setup.Peek">
+        <Grid Margin="18,0">
+            <TextBlock Text="{x:Static loc:Strings.Timer_Name}" Style="{StaticResource ToolCaption}" VerticalAlignment="Center" />
+            <TextBlock Text="{Binding MinutesText}" FontSize="14" FontWeight="SemiBold" HorizontalAlignment="Right"
+                       VerticalAlignment="Center" Foreground="{DynamicResource IslandForeground}" />
+        </Grid>
+    </DataTemplate>
+
+    <DataTemplate x:Key="timer.setup.Expanded">
+        <Grid Margin="24,14,24,12">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <TextBlock Text="{x:Static loc:Strings.Timer_Name}" Style="{StaticResource ToolCaption}" />
+
+            <!-- [−]  10 min  [+] -->
+            <StackPanel Grid.Row="1" Orientation="Horizontal" VerticalAlignment="Center">
+                <Button Style="{DynamicResource IslandPillButton}" Command="{Binding LessCommand}" Width="40" Padding="0,6"
+                        Content="&#xE738;" FontFamily="{StaticResource ToolGlyphFont}"
+                        AutomationProperties.Name="{x:Static loc:Strings.Timer_Less}" ToolTip="{x:Static loc:Strings.Timer_Less}" />
+                <TextBlock Text="{Binding MinutesText}" FontSize="30" FontWeight="Light" MinWidth="120" TextAlignment="Center"
+                           FontFamily="Segoe UI Variable Display, Segoe UI" VerticalAlignment="Center" Margin="10,0"
+                           Foreground="{DynamicResource IslandForeground}" />
+                <Button Style="{DynamicResource IslandPillButton}" Command="{Binding MoreCommand}" Width="40" Padding="0,6"
+                        Content="&#xE710;" FontFamily="{StaticResource ToolGlyphFont}"
+                        AutomationProperties.Name="{x:Static loc:Strings.Timer_More}" ToolTip="{x:Static loc:Strings.Timer_More}" />
+            </StackPanel>
+
+            <!-- Accesos rápidos -->
+            <ItemsControl Grid.Row="2" ItemsSource="{Binding Presets}" Focusable="False" Margin="0,0,0,8">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation="Horizontal" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Button Style="{DynamicResource IslandPillButton}" Command="{Binding Command}" Content="{Binding Label}"
+                                Padding="10,3" FontSize="11" Margin="0,0,6,0" AutomationProperties.Name="{Binding AccessibleName}" />
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+
+            <StackPanel Grid.Row="3" Orientation="Horizontal">
+                <Button Style="{DynamicResource IslandPillButton}" Command="{Binding StartCommand}" Margin="0,0,6,0"
+                        AutomationProperties.Name="{x:Static loc:Strings.Timer_Start}">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="&#xE768;" FontFamily="{StaticResource ToolGlyphFont}" Margin="0,1,6,0" />
+                        <TextBlock Text="{x:Static loc:Strings.Timer_Start}" />
+                    </StackPanel>
+                </Button>
+                <Button Style="{DynamicResource IslandPillButton}" Command="{Binding CancelCommand}"
+                        Content="{x:Static loc:Strings.Common_Cancel}" AutomationProperties.Name="{x:Static loc:Strings.Common_Cancel}" />
+            </StackPanel>
+        </Grid>
+    </DataTemplate>
+
     <!-- ============================================================ CRONÓMETRO -->
     <DataTemplate x:Key="stopwatch.Compact">
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">

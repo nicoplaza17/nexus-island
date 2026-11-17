@@ -10,6 +10,7 @@
   <data name="A11y_TimerDone" xml:space="preserve"><value>The timer finished</value></data>
   <data name="A11y_TimerPaused" xml:space="preserve"><value>Timer paused: {0} left</value></data>
   <data name="A11y_TimerRunning" xml:space="preserve"><value>Timer: {0} left</value></data>
+  <data name="A11y_TimerSetup" xml:space="preserve"><value>Timer: {0} minutes. Choose the duration and press Start.</value></data>
   <data name="A11y_Translation" xml:space="preserve"><value>Translation, {0}: {1}</value></data>
   <data name="Clipboard_Busy" xml:space="preserve"><value>The clipboard is busy in another app. Try again.</value></data>
   <data name="Clipboard_ClearA11y" xml:space="preserve"><value>Clear clipboard history</value></data>
@@ -62,9 +63,13 @@
   <data name="Stopwatch_MarkLap" xml:space="preserve"><value>Mark lap</value></data>
   <data name="Stopwatch_Name" xml:space="preserve"><value>Stopwatch</value></data>
   <data name="Timer_AddMinute" xml:space="preserve"><value>Add one minute</value></data>
+  <data name="Timer_Less" xml:space="preserve"><value>Fewer minutes</value></data>
   <data name="Timer_MinutesShort" xml:space="preserve"><value>{0} min</value></data>
+  <data name="Timer_More" xml:space="preserve"><value>More minutes</value></data>
   <data name="Timer_Name" xml:space="preserve"><value>Timer</value></data>
+  <data name="Timer_PresetA11y" xml:space="preserve"><value>{0} minutes</value></data>
   <data name="Timer_Resume" xml:space="preserve"><value>Resume</value></data>
+  <data name="Timer_Start" xml:space="preserve"><value>Start</value></data>
   <data name="Timer_TimesUp" xml:space="preserve"><value>Time's up!</value></data>
   <data name="Timer_TitleFormat" xml:space="preserve"><value>Timer · {0}</value></data>
   <data name="Translate_CancelDownloadA11y" xml:space="preserve"><value>Cancel the download</value></data>
