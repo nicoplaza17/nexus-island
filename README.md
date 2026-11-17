@@ -432,7 +432,7 @@ Windows solo deja leer las notificaciones de otras apps (`UserNotificationListen
 Las pruebas automáticas se corren desde la app de escritorio de Claude, que es una app empaquetada. Todo lo que se abría desde ahí heredaba su aislamiento. **Las escrituras en `AppData` y en el Registro (HKCU) de esas pruebas fueron a la carpeta privada de la app Claude**, no a las reales. Funcionalmente las pruebas valen (el comportamiento es el mismo), pero:
 
 - "Iniciar con Windows" (Etapa 3) recién se verificó en el Registro real en esta etapa: ✅.
-- **El instalador (Etapa 4) se probó dentro de ese aislamiento.** Falta repetir la prueba de instalar/desinstalar fuera de él (con `explorer.exe`, como se hace ahora).
+- **El instalador (Etapa 4) se volvió a probar fuera del aislamiento** (17/11, instalador 0.7.0, lanzado con `explorer.exe`): ✅ instalación silenciosa por usuario (231 MB), acceso en Inicio, entrada "Nexus Island 0.7.0" en Aplicaciones, la versión instalada arranca y escribe en las carpetas reales, reinstalar encima con la app abierta, y desinstalar con la app abierta borra carpeta, acceso, entrada y la clave de "Iniciar con Windows", conservando los datos del usuario.
 - Desde la Etapa 7, las verificaciones de archivos y Registro se hacen fuera del aislamiento: se le pide al Explorador de Windows que ejecute la comprobación.
 
 **Limitaciones (reales de Windows)**
@@ -440,7 +440,7 @@ Las pruebas automáticas se corren desde la app de escritorio de Claude, que es 
 - **No se pueden tocar los botones** de las notificaciones de otras apps (por ejemplo "Responder"), ni evitar que Windows muestre su propio cartel (se ven en los dos lados; con "No molestar" de Windows solo en la isla).
 - Solo notificaciones tipo *toast*.
 - *Abrir app* abre la app, no la conversación puntual.
-- **La versión instalada** necesita su propio registro: `.\tools\register-identity.ps1 -Installed`, y además se copia el manifiesto junto al `.exe`. El instalador todavía no lo hace solo: requiere firmar, Etapa 9.
+- **Versión instalada:** en esta PC, la versión instalada tomó la identidad del paquete ya registrado (mismo nombre y editor en `<msix>`) sin registrarla aparte, y las notificaciones funcionaron. Es un comportamiento observado, no documentado por Microsoft para una ubicación distinta. Si no la tomara, `.\tools\register-identity.ps1 -Installed` la registra para esa carpeta. En otras PCs el instalador todavía no registra la identidad: requiere firmar, Etapa 9.
 - Requiere Modo de desarrollador mientras el paquete no esté firmado.
 
 ## Próximas etapas
