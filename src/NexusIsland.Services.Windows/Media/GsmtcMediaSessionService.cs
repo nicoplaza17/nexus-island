@@ -40,6 +40,7 @@ public sealed class GsmtcMediaSessionService : IMediaSessionService
     private GsmtcSession? _session;
     private string? _thumbnailTrackKey;
     private byte[]? _thumbnail;
+    private volatile bool _thumbnailStale; // la app avisó que cambiaron título/carátula: releer aunque sea la misma canción
     private bool _disposed;
     private Timer? _resyncTimer;
 
@@ -134,7 +135,7 @@ public sealed class GsmtcMediaSessionService : IMediaSessionService
         lock (_sessionLock)
         {
             if (_session is null) return;
-            _session.MediaPropertiesChanged -= OnSessionChanged;
+            _session.MediaPropertiesChanged -= OnMediaPropertiesChanged;
             _session.PlaybackInfoChanged -= OnSessionChanged;
             _session.TimelinePropertiesChanged -= OnSessionChanged;
             _session = null;
@@ -210,14 +211,15 @@ public sealed class GsmtcMediaSessionService : IMediaSessionService
 
             if (_session is not null)
             {
-                _session.MediaPropertiesChanged -= OnSessionChanged;
+                _session.MediaPropertiesChanged -= OnMediaPropertiesChanged;
                 _session.PlaybackInfoChanged -= OnSessionChanged;
                 _session.TimelinePropertiesChanged -= OnSessionChanged;
             }
             _session = next;
+            _thumbnailStale = true;
             if (_session is not null)
             {
-                _session.MediaPropertiesChanged += OnSessionChanged;
+                _session.MediaPropertiesChanged += OnMediaPropertiesChanged;
                 _session.PlaybackInfoChanged += OnSessionChanged;
                 _session.TimelinePropertiesChanged += OnSessionChanged;
             }
@@ -226,6 +228,12 @@ public sealed class GsmtcMediaSessionService : IMediaSessionService
     }
 
     private void OnSessionChanged(GsmtcSession sender, object args) => ScheduleRefresh();
+
+    private void OnMediaPropertiesChanged(GsmtcSession sender, object args)
+    {
+        _thumbnailStale = true;
+        ScheduleRefresh();
+    }
 
     /// <summary>
     /// Las apps suelen mandar varios avisos seguidos (título, después carátula, después estado):
@@ -305,32 +313,40 @@ public sealed class GsmtcMediaSessionService : IMediaSessionService
         return snapshot with { Thumbnail = await GetThumbnailAsync(snapshot.TrackKey, properties) };
     }
 
-    /// <summary>Lee la carátula solo cuando cambia la canción (o si todavía no había llegado).</summary>
+    /// <summary>
+    /// Lee la carátula cuando cambia la canción y también cuando la app avisa que cambiaron sus datos:
+    /// los navegadores (Spotify web, YouTube…) primero mandan su propio logo y la carátula real llega
+    /// un momento después, con la misma canción. Si la imagen no cambió, se devuelve el mismo arreglo
+    /// (así la isla no la vuelve a decodificar).
+    /// </summary>
     private async Task<byte[]?> GetThumbnailAsync(string trackKey, GlobalSystemMediaTransportControlsSessionMediaProperties properties)
     {
-        if (trackKey == _thumbnailTrackKey && _thumbnail is not null) return _thumbnail;
-        if (trackKey != _thumbnailTrackKey)
+        var sameTrack = trackKey == _thumbnailTrackKey;
+        if (sameTrack && _thumbnail is not null && !_thumbnailStale) return _thumbnail;
+        _thumbnailStale = false;
+        if (!sameTrack)
         {
             _thumbnailTrackKey = trackKey;
             _thumbnail = null;
         }
-        if (properties.Thumbnail is null) return null;
+        if (properties.Thumbnail is null) return _thumbnail;
 
         try
         {
             using var winrtStream = await properties.Thumbnail.OpenReadAsync().AsTask();
-            if (winrtStream.Size == 0 || winrtStream.Size > MaxThumbnailBytes) return null;
+            if (winrtStream.Size == 0 || winrtStream.Size > MaxThumbnailBytes) return _thumbnail;
             using var stream = winrtStream.AsStreamForRead();
             using var memory = new MemoryStream((int)winrtStream.Size);
             await stream.CopyToAsync(memory);
-            _thumbnail = memory.ToArray();
-            _logger.LogDebug("Carátula leída: {Bytes} bytes ({Type})", _thumbnail.Length, winrtStream.ContentType);
-            return _thumbnail;
+            var bytes = memory.ToArray();
+            if (_thumbnail is not null && bytes.AsSpan().SequenceEqual(_thumbnail)) return _thumbnail;
+            _logger.LogDebug("Carátula {Kind}: {Bytes} bytes ({Type})", sameTrack ? "actualizada" : "leída", bytes.Length, winrtStream.ContentType);
+            return _thumbnail = bytes;
         }
         catch (Exception ex)
         {
             _logger.LogDebug(ex, "No se pudo leer la carátula");
-            return null;
+            return _thumbnail;
         }
     }
 
@@ -338,6 +354,14 @@ public sealed class GsmtcMediaSessionService : IMediaSessionService
     {
         if (string.IsNullOrEmpty(appId)) return "Multimedia";
         if (_appNameCache.TryGetValue(appId, out var cached)) return cached;
+
+        // Apps web instaladas desde el navegador (Spotify, YouTube Music…): Windows sabe su nombre.
+        if (SourceAppNames.IsBrowserWebApp(appId) && Shell.AppDisplayNames.TryGet(appId, out var webAppName))
+        {
+            _appNameCache[appId] = webAppName;
+            _logger.LogInformation("App multimedia {AppId} → \"{Name}\" (app web)", appId, webAppName);
+            return webAppName;
+        }
 
         if (!SourceAppNames.TryGetKnown(appId, out var name))
         {

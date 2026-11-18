@@ -36,11 +36,14 @@ public static class SourceAppNames
         ("discord", "Discord"),
     ];
 
+    /// <summary>App web instalada desde un navegador (PWA): "Chrome._crx_&lt;id&gt;", "MSEdge._crx_&lt;id&gt;".</summary>
+    public static bool IsBrowserWebApp(string appUserModelId) =>
+        appUserModelId.Contains("_crx_", StringComparison.OrdinalIgnoreCase);
+
     public static bool TryGetKnown(string appUserModelId, out string name)
     {
-        // Apps web instaladas desde un navegador (PWA): "Chrome._crx_<id>", "MSEdge._crx_<id>".
-        // Windows no expone su nombre por esta vía; se indica de dónde vienen.
-        if (appUserModelId.Contains("_crx_", StringComparison.OrdinalIgnoreCase))
+        // Apps web (PWA) cuyo nombre Windows no pudo dar (ver AppDisplayNames): se indica de dónde vienen.
+        if (IsBrowserWebApp(appUserModelId))
         {
             name = appUserModelId.StartsWith("MSEdge", StringComparison.OrdinalIgnoreCase)
                 ? Strings.App_WebEdge : Strings.App_WebChrome;

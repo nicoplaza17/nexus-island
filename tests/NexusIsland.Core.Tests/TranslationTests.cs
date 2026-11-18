@@ -19,6 +19,14 @@ public class TranslationTests
     public void Detect_GuessesLanguage(string text, TranslationDirection expected) =>
         Assert.Equal(expected, TranslationText.Detect(text));
 
+    [Theory]
+    [InlineData("Chrome._crx_pjibgcllelbfgfagdaldikeohf", true)]
+    [InlineData("MSEdge._crx_abc", true)]
+    [InlineData("chrome", false)]
+    [InlineData("Spotify.exe", false)]
+    public void BrowserWebApps_AreRecognized(string aumid, bool expected) =>
+        Assert.Equal(expected, NexusIsland.Core.Media.SourceAppNames.IsBrowserWebApp(aumid));
+
     [Fact]
     public void Reverse_And_Code()
     {

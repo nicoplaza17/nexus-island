@@ -634,6 +634,18 @@ muestra la traducción con **Copiar** e **Invertir** (por si detectó mal). Hast
 - El panel de herramientas queda en 7 botones y siempre en 2 filas: las columnas se ajustan solas, sin nombres cortados.
 - Verificado en español e inglés con UI Automation (10 → + + = 20 → 25 → − = 20 → Iniciar → "Temporizador · 20:00") y capturas. Tests: 185/185.
 
+### v0.10.2 — Spotify web con nombre y carátula (18/11/2026)
+
+- **Carátula:** Chrome (y otros navegadores) primero mandan su propio logo y la carátula real llega un momento después,
+  con la misma canción. La isla solo leía la imagen una vez por canción y se quedaba con el logo. Ahora la vuelve a
+  leer cada vez que la app avisa que cambiaron sus datos (sin redibujar si la imagen es la misma).
+- **Nombre:** las apps web instaladas desde Chrome o Edge (`Chrome._crx_…`) se muestran con su nombre real
+  ("Spotify", "YouTube Music") preguntándole a Windows (carpeta Aplicaciones, `shell:AppsFolder`), en vez de "App web (Chrome)".
+- Verificado con Spotify web sonando: la isla y el Narrador dicen "Reproduciendo Passing Clouds de Skaresnø en Spotify";
+  al pasar de canción, a 1 s ya se ve la carátula nueva. Tests: 189/189.
+- Límite: Spotify abierto en una **pestaña** común de Chrome (no instalado como app) sigue figurando como "Google Chrome":
+  Windows no informa qué sitio está sonando.
+
 ## Próximas etapas
 
 - Distribución "en serio": firma de código y actualizaciones automáticas (si deja de ser de uso personal).
