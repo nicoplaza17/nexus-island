@@ -52,12 +52,13 @@
         </Setter>
     </Style>
 
-    <!-- Indicador "sonando": tres barras estáticas (sin animación continua, para no gastar CPU). -->
+    <!-- Indicador "sonando": tres barritas que siguen el volumen real (MediaViewModel.Bar*Height).
+         Alto fijo de 15 px para que al moverse no cambie el tamaño de lo que las rodea. -->
     <DataTemplate x:Key="MediaPlayingBars">
-        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-            <Rectangle Width="3" Height="7" RadiusX="1.5" RadiusY="1.5" Fill="{DynamicResource IslandAccent}" VerticalAlignment="Center" Margin="0,0,2,0" />
-            <Rectangle Width="3" Height="13" RadiusX="1.5" RadiusY="1.5" Fill="{DynamicResource IslandAccent}" VerticalAlignment="Center" Margin="0,0,2,0" />
-            <Rectangle Width="3" Height="9" RadiusX="1.5" RadiusY="1.5" Fill="{DynamicResource IslandAccent}" VerticalAlignment="Center" />
+        <StackPanel Orientation="Horizontal" Height="15" VerticalAlignment="Center">
+            <Rectangle Width="3" Height="{Binding Bar1Height}" RadiusX="1.5" RadiusY="1.5" Fill="{DynamicResource IslandAccent}" VerticalAlignment="Center" Margin="0,0,2,0" />
+            <Rectangle Width="3" Height="{Binding Bar2Height}" RadiusX="1.5" RadiusY="1.5" Fill="{DynamicResource IslandAccent}" VerticalAlignment="Center" Margin="0,0,2,0" />
+            <Rectangle Width="3" Height="{Binding Bar3Height}" RadiusX="1.5" RadiusY="1.5" Fill="{DynamicResource IslandAccent}" VerticalAlignment="Center" />
         </StackPanel>
     </DataTemplate>
 
@@ -85,7 +86,7 @@
             </Grid>
 
             <ContentControl HorizontalAlignment="Right" Focusable="False"
-                            ContentTemplate="{StaticResource MediaPlayingBars}"
+                            Content="{Binding}" ContentTemplate="{StaticResource MediaPlayingBars}"
                             Visibility="{Binding IsPlaying, Converter={StaticResource BoolToVisibility}}" />
             <TextBlock HorizontalAlignment="Right" VerticalAlignment="Center"
                        Text="&#xE769;" FontFamily="{StaticResource MediaGlyphFont}" FontSize="11"
@@ -125,7 +126,7 @@
             </StackPanel>
 
             <Grid Grid.Column="2" VerticalAlignment="Center">
-                <ContentControl Focusable="False" ContentTemplate="{StaticResource MediaPlayingBars}"
+                <ContentControl Focusable="False" Content="{Binding}" ContentTemplate="{StaticResource MediaPlayingBars}"
                                 Visibility="{Binding IsPlaying, Converter={StaticResource BoolToVisibility}}" />
                 <TextBlock Text="&#xE769;" FontFamily="{StaticResource MediaGlyphFont}" FontSize="12"
                            Foreground="{DynamicResource IslandForegroundMuted}"

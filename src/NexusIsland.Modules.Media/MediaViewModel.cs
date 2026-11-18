@@ -25,6 +25,16 @@ public sealed class MediaViewModel : ObservableObject, IIslandAware, IAccessible
     // 1 vez por segundo: el texto de tiempo cambia cada segundo y cada actualización redibuja la isla.
     private readonly DispatcherTimer _progressTimer = new(DispatcherPriority.Background) { Interval = TimeSpan.FromSeconds(1) };
 
+    // Barritas "sonando": siguen el volumen real a ~15 cuadros por segundo, solo mientras se ven.
+    private static readonly double[] StaticBars = [7, 13, 9]; // forma de las barritas quietas
+    private const double BarMin = 3, BarMax = 15;
+    private readonly IAudioLevelMeter? _meter;
+    private readonly Func<bool> _barsEnabled;
+    private readonly LevelBars _levels = new();
+    private readonly DispatcherTimer _barsTimer = new(DispatcherPriority.Render) { Interval = TimeSpan.FromMilliseconds(66) };
+    private bool _barsVisible;
+    private double _bar1 = StaticBars[0], _bar2 = StaticBars[1], _bar3 = StaticBars[2];
+
     private MediaSnapshot? _snapshot;
     private byte[]? _artworkBytes;
 
@@ -33,11 +43,14 @@ public sealed class MediaViewModel : ObservableObject, IIslandAware, IAccessible
     private bool _isPlaying, _hasTimeline, _canPlayPause, _canNext, _canPrevious, _canSeek;
     private double _progress;
 
-    public MediaViewModel(IMediaSessionService service, ILogger logger)
+    public MediaViewModel(IMediaSessionService service, ILogger logger, IAudioLevelMeter? meter = null, Func<bool>? barsEnabled = null)
     {
         _service = service;
         _logger = logger;
+        _meter = meter;
+        _barsEnabled = barsEnabled ?? (() => true);
         _progressTimer.Tick += (_, _) => UpdatePosition();
+        _barsTimer.Tick += (_, _) => UpdateBars();
 
         PlayPauseCommand = new AsyncCommand<object>(_ => TogglePlayPauseAsync(), _ => CanPlayPause, OnCommandError);
         NextCommand = new AsyncCommand<object>(_ => _service.NextAsync(), _ => CanNext, OnCommandError);
@@ -75,6 +88,7 @@ public sealed class MediaViewModel : ObservableObject, IIslandAware, IAccessible
                 OnPropertyChanged(nameof(IsNotPlaying));
                 OnPropertyChanged(nameof(PlayPauseGlyph));
                 OnPropertyChanged(nameof(PlayPauseLabel));
+                UpdateBarsTimer();
             }
         }
     }
@@ -88,6 +102,11 @@ public sealed class MediaViewModel : ObservableObject, IIslandAware, IAccessible
 
     /// <summary>Lo que se anuncia al cambiar de canción.</summary>
     public string Announcement => string.Format(Strings.A11y_NewTrack, Title, Artist);
+
+    /// <summary>Alturas (px) de las tres barritas del indicador "sonando".</summary>
+    public double Bar1Height { get => _bar1; private set => SetProperty(ref _bar1, value); }
+    public double Bar2Height { get => _bar2; private set => SetProperty(ref _bar2, value); }
+    public double Bar3Height { get => _bar3; private set => SetProperty(ref _bar3, value); }
 
     public bool HasTimeline { get => _hasTimeline; private set => SetProperty(ref _hasTimeline, value); }
     public double Progress { get => _progress; private set => SetProperty(ref _progress, value); }
@@ -143,9 +162,53 @@ public sealed class MediaViewModel : ObservableObject, IIslandAware, IAccessible
         {
             _progressTimer.Stop();
         }
+        // Las barritas están en la isla contraída y en el vistazo (la expandida muestra el progreso).
+        _barsVisible = isShown && state is IslandState.Collapsed or IslandState.Peek;
+        UpdateBarsTimer();
     }
 
-    public void Stop() => _progressTimer.Stop();
+    public void Stop()
+    {
+        _progressTimer.Stop();
+        _barsVisible = false;
+        UpdateBarsTimer();
+    }
+
+    /// <summary>
+    /// Las barritas se mueven solo si: suena algo, se ven, el ajuste está activado, Windows no pide
+    /// reducir animaciones y hay un medidor de audio. Si no, quedan quietas (y la isla no se redibuja).
+    /// </summary>
+    private void UpdateBarsTimer()
+    {
+        var animate = _isPlaying && _barsVisible && _meter is not null && _barsEnabled()
+                      && System.Windows.SystemParameters.ClientAreaAnimation;
+        if (animate == _barsTimer.IsEnabled) return;
+        if (animate)
+        {
+            _levels.Reset();
+            _barsTimer.Start();
+        }
+        else
+        {
+            _barsTimer.Stop();
+            Bar1Height = StaticBars[0];
+            Bar2Height = StaticBars[1];
+            Bar3Height = StaticBars[2];
+        }
+    }
+
+    private void UpdateBars()
+    {
+        if (_meter is null || !_meter.TryRead(out var left, out var right)) left = right = 0;
+        _levels.Update(left, right);
+        var l = _levels.Levels;
+        Bar1Height = LevelBars.ToPixels(l[0], BarMin, BarMax);
+        Bar2Height = LevelBars.ToPixels(l[1], BarMin, BarMax);
+        Bar3Height = LevelBars.ToPixels(l[2], BarMin, BarMax);
+    }
+
+    /// <summary>Se activó o desactivó el ajuste "barritas que siguen la música".</summary>
+    public void RefreshBarsSetting() => UpdateBarsTimer();
 
     private void UpdatePosition()
     {

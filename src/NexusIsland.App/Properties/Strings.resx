@@ -23,6 +23,8 @@
   <data name="Settings_AlertNetwork" xml:space="preserve"><value>No Internet / connection restored</value></data>
   <data name="Settings_Alerts" xml:space="preserve"><value>System alerts</value></data>
   <data name="Settings_AlertsHint" xml:space="preserve"><value>The island checks itself every 3 seconds and only alerts when needed. The 'System' panel (tools button) is always available.</value></data>
+  <data name="Settings_AnimatedBars" xml:space="preserve"><value>Bars that follow the music volume</value></data>
+  <data name="Settings_AnimatedBarsHint" xml:space="preserve"><value>The green bars move with the real sound level (as reported by Windows; nothing is recorded). They only move while music is playing and the island is visible. If you turn it off, they stay still and use no processor.</value></data>
   <data name="Settings_Change" xml:space="preserve"><value>Change…</value></data>
   <data name="Settings_ConfigFile" xml:space="preserve"><value>Settings:</value></data>
   <data name="Settings_DeleteModels" xml:space="preserve"><value>Delete models</value></data>

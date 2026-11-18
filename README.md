@@ -646,6 +646,26 @@ muestra la traducción con **Copiar** e **Invertir** (por si detectó mal). Hast
 - Límite: Spotify abierto en una **pestaña** común de Chrome (no instalado como app) sigue figurando como "Google Chrome":
   Windows no informa qué sitio está sonando.
 
+### v0.11.0 — Barritas que siguen la música (18/11/2026)
+
+- Las tres barritas verdes del indicador "sonando" se mueven con el **nivel real del sonido**, leído con el medidor
+  de picos de Windows (Core Audio, `IAudioMeterInformation`, el mismo del mezclador de volumen): no se graba ni se
+  analiza el audio. Izquierda (rápida), máximo de los dos canales (lenta) y derecha (intermedia); suben rápido y bajan suave.
+- Solo se mueven si suena algo, se ven (isla contraída o vistazo, visible, sin pantalla completa), Windows no pide
+  reducir animaciones y el ajuste está activado (Configuración → Multimedia). Si no, quedan quietas y no redibujan.
+- ~15 cuadros por segundo; alturas redondeadas a medio píxel (cambios invisibles no redibujan).
+- Límite: el medidor es el de la salida de audio completa: si suena otra cosa a la vez (un video, un aviso), también se ve.
+
+**Costo medido** (isla contraída con Spotify sonando, 30–40 s por prueba, alternando):
+
+| | CPU de la isla (1 núcleo) |
+|---|---|
+| Barritas quietas | 0,4–0,7 % |
+| Barritas siguiendo la música | 0,9–1,6 % |
+
+Los picos que aparecieron en algunas pruebas (40–70 % durante 1–2 s) coincidieron con cambios de canción o de app
+(la animación del vistazo, que ya existía), no con las barritas. Tests: 198/198.
+
 ## Próximas etapas
 
 - Distribución "en serio": firma de código y actualizaciones automáticas (si deja de ser de uso personal).

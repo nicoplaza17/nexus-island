@@ -564,11 +564,14 @@ public partial class IslandWindow : Window
             }
             OverlayWindowStyles.BringToTopmost(_hwnd);
             Fade(to: 1, onCompleted: null);
+            NotifyAware(_shownActivity, _stateMachine.State, isShown: true);
         }
         else
         {
             _stateMachine.ForceCollapse();
             Fade(to: 0, onCompleted: () => { if (!_wantVisible) Hide(); });
+            // Oculta (por el usuario o por pantalla completa): nada de animaciones que nadie ve.
+            NotifyAware(_shownActivity, _stateMachine.State, isShown: false);
         }
     }
 

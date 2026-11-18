@@ -23,6 +23,8 @@
   <data name="Settings_AlertNetwork" xml:space="preserve"><value>Sin Internet / conexión recuperada</value></data>
   <data name="Settings_Alerts" xml:space="preserve"><value>Alertas del sistema</value></data>
   <data name="Settings_AlertsHint" xml:space="preserve"><value>La isla se revisa sola cada 3 segundos y avisa solo cuando hace falta. El panel 'Sistema' (botón de herramientas) siempre está disponible.</value></data>
+  <data name="Settings_AnimatedBars" xml:space="preserve"><value>Barritas que siguen el volumen de la música</value></data>
+  <data name="Settings_AnimatedBarsHint" xml:space="preserve"><value>Las barritas verdes se mueven con el nivel real del sonido (lo informa Windows; no se graba nada). Solo se mueven mientras suena música y la isla está a la vista. Si lo desactivás, quedan quietas y no gastan procesador.</value></data>
   <data name="Settings_Change" xml:space="preserve"><value>Cambiar…</value></data>
   <data name="Settings_ConfigFile" xml:space="preserve"><value>Configuración:</value></data>
   <data name="Settings_DeleteModels" xml:space="preserve"><value>Borrar modelos</value></data>

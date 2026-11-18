@@ -30,12 +30,20 @@ public sealed class MediaModule : IIslandModule
 
     private readonly SettingsStore _settings;
 
-    public MediaModule(IMediaSessionService service, SettingsStore settings, ILogger<MediaModule> logger)
+    private readonly IAudioLevelMeter _meter;
+
+    public MediaModule(IMediaSessionService service, SettingsStore settings, IAudioLevelMeter meter, ILogger<MediaModule> logger)
     {
         _service = service;
         _settings = settings;
+        _meter = meter;
         _logger = logger;
     }
+
+    /// <summary>NEXUS_BARS=off apaga las barritas animadas sin tocar la configuración (para medir el costo).</summary>
+    private bool BarsEnabled() =>
+        _settings.Current.Media.AnimatedBars
+        && !string.Equals(Environment.GetEnvironmentVariable("NEXUS_BARS"), "off", StringComparison.OrdinalIgnoreCase);
 
     public string Id => ModuleId;
 
@@ -49,7 +57,8 @@ public sealed class MediaModule : IIslandModule
         _host = host;
         _uiContext = SynchronizationContext.Current
             ?? throw new InvalidOperationException("MediaModule debe iniciarse en el hilo de la interfaz.");
-        _viewModel = new MediaViewModel(_service, _logger);
+        _viewModel = new MediaViewModel(_service, _logger, _meter, BarsEnabled);
+        _settings.Changed += _ => _uiContext.Post(_ => _viewModel?.RefreshBarsSetting(), null);
         _removeGrace = new System.Windows.Threading.DispatcherTimer { Interval = RemoveGrace };
         _removeGrace.Tick += (_, _) =>
         {

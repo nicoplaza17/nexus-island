@@ -139,6 +139,9 @@ public sealed class MediaSettings
     /// <summary>Mostrar el vistazo unos segundos al cambiar de canción.</summary>
     public bool NotifyOnTrackChange { get; set; } = true;
 
+    /// <summary>Las barritas "sonando" siguen el volumen real de la música (si no, quedan quietas).</summary>
+    public bool AnimatedBars { get; set; } = true;
+
     /// <summary>Apps cuya reproducción la isla no muestra (p. ej. WhatsApp, Discord).</summary>
     public List<IgnoredApp> IgnoredApps { get; set; } = [];
 

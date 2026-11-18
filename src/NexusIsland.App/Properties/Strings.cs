@@ -75,6 +75,12 @@ public static class Strings
     /// <summary>The island checks itself every 3 seconds and only alerts when needed. The 'System' panel (tools button) is always available.</summary>
     public static string Settings_AlertsHint => ResourceManager.GetString("Settings_AlertsHint", Culture) ?? "Settings_AlertsHint";
 
+    /// <summary>Bars that follow the music volume</summary>
+    public static string Settings_AnimatedBars => ResourceManager.GetString("Settings_AnimatedBars", Culture) ?? "Settings_AnimatedBars";
+
+    /// <summary>The green bars move with the real sound level (as reported by Windows; nothing is recorded). They only move while music is playing and the island is visible. If you turn it off, they stay still and use no processor.</summary>
+    public static string Settings_AnimatedBarsHint => ResourceManager.GetString("Settings_AnimatedBarsHint", Culture) ?? "Settings_AnimatedBarsHint";
+
     /// <summary>Change…</summary>
     public static string Settings_Change => ResourceManager.GetString("Settings_Change", Culture) ?? "Settings_Change";
 

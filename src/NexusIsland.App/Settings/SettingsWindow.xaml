@@ -87,6 +87,8 @@
             <!-- ================================ MULTIMEDIA -->
             <TextBlock Text="{x:Static loc:Strings.Settings_Media}" Style="{StaticResource SectionTitle}" />
             <CheckBox x:Name="NotifyTrackBox" Content="{x:Static loc:Strings.Settings_NotifyTrack}" />
+            <CheckBox x:Name="AnimatedBarsBox" Content="{x:Static loc:Strings.Settings_AnimatedBars}" Margin="0,6,0,0" />
+            <TextBlock Style="{StaticResource Hint}" Text="{x:Static loc:Strings.Settings_AnimatedBarsHint}" />
             <TextBlock Text="{x:Static loc:Strings.Settings_IgnoredApps}" FontWeight="SemiBold" Margin="0,14,0,0" />
             <TextBlock Style="{StaticResource Hint}"
                        Text="{x:Static loc:Strings.Settings_IgnoredHint}" />

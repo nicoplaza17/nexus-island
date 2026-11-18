@@ -277,6 +277,7 @@ public partial class App : Application
 
         // Servicios de Windows
         services.AddSingleton<IMediaSessionService, GsmtcMediaSessionService>();
+        services.AddSingleton<IAudioLevelMeter, CoreAudioLevelMeter>();
 
         services.AddSingleton<IClipboardMonitor, ClipboardMonitor>();
         services.AddSingleton<ISystemMetricsSource, SystemMetricsService>();

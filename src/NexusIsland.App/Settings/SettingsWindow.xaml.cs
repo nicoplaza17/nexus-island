@@ -89,6 +89,7 @@ public partial class SettingsWindow : Window
         UpdateRestartPanel();
 
         NotifyTrackBox.IsChecked = s.Media.NotifyOnTrackChange;
+        AnimatedBarsBox.IsChecked = s.Media.AnimatedBars;
         ShowContentBox.IsChecked = s.Notifications.ShowContent;
         BuildMutedList();
         NotificationStatus.Text = NexusIsland.Services.Windows.Notifications.PackageIdentity.HasIdentity
@@ -215,6 +216,8 @@ public partial class SettingsWindow : Window
 
         NotifyTrackBox.Checked += (_, _) => Save(s => s.Media.NotifyOnTrackChange = true);
         NotifyTrackBox.Unchecked += (_, _) => Save(s => s.Media.NotifyOnTrackChange = false);
+        AnimatedBarsBox.Checked += (_, _) => Save(s => s.Media.AnimatedBars = true);
+        AnimatedBarsBox.Unchecked += (_, _) => Save(s => s.Media.AnimatedBars = false);
 
         ShowContentBox.Checked += (_, _) => Save(s => s.Notifications.ShowContent = true);
         ShowContentBox.Unchecked += (_, _) => Save(s => s.Notifications.ShowContent = false);
