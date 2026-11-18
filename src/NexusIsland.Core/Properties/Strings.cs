@@ -36,4 +36,115 @@ public static class Strings
     /// <summary>Media</summary>
     public static string Media_Generic => ResourceManager.GetString("Media_Generic", Culture) ?? "Media_Generic";
 
+    /// <summary>{0} is now an administrator of this PC (change made by {1}).</summary>
+    public static string Sec_AdminAdded_Detail => ResourceManager.GetString("Sec_AdminAdded_Detail", Culture) ?? "Sec_AdminAdded_Detail";
+
+    /// <summary>Someone was added to Administrators</summary>
+    public static string Sec_AdminAdded_Title => ResourceManager.GetString("Sec_AdminAdded_Title", Culture) ?? "Sec_AdminAdded_Title";
+
+    /// <summary>{0} failed attempts in 2 minutes from {1} (accounts: {2}).</summary>
+    public static string Sec_BruteForce_Detail => ResourceManager.GetString("Sec_BruteForce_Detail", Culture) ?? "Sec_BruteForce_Detail";
+
+    /// <summary>Burst of failed sign-ins</summary>
+    public static string Sec_BruteForce_Title => ResourceManager.GetString("Sec_BruteForce_Title", Culture) ?? "Sec_BruteForce_Title";
+
+    /// <summary>Account {0} signed in from {1}, the same source as the failed attempts.</summary>
+    public static string Sec_BruteSuccess_Detail => ResourceManager.GetString("Sec_BruteSuccess_Detail", Culture) ?? "Sec_BruteSuccess_Detail";
+
+    /// <summary>Successful sign-in after a burst</summary>
+    public static string Sec_BruteSuccess_Title => ResourceManager.GetString("Sec_BruteSuccess_Title", Culture) ?? "Sec_BruteSuccess_Title";
+
+    /// <summary>{0}: {1}.</summary>
+    public static string Sec_DefenderAction_Detail => ResourceManager.GetString("Sec_DefenderAction_Detail", Culture) ?? "Sec_DefenderAction_Detail";
+
+    /// <summary>Defender acted on a threat</summary>
+    public static string Sec_DefenderAction_Title => ResourceManager.GetString("Sec_DefenderAction_Title", Culture) ?? "Sec_DefenderAction_Title";
+
+    /// <summary>Defender will no longer scan: {0}</summary>
+    public static string Sec_Exclusion_Detail => ResourceManager.GetString("Sec_Exclusion_Detail", Culture) ?? "Sec_Exclusion_Detail";
+
+    /// <summary>An antivirus exclusion was added</summary>
+    public static string Sec_Exclusion_Title => ResourceManager.GetString("Sec_Exclusion_Title", Culture) ?? "Sec_Exclusion_Title";
+
+    /// <summary>Profile: {0}.</summary>
+    public static string Sec_FirewallOff_Detail => ResourceManager.GetString("Sec_FirewallOff_Detail", Culture) ?? "Sec_FirewallOff_Detail";
+
+    /// <summary>The firewall was turned off</summary>
+    public static string Sec_FirewallOff_Title => ResourceManager.GetString("Sec_FirewallOff_Title", Culture) ?? "Sec_FirewallOff_Title";
+
+    /// <summary>tries to disable AMSI protection</summary>
+    public static string Sec_Ind_Amsi => ResourceManager.GetString("Sec_Ind_Amsi", Culture) ?? "Sec_Ind_Amsi";
+
+    /// <summary>credential theft</summary>
+    public static string Sec_Ind_Credentials => ResourceManager.GetString("Sec_Ind_Credentials", Culture) ?? "Sec_Ind_Credentials";
+
+    /// <summary>changes the antivirus</summary>
+    public static string Sec_Ind_Defender => ResourceManager.GetString("Sec_Ind_Defender", Culture) ?? "Sec_Ind_Defender";
+
+    /// <summary>downloads from the Internet</summary>
+    public static string Sec_Ind_Download => ResourceManager.GetString("Sec_Ind_Download", Culture) ?? "Sec_Ind_Download";
+
+    /// <summary>runs code in memory</summary>
+    public static string Sec_Ind_Exec => ResourceManager.GetString("Sec_Ind_Exec", Culture) ?? "Sec_Ind_Exec";
+
+    /// <summary>hidden window</summary>
+    public static string Sec_Ind_Hidden => ResourceManager.GetString("Sec_Ind_Hidden", Culture) ?? "Sec_Ind_Hidden";
+
+    /// <summary>encoded or obfuscated code</summary>
+    public static string Sec_Ind_Obfuscation => ResourceManager.GetString("Sec_Ind_Obfuscation", Culture) ?? "Sec_Ind_Obfuscation";
+
+    /// <summary>this same PC</summary>
+    public static string Sec_LocalSource => ResourceManager.GetString("Sec_LocalSource", Culture) ?? "Sec_LocalSource";
+
+    /// <summary>Cleared by {0}. Clearing the log is a way to hide tracks.</summary>
+    public static string Sec_LogCleared_Detail => ResourceManager.GetString("Sec_LogCleared_Detail", Culture) ?? "Sec_LogCleared_Detail";
+
+    /// <summary>The security log was cleared</summary>
+    public static string Sec_LogCleared_Title => ResourceManager.GetString("Sec_LogCleared_Title", Culture) ?? "Sec_LogCleared_Title";
+
+    /// <summary>{0} in {1}.</summary>
+    public static string Sec_Malware_Detail => ResourceManager.GetString("Sec_Malware_Detail", Culture) ?? "Sec_Malware_Detail";
+
+    /// <summary>Defender detected a threat</summary>
+    public static string Sec_Malware_Title => ResourceManager.GetString("Sec_Malware_Title", Culture) ?? "Sec_Malware_Title";
+
+    /// <summary>Signs: {0}.</summary>
+    public static string Sec_PowerShell_Detail => ResourceManager.GetString("Sec_PowerShell_Detail", Culture) ?? "Sec_PowerShell_Detail";
+
+    /// <summary>Suspicious PowerShell</summary>
+    public static string Sec_PowerShell_Title => ResourceManager.GetString("Sec_PowerShell_Title", Culture) ?? "Sec_PowerShell_Title";
+
+    /// <summary>domain</summary>
+    public static string Sec_Profile_Domain => ResourceManager.GetString("Sec_Profile_Domain", Culture) ?? "Sec_Profile_Domain";
+
+    /// <summary>private</summary>
+    public static string Sec_Profile_Private => ResourceManager.GetString("Sec_Profile_Private", Culture) ?? "Sec_Profile_Private";
+
+    /// <summary>public</summary>
+    public static string Sec_Profile_Public => ResourceManager.GetString("Sec_Profile_Public", Culture) ?? "Sec_Profile_Public";
+
+    /// <summary>Microsoft Defender Antivirus stopped watching in real time.</summary>
+    public static string Sec_RealtimeOff_Detail => ResourceManager.GetString("Sec_RealtimeOff_Detail", Culture) ?? "Sec_RealtimeOff_Detail";
+
+    /// <summary>Real-time protection was turned off</summary>
+    public static string Sec_RealtimeOff_Title => ResourceManager.GetString("Sec_RealtimeOff_Title", Culture) ?? "Sec_RealtimeOff_Title";
+
+    /// <summary>Service {0}: {1}</summary>
+    public static string Sec_Service_Detail => ResourceManager.GetString("Sec_Service_Detail", Culture) ?? "Sec_Service_Detail";
+
+    /// <summary>A service was installed</summary>
+    public static string Sec_Service_Title => ResourceManager.GetString("Sec_Service_Title", Culture) ?? "Sec_Service_Title";
+
+    /// <summary>{0} (user {1}). Tasks can make a program run on its own.</summary>
+    public static string Sec_Task_Detail => ResourceManager.GetString("Sec_Task_Detail", Culture) ?? "Sec_Task_Detail";
+
+    /// <summary>New scheduled task</summary>
+    public static string Sec_Task_Title => ResourceManager.GetString("Sec_Task_Title", Culture) ?? "Sec_Task_Title";
+
+    /// <summary>New user: {0} (created by {1}).</summary>
+    public static string Sec_UserCreated_Detail => ResourceManager.GetString("Sec_UserCreated_Detail", Culture) ?? "Sec_UserCreated_Detail";
+
+    /// <summary>A user account was created</summary>
+    public static string Sec_UserCreated_Title => ResourceManager.GetString("Sec_UserCreated_Title", Culture) ?? "Sec_UserCreated_Title";
+
 }

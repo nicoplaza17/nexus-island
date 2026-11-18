@@ -666,6 +666,55 @@ muestra la traducción con **Copiar** e **Invertir** (por si detectó mal). Hast
 Los picos que aparecieron en algunas pruebas (40–70 % durante 1–2 s) coincidieron con cambios de canción o de app
 (la animación del vistazo, que ya existía), no con las barritas. Tests: 198/198.
 
+### Etapa 12 — Vigilante de seguridad con IA local (18/11/2026, v0.12.0)
+
+**Qué hace:** escucha en tiempo real registros de Windows, aplica **reglas fijas** y avisa en la isla. El botón
+**Explicar con IA** abre una ventana donde un modelo local (LM Studio + Foundation-Sec 1.1 8B de Cisco) explica la alerta
+en español: qué pasó, gravedad, cómo verificar y qué hacer. **Las reglas deciden; la IA solo explica.**
+
+| Regla | Registro / evento | Gravedad | MITRE |
+|---|---|---|---|
+| ≥ 10 inicios de sesión fallidos en 2 min desde un origen | Security 4625 | Aviso | T1110 |
+| Inicio exitoso desde el origen de una ráfaga | Security 4624 | Crítica | T1110 → T1078 |
+| Usuario creado / agregado a Administradores | Security 4720 / 4732 | Aviso / Crítica | T1136.001 / T1098 |
+| Registro de seguridad borrado | Security 1102 | Crítica | T1070.001 |
+| Servicio instalado (Store/drivers: informativo; rutas de usuario, temp o intérpretes: crítico) | System 7045 | Info–Crítica | T1543.003 |
+| Tarea programada nueva (ignora `\Microsoft\`; actualizadores conocidos: informativo) | TaskScheduler 106 | Info–Aviso | T1053.005 |
+| Defender detectó amenaza / apagaron la protección en tiempo real / exclusión nueva | Defender 1116 / 5001 / 5007 | Crítica / Crítica / Aviso | T1204 / T1562.001 |
+| Firewall desactivado (`SettingType=1`, valor 0) | Firewall 2082 | Crítica | T1562.004 |
+| PowerShell con combinaciones de ataque (descargar + ejecutar, AMSI, credenciales, Defender, ofuscado + ejecutar) | PowerShell 4104 | Aviso–Crítica | T1059.001 |
+
+- Reglas escritas sobre el **formato real** de los eventos de esta PC. Lo que corre la app de Claude en PowerShell, los
+  servicios de apps de la Store y las tareas de Windows **no** generan alertas (falsos positivos evitados).
+- Cada alerta se repite como máximo una vez cada 10 min. Las informativas solo van al historial (panel *Seguridad*).
+- **IA:** si LM Studio no está corriendo, la isla lo arranca (`lms server start`); el modelo se carga al pedir la
+  explicación y se descarga solo a los **5 min** sin uso (`ttl`). En esta notebook: empieza a escribir a los ~45 s y termina en ~4 min.
+- **Privacidad:** los eventos solo van al modelo local (127.0.0.1). El log de la isla solo guarda qué regla saltó.
+
+**Permiso para el registro Security** (logins, usuarios, borrado del registro): Windows solo lo deja leer a
+administradores elevados o a miembros de *Lectores del registro de eventos*. Sin ese permiso el vigilante funciona con
+los otros 5 registros y lo dice en el panel. Para darlo (una vez, en una consola **como administrador**, y cerrar sesión):
+
+```powershell
+Add-LocalGroupMember -SID "S-1-5-32-573" -Member "$env:USERDOMAIN\$env:USERNAME"
+```
+
+**Verificado**
+
+| Prueba | Resultado |
+|---|---|
+| Tests de reglas (umbral y ventana de fuerza bruta, enfriamiento, éxito tras ráfaga, Administradores, servicios por ruta, tareas, Defender, firewall, PowerShell incluido lo que corre la app de Claude) | ✅ 219/219 |
+| Tarea programada de prueba (desactivada, borrada al instante) → alerta "Tarea programada nueva" en 1 s | ✅ log |
+| PowerShell inofensivo que solo menciona `Invoke-WebRequest + Invoke-Expression` → alerta crítica T1059.001 | ✅ log |
+| **Encontrado y corregido:** Windows registró ese script en 2 bloques → 2 alertas; ahora el mismo patrón avisa una vez | ✅ |
+| **Encontrado y corregido:** suscribirse al registro Security sin permiso no da error (solo no llegan eventos) y el panel decía "6 de 6"; ahora se prueba leer antes y dice "5 de 6, falta permiso" | ✅ |
+| **Encontrado y corregido:** la ventana de detalle fallaba al abrir (recurso declarado después de usarse) | ✅ |
+| Explicar con IA: arrancó LM Studio solo, el modelo empezó a escribir a los 47 s y terminó en 3 min 51 s; LM Studio muestra `TTL 4m / 5m` | ✅ log + UI Automation |
+| La explicación dijo que el script "se descargó y ejecutó" aunque solo mencionaba las palabras → se reforzaron las instrucciones (patrones ≠ hechos) | ⚠️ límite de la IA |
+
+**Limitaciones:** vigila solo esta PC; las reglas detectan patrones conocidos; un atacante con privilegios puede apagar
+registros (por eso se avisa el borrado); no reemplaza a Defender ni a un EDR/SIEM; la IA puede equivocarse.
+
 ## Próximas etapas
 
 - Distribución "en serio": firma de código y actualizaciones automáticas (si deja de ser de uso personal).

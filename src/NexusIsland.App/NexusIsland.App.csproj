@@ -42,6 +42,7 @@
     <ProjectReference Include="..\NexusIsland.Modules.Notifications\NexusIsland.Modules.Notifications.csproj" />
     <ProjectReference Include="..\NexusIsland.Modules.Tasks\NexusIsland.Modules.Tasks.csproj" />
     <ProjectReference Include="..\NexusIsland.Translation\NexusIsland.Translation.csproj" />
+    <ProjectReference Include="..\NexusIsland.Modules.Security\NexusIsland.Modules.Security.csproj" />
   </ItemGroup>
 
 </Project>

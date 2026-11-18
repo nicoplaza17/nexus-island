@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="A11y_Alert" xml:space="preserve"><value>Alerta de seguridad {0}: {1}. {2}</value></data>
+  <data name="Close" xml:space="preserve"><value>Cerrar</value></data>
+  <data name="Copied" xml:space="preserve"><value>Copiado</value></data>
+  <data name="Copy" xml:space="preserve"><value>Copiar todo</value></data>
+  <data name="Empty" xml:space="preserve"><value>Sin alertas desde que se abrió la isla.</value></data>
+  <data name="Explain" xml:space="preserve"><value>Explicar con IA</value></data>
+  <data name="Explain_Failed" xml:space="preserve"><value>No se pudo obtener la explicación: {0}. ¿Está instalado LM Studio con el modelo {1}?</value></data>
+  <data name="GotIt" xml:space="preserve"><value>Entendido</value></data>
+  <data name="GotItA11y" xml:space="preserve"><value>Cerrar la alerta de seguridad</value></data>
+  <data name="History" xml:space="preserve"><value>Historial</value></data>
+  <data name="Mitre" xml:space="preserve"><value>MITRE ATT&amp;CK {0}</value></data>
+  <data name="Module_Name" xml:space="preserve"><value>Seguridad</value></data>
+  <data name="Panel_OpenItemA11y" xml:space="preserve"><value>Ver la alerta: {0}</value></data>
+  <data name="Severity_Critical" xml:space="preserve"><value>Crítica</value></data>
+  <data name="Severity_Info" xml:space="preserve"><value>Informativa</value></data>
+  <data name="Severity_Warning" xml:space="preserve"><value>Aviso</value></data>
+  <data name="Stage_Done" xml:space="preserve"><value>Listo.</value></data>
+  <data name="Stage_LoadingModel" xml:space="preserve"><value>Cargando el modelo y leyendo la alerta (en esta PC puede tardar de 1 a 3 minutos)…</value></data>
+  <data name="Stage_StartingServer" xml:space="preserve"><value>Arrancando LM Studio…</value></data>
+  <data name="Stage_Writing" xml:space="preserve"><value>Escribiendo…</value></data>
+  <data name="Status_NoSecurityLog" xml:space="preserve"><value>Sin permiso para el registro de Seguridad: no se vigilan los inicios de sesión ni los cambios de cuentas.</value></data>
+  <data name="Status_Watching" xml:space="preserve"><value>Vigilando {0} de {1} registros de Windows.</value></data>
+  <data name="Window_Disclaimer" xml:space="preserve"><value>La IA puede equivocarse: usala como ayuda y verificá. Los datos no salen de esta PC.</value></data>
+  <data name="Window_Evidence" xml:space="preserve"><value>Evidencia (datos del evento de Windows)</value></data>
+  <data name="Window_Explanation" xml:space="preserve"><value>Explicación de la IA local ({0})</value></data>
+  <data name="Window_Title" xml:space="preserve"><value>Nexus Island — Seguridad</value></data>
+</root>

@@ -297,6 +297,9 @@ public partial class App : Application
         services.AddSingleton<IIslandModule, MonitorModule>();
         services.AddSingleton<IIslandModule, NotificationsModule>();
         services.AddSingleton<IIslandModule, TasksModule>();
+        services.AddSingleton<NexusIsland.Core.Security.ISecurityEventSource, NexusIsland.Services.Windows.Security.SecurityEventWatcher>();
+        services.AddSingleton<NexusIsland.Core.Security.ISecurityExplainer, NexusIsland.Services.Windows.Security.LmStudioExplainer>();
+        services.AddSingleton<IIslandModule, NexusIsland.Modules.Security.SecurityModule>();
 
         return services.BuildServiceProvider(new ServiceProviderOptions { ValidateOnBuild = true });
     }

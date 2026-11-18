@@ -5,6 +5,7 @@
     <Project Path="src/NexusIsland.Modules.Media/NexusIsland.Modules.Media.csproj" />
     <Project Path="src/NexusIsland.Modules.Monitor/NexusIsland.Modules.Monitor.csproj" />
     <Project Path="src/NexusIsland.Modules.Notifications/NexusIsland.Modules.Notifications.csproj" />
+    <Project Path="src/NexusIsland.Modules.Security/NexusIsland.Modules.Security.csproj" />
     <Project Path="src/NexusIsland.Modules.Tasks/NexusIsland.Modules.Tasks.csproj" />
     <Project Path="src/NexusIsland.Modules.Tools/NexusIsland.Modules.Tools.csproj" />
     <Project Path="src/NexusIsland.Services.Windows/NexusIsland.Services.Windows.csproj" />

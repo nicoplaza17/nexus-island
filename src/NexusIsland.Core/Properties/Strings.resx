@@ -10,4 +10,41 @@
   <data name="App_WebEdge" xml:space="preserve"><value>Web app (Edge)</value></data>
   <data name="Download_Unnamed" xml:space="preserve"><value>Download</value></data>
   <data name="Media_Generic" xml:space="preserve"><value>Media</value></data>
+  <data name="Sec_AdminAdded_Detail" xml:space="preserve"><value>{0} is now an administrator of this PC (change made by {1}).</value></data>
+  <data name="Sec_AdminAdded_Title" xml:space="preserve"><value>Someone was added to Administrators</value></data>
+  <data name="Sec_BruteForce_Detail" xml:space="preserve"><value>{0} failed attempts in 2 minutes from {1} (accounts: {2}).</value></data>
+  <data name="Sec_BruteForce_Title" xml:space="preserve"><value>Burst of failed sign-ins</value></data>
+  <data name="Sec_BruteSuccess_Detail" xml:space="preserve"><value>Account {0} signed in from {1}, the same source as the failed attempts.</value></data>
+  <data name="Sec_BruteSuccess_Title" xml:space="preserve"><value>Successful sign-in after a burst</value></data>
+  <data name="Sec_DefenderAction_Detail" xml:space="preserve"><value>{0}: {1}.</value></data>
+  <data name="Sec_DefenderAction_Title" xml:space="preserve"><value>Defender acted on a threat</value></data>
+  <data name="Sec_Exclusion_Detail" xml:space="preserve"><value>Defender will no longer scan: {0}</value></data>
+  <data name="Sec_Exclusion_Title" xml:space="preserve"><value>An antivirus exclusion was added</value></data>
+  <data name="Sec_FirewallOff_Detail" xml:space="preserve"><value>Profile: {0}.</value></data>
+  <data name="Sec_FirewallOff_Title" xml:space="preserve"><value>The firewall was turned off</value></data>
+  <data name="Sec_Ind_Amsi" xml:space="preserve"><value>tries to disable AMSI protection</value></data>
+  <data name="Sec_Ind_Credentials" xml:space="preserve"><value>credential theft</value></data>
+  <data name="Sec_Ind_Defender" xml:space="preserve"><value>changes the antivirus</value></data>
+  <data name="Sec_Ind_Download" xml:space="preserve"><value>downloads from the Internet</value></data>
+  <data name="Sec_Ind_Exec" xml:space="preserve"><value>runs code in memory</value></data>
+  <data name="Sec_Ind_Hidden" xml:space="preserve"><value>hidden window</value></data>
+  <data name="Sec_Ind_Obfuscation" xml:space="preserve"><value>encoded or obfuscated code</value></data>
+  <data name="Sec_LocalSource" xml:space="preserve"><value>this same PC</value></data>
+  <data name="Sec_LogCleared_Detail" xml:space="preserve"><value>Cleared by {0}. Clearing the log is a way to hide tracks.</value></data>
+  <data name="Sec_LogCleared_Title" xml:space="preserve"><value>The security log was cleared</value></data>
+  <data name="Sec_Malware_Detail" xml:space="preserve"><value>{0} in {1}.</value></data>
+  <data name="Sec_Malware_Title" xml:space="preserve"><value>Defender detected a threat</value></data>
+  <data name="Sec_PowerShell_Detail" xml:space="preserve"><value>Signs: {0}.</value></data>
+  <data name="Sec_PowerShell_Title" xml:space="preserve"><value>Suspicious PowerShell</value></data>
+  <data name="Sec_Profile_Domain" xml:space="preserve"><value>domain</value></data>
+  <data name="Sec_Profile_Private" xml:space="preserve"><value>private</value></data>
+  <data name="Sec_Profile_Public" xml:space="preserve"><value>public</value></data>
+  <data name="Sec_RealtimeOff_Detail" xml:space="preserve"><value>Microsoft Defender Antivirus stopped watching in real time.</value></data>
+  <data name="Sec_RealtimeOff_Title" xml:space="preserve"><value>Real-time protection was turned off</value></data>
+  <data name="Sec_Service_Detail" xml:space="preserve"><value>Service {0}: {1}</value></data>
+  <data name="Sec_Service_Title" xml:space="preserve"><value>A service was installed</value></data>
+  <data name="Sec_Task_Detail" xml:space="preserve"><value>{0} (user {1}). Tasks can make a program run on its own.</value></data>
+  <data name="Sec_Task_Title" xml:space="preserve"><value>New scheduled task</value></data>
+  <data name="Sec_UserCreated_Detail" xml:space="preserve"><value>New user: {0} (created by {1}).</value></data>
+  <data name="Sec_UserCreated_Title" xml:space="preserve"><value>A user account was created</value></data>
 </root>
